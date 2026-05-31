@@ -1,0 +1,20 @@
+{
+  "name": "persona-plugin",
+  "interface": {
+    "displayName": "persona-plugin"
+  },
+  "plugins": [
+    {
+      "name": "persona-plugin",
+      "source": {
+        "source": "local",
+        "path": "./plugins/persona-plugin"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Marketing"
+    }
+  ]
+}

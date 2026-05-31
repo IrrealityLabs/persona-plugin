@@ -157,11 +157,17 @@ Or from a local clone:
 Register the marketplace from the terminal:
 
 ```
-codex plugin marketplace add <github-org>/persona-plugin
+codex plugin marketplace add IrrealityLabs/persona-plugin
 # or: codex plugin marketplace add /absolute/path/to/persona-plugin
 ```
 
-Then start `codex`, open the `/plugins` menu, install **persona-plugin**, and restart Codex to pick up the new skills.
+Then install the plugin:
+
+```
+codex plugin add persona-plugin@persona-plugin
+```
+
+Start a new Codex thread after installing so the new skills are loaded.
 
 ### Cursor
 
@@ -199,10 +205,15 @@ Add `.personas/assets/` to `.gitignore` if your raw source data shouldn't be com
 
 ```
 persona-plugin/
+├── .agents/
+│   └── plugins/
+│       └── marketplace.json          # Codex marketplace manifest
 ├── .claude-plugin/
 │   └── plugin.json                   # Claude Code manifest
 ├── .codex-plugin/
 │   └── plugin.json                   # Codex manifest
+├── plugins/
+│   └── persona-plugin -> ..          # Codex marketplace entry points back to this plugin root
 ├── README.md                         # this file
 └── skills/
     ├── persona-create/               # build a persona (interview / CSV / paste)
