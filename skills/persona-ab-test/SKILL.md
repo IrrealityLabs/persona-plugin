@@ -11,6 +11,7 @@ Compare 2–4 variants of an asset (headlines, hero images, pricing pages, CTAs,
 
 - Use `persona-ab-test` when you have *finished* variants and want the panel to pick.
 - Use `persona-review` to critique one asset for improvement (not pick between alternatives).
+- Use `persona-goal` to *iteratively optimize* one asset in a loop (review → edit → re-score until it stops improving), rather than pick between fixed variants.
 - Use `persona-max-diff` for prioritizing a *long list* (≥5 items) — A/B testing 8 things produces noisy results.
 - Use `persona-concept-test` when the variants aren't built yet — test the *concept* before producing the asset.
 

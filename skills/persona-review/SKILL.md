@@ -9,6 +9,8 @@ Review an asset through a panel of target personas and return feedback the way a
 
 For a **slide deck or recorded talk**, use `persona-presentation` instead — it ingests the deck/transcript/video, reacts slide by slide, and judges the narrative arc. `persona-review` is for static assets consumed at once (copy, a page, an ad), not a sequenced talk.
 
+To **iteratively optimize** an asset rather than review it once — loop review-and-edit until the panel stops finding problems — use `persona-goal`, which runs this skill in a stopping-aware loop via the platform's goal feature (round budget, no-improvement and convergence stops).
+
 The value is *specificity*. A persona saying "I like it" or "I don't like it" is a failure. A persona saying "The phrase 'enterprise-grade' in the H1 makes me bounce — I've been burned by that exact wording from three vendors who didn't have SOC 2 — replace with the actual compliance certification you hold" is the goal.
 
 ## Phase 0 — Announce

@@ -65,6 +65,7 @@ The parent / dispatcher for the full library of research methodologies. Helps yo
 ## Plus
 
 - **`persona-review`** — review an asset (copy, landing page, ad, pricing page) past the panel with code-review-style feedback (severity tags, references, suggested changes). Originally the namesake of this plugin; now one method among many.
+- **`persona-goal`** — *optimize* an asset against the panel in a loop: review → edit → re-score, driven by the native goal feature in Claude Code and Codex. Stops on a principled signal — the score stops improving, the panel runs out of blockers, or your round budget is hit — and tells done apart from stuck.
 - **`persona-roleplay`** — rehearse a high-stakes conversation against a persona who plays the counterpart: a journalist interviewing you, a prospect you're pitching, your boss in a 1:1. Inverts the usual setup — *you* are the one being tested, and you get coached at the end.
 - **`persona-presentation`** — slide-by-slide audience feedback on a deck or talk. Feed it a deck, a run-of-show, and/or a transcript/video; the personas sit through the whole talk and the panel feedback becomes a curated change list.
 - **`persona-of-thought`** — a [reasoning technique](https://askrally.com/article/personas-of-thought): each persona answers a question independently, then the answers are fused into a single anonymous joint response. Use when you want *one* better answer informed by many perspectives, not a panel breakdown.
@@ -224,6 +225,7 @@ persona-plugin/
     ├── persona-sample/               # QMD + grep filter to relevant N
     ├── persona-audience/             # named groups of persona slugs
     ├── persona-review/               # asset review with line-level critique
+    ├── persona-goal/                 # optimize an asset against the panel in a stopping-aware loop (goal feature)
     ├── persona-roleplay/             # rehearse a live conversation; the persona plays the counterpart
     ├── persona-presentation/         # slide-by-slide audience feedback on a deck / talk
     ├── persona-of-thought/           # independent answers fused into one anonymous joint answer

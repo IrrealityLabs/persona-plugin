@@ -8,7 +8,7 @@
       "name": "persona-plugin",
       "source": "./",
       "description": "Run market research with simulated persona panels — review marketing assets, run interviews / surveys / focus groups / A-B tests / Van Westendorp / conjoint / MaxDiff / TURF / brand tracking / ethnographic / grounded theory and more. Personas live as .md files in a local .personas/ folder; build them via interview, bulk import, distillation from Slack / X / web research, or statistical synthesis from survey data.",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "author": {
         "name": "Mike Taylor"
       },
