@@ -1,0 +1,27 @@
+{
+  "name": "persona-plugin",
+  "version": "0.2.0",
+  "description": "Run market research with simulated persona panels — review marketing assets, run interviews / surveys / focus groups / A-B tests / Van Westendorp / conjoint / MaxDiff / TURF / brand tracking / ethnographic / grounded theory and more. Personas live as .md files in a local .personas/ folder; build them via interview, bulk import, distillation from Slack / X / web research, or statistical synthesis from survey data (Gaussian copula).",
+  "author": {
+    "name": "Mike Taylor"
+  },
+  "license": "MIT",
+  "homepage": "https://irrealitylabs.com",
+  "repository": "https://github.com/IrrealityLabs/persona-plugin",
+  "keywords": ["personas", "marketing", "review", "consumer-research", "feedback"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "persona-plugin",
+    "shortDescription": "Persona panels for market research — review, interview, survey, A/B test, price, brand-track, and more.",
+    "longDescription": "Run market research with simulated persona panels. Build personas via interview, bulk import, distillation from Slack / X / web, batch generation of many unique personas from a single description, or statistical synthesis from survey data via Gaussian copula (persona-copula). Then review assets (persona-review), rehearse a live conversation where a persona plays the counterpart — journalist interview, sales pitch, meeting with your boss (persona-roleplay), ask one persona a question (persona-ask), fuse many personas' independent answers into one joint answer (persona-of-thought), or run a full study (persona-research dispatches to interview / survey / focus group / council / user test / presentation feedback / A/B test / concept test / Van Westendorp / conjoint / MaxDiff / TURF / brand tracking / social listening / ethnographic / diary study / grounded theory / town simulation / Hacker News simulation / tree test / JTBD interview). Saved audiences group personas into reusable segments. References-and-confidence grounding in every response. Persona simulations are best where real research isn't possible — never a substitute for talking to actual customers.",
+    "developerName": "Mike Hammer",
+    "category": "Marketing",
+    "capabilities": ["Interactive"],
+    "defaultPrompt": [
+      "Create a persona for my target customer",
+      "Review this landing-page copy with the personas",
+      "Run a Van Westendorp on this product",
+      "What would my personas think of this pricing page"
+    ]
+  }
+}

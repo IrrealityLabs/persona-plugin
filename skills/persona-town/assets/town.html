@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Persona Town</title>
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+<style>
+  body { margin: 0; background: #1a1a1a; color: #ddd; font-family: ui-monospace, Menlo, monospace; }
+  header { padding: 8px 16px; border-bottom: 1px solid #333; display: flex; gap: 24px; align-items: center; }
+  header h1 { font-size: 14px; margin: 0; font-weight: 600; }
+  header .stat { font-size: 12px; color: #999; }
+  header .stat b { color: #ddd; font-weight: 600; }
+  #wrap { display: grid; grid-template-columns: auto 1fr; gap: 16px; padding: 16px; }
+  #game { background: #2d2d2d; border-radius: 6px; }
+  #side { min-width: 320px; max-width: 480px; display: flex; flex-direction: column; gap: 16px; }
+  #side section { background: #222; border: 1px solid #333; border-radius: 6px; padding: 12px; }
+  #side h2 { font-size: 12px; margin: 0 0 8px 0; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  #log { font-size: 11px; max-height: 280px; overflow: auto; line-height: 1.5; }
+  #log .ev { padding: 2px 0; border-bottom: 1px solid #2a2a2a; }
+  #log .ev .t { color: #666; }
+  #log .ev .actor { color: #ffb86c; font-weight: 600; }
+  #log .ev .target { color: #8be9fd; }
+  #knowers { font-size: 11px; line-height: 1.6; }
+  #knowers .k { color: #50fa7b; }
+  #knowers .u { color: #555; }
+  .err { color: #ff5555; font-size: 11px; padding: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Persona Town</h1>
+  <div class="stat">tick <b id="tick">0</b></div>
+  <div class="stat">personas <b id="pcount">0</b></div>
+  <div class="stat">events <b id="ecount">0</b></div>
+  <div class="stat" id="status"></div>
+</header>
+<div id="wrap">
+  <div id="game"></div>
+  <div id="side">
+    <section><h2>Event Log (latest)</h2><div id="log">waiting for world.json…</div></section>
+    <section><h2>Who Knows About It</h2><div id="knowers">—</div></section>
+  </div>
+</div>
+
+<script>
+const TILE = 32, DEFAULT_COLS = 20, DEFAULT_ROWS = 15;
+const STATE_URL = './world.json';
+const EVENTS_URL = './events.jsonl';
+const POLL_MS = 1000;
+
+let gridCols = DEFAULT_COLS, gridRows = DEFAULT_ROWS;
+let phaserScene = null;
+let sprites = {}, labels = {}, bubbles = {}, buildingsDrawn = false;
+let lastEventCount = 0;
+
+const config = {
+  type: Phaser.AUTO,
+  parent: 'game',
+  width: TILE * DEFAULT_COLS,
+  height: TILE * DEFAULT_ROWS,
+  backgroundColor: '#2d2d2d',
+  scene: { preload, create, update }
+};
+const game = new Phaser.Game(config);
+
+function preload() {}
+
+function create() {
+  phaserScene = this;
+  this.gridGfx = this.add.graphics();
+  this.bldGfx = this.add.graphics();
+  drawGrid(this, DEFAULT_COLS, DEFAULT_ROWS);
+  pollLoop();
+}
+
+function update() {}
+
+function drawGrid(scene, cols, rows) {
+  scene.gridGfx.clear();
+  scene.gridGfx.lineStyle(1, 0x3a3a3a);
+  for (let i = 0; i <= cols; i++) scene.gridGfx.lineBetween(i*TILE, 0, i*TILE, rows*TILE);
+  for (let j = 0; j <= rows; j++) scene.gridGfx.lineBetween(0, j*TILE, cols*TILE, j*TILE);
+  game.scale.resize(cols*TILE, rows*TILE);
+}
+
+function drawBuildings(scene, buildings) {
+  scene.bldGfx.clear();
+  scene.bldGfx.fillStyle(0x444450, 1);
+  scene.bldGfx.lineStyle(1, 0x666);
+  for (const b of buildings) {
+    scene.bldGfx.fillRect(b.x*TILE, b.y*TILE, b.w*TILE, b.h*TILE);
+    scene.bldGfx.strokeRect(b.x*TILE, b.y*TILE, b.w*TILE, b.h*TILE);
+    if (b.name) {
+      const t = scene.add.text(b.x*TILE + (b.w*TILE)/2, b.y*TILE + (b.h*TILE)/2, b.name, {
+        fontSize: '11px', color: '#aaa'
+      }).setOrigin(0.5);
+      t.depth = 1;
+    }
+  }
+}
+
+function hashColor(slug) {
+  let h = 5381;
+  for (let i = 0; i < slug.length; i++) h = ((h << 5) + h + slug.charCodeAt(i)) >>> 0;
+  const r = 100 + (h & 0x7f);
+  const g = 100 + ((h >> 7) & 0x7f);
+  const b = 100 + ((h >> 14) & 0x7f);
+  return (r << 16) | (g << 8) | b;
+}
+
+async function pollLoop() {
+  try {
+    const res = await fetch(STATE_URL + '?_=' + Date.now(), { cache: 'no-store' });
+    if (res.ok) {
+      const world = await res.json();
+      render(world);
+      document.getElementById('status').textContent = '';
+    } else {
+      document.getElementById('status').innerHTML = `<span class="err">world.json: HTTP ${res.status}</span>`;
+    }
+  } catch (e) {
+    document.getElementById('status').innerHTML = `<span class="err">${e.message} — serve this dir over HTTP</span>`;
+  }
+
+  try {
+    const res = await fetch(EVENTS_URL + '?_=' + Date.now(), { cache: 'no-store' });
+    if (res.ok) {
+      const text = await res.text();
+      const lines = text.split('\n').filter(l => l.trim());
+      renderEvents(lines);
+    }
+  } catch (e) { /* events file may not exist yet */ }
+
+  setTimeout(pollLoop, POLL_MS);
+}
+
+function render(world) {
+  if (!phaserScene) return;
+  document.getElementById('tick').textContent = world.tick ?? 0;
+  document.getElementById('pcount').textContent = (world.personas || []).length;
+
+  // grid resize if changed
+  const cols = world.grid?.cols || DEFAULT_COLS;
+  const rows = world.grid?.rows || DEFAULT_ROWS;
+  if (cols !== gridCols || rows !== gridRows) {
+    gridCols = cols; gridRows = rows;
+    drawGrid(phaserScene, cols, rows);
+  }
+
+  // buildings (once)
+  if (!buildingsDrawn && world.buildings) {
+    drawBuildings(phaserScene, world.buildings);
+    buildingsDrawn = true;
+  }
+
+  // personas
+  for (const p of world.personas || []) {
+    const id = p.slug;
+    const cx = p.x*TILE + TILE/2;
+    const cy = p.y*TILE + TILE/2;
+    if (!sprites[id]) {
+      sprites[id] = phaserScene.add.circle(cx, cy, 11, hashColor(id));
+      sprites[id].setStrokeStyle(1.5, 0x000000);
+      sprites[id].depth = 2;
+      labels[id] = phaserScene.add.text(cx, cy - 18, id, {
+        fontSize: '10px', color: '#eee'
+      }).setOrigin(0.5);
+      labels[id].depth = 3;
+    } else {
+      phaserScene.tweens.add({ targets: [sprites[id]], x: cx, y: cy, duration: 500 });
+      phaserScene.tweens.add({ targets: [labels[id]], x: cx, y: cy - 18, duration: 500 });
+    }
+    if (p.speech) {
+      if (bubbles[id]) bubbles[id].destroy();
+      bubbles[id] = phaserScene.add.text(cx, cy - 34, '💬 ' + p.speech.slice(0, 48), {
+        fontSize: '10px', color: '#ffd', backgroundColor: '#1a1a1a', padding: { x: 4, y: 2 }
+      }).setOrigin(0.5);
+      bubbles[id].depth = 4;
+      const ref = bubbles[id];
+      setTimeout(() => { if (bubbles[id] === ref) { ref.destroy(); bubbles[id] = null; } }, 4000);
+    }
+  }
+
+  // who-knows panel
+  if (world.knowers) {
+    const all = world.personas.map(p => p.slug);
+    const knows = new Set(world.knowers);
+    document.getElementById('knowers').innerHTML = all.map(s =>
+      knows.has(s) ? `<span class="k">✓ ${s}</span>` : `<span class="u">○ ${s}</span>`
+    ).join('<br>');
+  }
+}
+
+function renderEvents(lines) {
+  if (lines.length === lastEventCount) return;
+  lastEventCount = lines.length;
+  document.getElementById('ecount').textContent = lines.length;
+  const recent = lines.slice(-30).reverse();
+  document.getElementById('log').innerHTML = recent.map(line => {
+    try {
+      const e = JSON.parse(line);
+      const actor = e.actor ? `<span class="actor">${e.actor}</span>` : '';
+      const target = e.target ? ` → <span class="target">${e.target}</span>` : '';
+      return `<div class="ev"><span class="t">t${e.tick}</span> ${actor}${target} ${e.text || e.kind || ''}</div>`;
+    } catch {
+      return `<div class="ev">${line}</div>`;
+    }
+  }).join('');
+}
+</script>
+</body>
+</html>

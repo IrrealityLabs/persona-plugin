@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Persona Market — Dashboard</title>
+<style>
+  body { margin: 0; background: #1a1a1a; color: #ddd; font-family: ui-monospace, Menlo, monospace; }
+  header { padding: 12px 20px; border-bottom: 1px solid #333; display: flex; gap: 24px; align-items: baseline; }
+  header h1 { font-size: 16px; margin: 0; font-weight: 700; }
+  header .stat { font-size: 12px; color: #999; }
+  header .stat b { color: #ddd; }
+  main { padding: 20px; max-width: 1400px; }
+  h2 { font-size: 13px; margin: 24px 0 8px 0; color: #888; text-transform: uppercase; letter-spacing: 0.05em; }
+  section { background: #222; border: 1px solid #2a2a2a; border-radius: 6px; padding: 16px; margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid #2a2a2a; }
+  th { color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; font-size: 11px; }
+  .rank-1 { color: #50fa7b; font-weight: 700; }
+  .rank-2 { color: #8be9fd; }
+  .rank-3 { color: #ffb86c; }
+  .rank-low { color: #888; }
+  .bar { display: inline-block; height: 10px; background: #50fa7b; border-radius: 2px; vertical-align: middle; }
+  .bar.influenced { background: #ff79c6; }
+  .var-low { color: #50fa7b; }
+  .var-high { color: #ff5555; }
+  .err { color: #ff5555; font-size: 12px; padding: 10px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .world { background: #1e1e1e; border: 1px solid #333; border-radius: 4px; padding: 12px; }
+  .world h3 { font-size: 13px; margin: 0 0 8px 0; color: #ffb86c; }
+  .world ol { margin: 0; padding-left: 20px; font-size: 12px; }
+  .world li { padding: 2px 0; }
+  .tick { font-size: 10px; color: #666; margin-top: 4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Persona Market</h1>
+  <div class="stat">items <b id="itemCount">–</b></div>
+  <div class="stat">worlds <b id="worldCount">–</b></div>
+  <div class="stat">rounds <b id="roundCount">–</b></div>
+  <div class="stat">condition <b id="condition">–</b></div>
+  <div class="stat" id="status"></div>
+</header>
+<main>
+  <section><h2>Per-world final rankings</h2><div id="worlds" class="grid">loading…</div></section>
+  <section><h2>Cross-world variance</h2><div id="variance">loading…</div></section>
+  <section><h2>Predictability</h2><div id="predict">loading…</div></section>
+</main>
+
+<script>
+const POLL_MS = 2000;
+
+async function fetchJSON(url) {
+  const res = await fetch(url + '?_=' + Date.now(), { cache: 'no-store' });
+  if (!res.ok) throw new Error(url + ' → ' + res.status);
+  return res.json();
+}
+
+async function loadAll() {
+  try {
+    const cfg = await fetchJSON('./config.json');
+    const items = await fetchJSON('./items.json');
+    document.getElementById('itemCount').textContent = items.length;
+    document.getElementById('worldCount').textContent = cfg.worlds;
+    document.getElementById('roundCount').textContent = cfg.rounds;
+    document.getElementById('condition').textContent = cfg.condition || 'social-influence';
+
+    const worlds = [];
+    for (let w = 1; w <= cfg.worlds; w++) {
+      try {
+        const state = await fetchJSON(`./worlds/world-${w}/state.json`);
+        worlds.push({ id: w, state });
+      } catch (e) {
+        worlds.push({ id: w, state: null, err: e.message });
+      }
+    }
+    renderWorlds(items, worlds);
+    renderVariance(items, worlds);
+    renderPredictability(items, worlds);
+    document.getElementById('status').textContent = '';
+  } catch (e) {
+    document.getElementById('status').innerHTML = `<span class="err">${e.message} — serve over HTTP</span>`;
+  }
+  setTimeout(loadAll, POLL_MS);
+}
+
+function rankItems(state) {
+  if (!state || !state.counts) return [];
+  return Object.entries(state.counts)
+    .map(([id, count]) => ({ id, count }))
+    .sort((a, b) => b.count - a.count);
+}
+
+function renderWorlds(items, worlds) {
+  const itemName = id => items.find(i => i.id === id)?.name || id;
+  const html = worlds.map(w => {
+    if (!w.state) return `<div class="world"><h3>World ${w.id}</h3><div class="err">${w.err || 'no state yet'}</div></div>`;
+    const ranked = rankItems(w.state);
+    const maxCount = ranked[0]?.count || 1;
+    return `<div class="world">
+      <h3>World ${w.id}</h3>
+      <ol>${ranked.map((r, idx) => {
+        const cls = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : 'rank-low';
+        const barW = Math.round((r.count / maxCount) * 100);
+        return `<li class="${cls}">${itemName(r.id)} <span class="bar" style="width:${barW}px"></span> ${r.count}</li>`;
+      }).join('')}</ol>
+      <div class="tick">tick ${w.state.tick ?? '?'}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('worlds').innerHTML = html;
+}
+
+function renderVariance(items, worlds) {
+  const itemName = id => items.find(i => i.id === id)?.name || id;
+  const live = worlds.filter(w => w.state);
+  if (live.length < 2) {
+    document.getElementById('variance').innerHTML = '<div class="tick">need ≥ 2 completed worlds for variance</div>';
+    return;
+  }
+  // Build rank table: each item × each world → rank
+  const itemRanks = {};
+  items.forEach(it => itemRanks[it.id] = []);
+  live.forEach(w => {
+    const ranked = rankItems(w.state);
+    ranked.forEach((r, idx) => itemRanks[r.id].push(idx + 1));
+  });
+  // Compute mean rank and variance per item
+  const rows = items.map(it => {
+    const ranks = itemRanks[it.id];
+    const mean = ranks.reduce((a, b) => a + b, 0) / ranks.length;
+    const variance = ranks.reduce((s, r) => s + Math.pow(r - mean, 2), 0) / ranks.length;
+    return { id: it.id, name: it.name, ranks, mean, variance };
+  }).sort((a, b) => a.mean - b.mean);
+  const worldHeaders = live.map(w => `<th>W${w.id}</th>`).join('');
+  const html = `<table>
+    <thead><tr><th>Item</th>${worldHeaders}<th>Mean rank</th><th>Variance</th></tr></thead>
+    <tbody>${rows.map(r => {
+      const varCls = r.variance < 1 ? 'var-low' : r.variance > 3 ? 'var-high' : '';
+      const rankCells = r.ranks.map(rk => `<td>${rk}</td>`).join('');
+      return `<tr><td><b>${r.name}</b></td>${rankCells}<td>${r.mean.toFixed(2)}</td><td class="${varCls}">${r.variance.toFixed(2)}</td></tr>`;
+    }).join('')}</tbody>
+  </table>
+  <div class="tick">Low variance = consistent across worlds. High variance = social-influence-driven outcomes — the item's success depended on which world it was in.</div>`;
+  document.getElementById('variance').innerHTML = html;
+}
+
+function renderPredictability(items, worlds) {
+  const live = worlds.filter(w => w.state);
+  if (live.length < 2) {
+    document.getElementById('predict').innerHTML = '<div class="tick">need ≥ 2 completed worlds</div>';
+    return;
+  }
+  const winners = live.map(w => rankItems(w.state)[0]?.id).filter(Boolean);
+  const counts = {};
+  winners.forEach(id => counts[id] = (counts[id] || 0) + 1);
+  const topWinner = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  const itemName = id => items.find(i => i.id === id)?.name || id;
+  const score = topWinner ? topWinner[1] / live.length : 0;
+  const interp = score >= 0.8 ? 'High predictability — outcome largely merit-driven.' :
+                 score >= 0.5 ? 'Moderate predictability — favorite emerges but not always.' :
+                 'Low predictability — social-influence dynamics dominate. Different worlds, different winners.';
+  document.getElementById('predict').innerHTML = `
+    <div>Winner across ${live.length} worlds: <b>${topWinner ? itemName(topWinner[0]) : '–'}</b> won <b>${topWinner ? topWinner[1] : 0}</b> times.</div>
+    <div>Predictability score: <b>${(score * 100).toFixed(0)}%</b></div>
+    <div class="tick">${interp}</div>
+  `;
+}
+
+loadAll();
+</script>
+</body>
+</html>

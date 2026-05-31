@@ -1,0 +1,12 @@
+{
+  "name": "persona-plugin",
+  "version": "0.2.0",
+  "description": "Run market research with simulated persona panels — review marketing assets, run interviews / surveys / focus groups / A-B tests / Van Westendorp / conjoint / MaxDiff / TURF / brand tracking / ethnographic / grounded theory and more. Personas live as .md files in a local .personas/ folder; build them via interview, bulk import, distillation from Slack / X / web research, or statistical synthesis from survey data (Gaussian copula).",
+  "author": {
+    "name": "Mike Taylor"
+  },
+  "keywords": ["personas", "market-research", "consumer-research", "marketing", "user-research", "qualitative", "quantitative"],
+  "homepage": "https://irrealitylabs.com",
+  "repository": "https://github.com/IrrealityLabs/persona-plugin",
+  "license": "MIT"
+}
