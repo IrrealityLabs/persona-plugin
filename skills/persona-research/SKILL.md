@@ -1,6 +1,6 @@
 ---
 name: persona-research
-description: Run structured market research with your personas. Parent skill that catalogs the available study types (interview, JTBD interview, survey, focus group, council, user testing, presentation feedback, tree test, A/B test, concept test, TURF, conjoint, MaxDiff, Van Westendorp, brand tracking, social listening, ethnographic, diary study, grounded theory, town simulation, Hacker News / X / LinkedIn / Slack / email simulation, roast, divergent ideation) and helps you pick the right one for your question, then dispatches to the matching child skill. Use when the user says "/persona-research", "run a study", "do market research with the personas", "what method should I use for X", or describes a research question without naming the methodology.
+description: Run structured market research with your personas. Parent skill that catalogs the available study types (interview, JTBD interview, survey, focus group, council, user testing, presentation feedback, tree test, A/B test, concept test, TURF, conjoint, MaxDiff, Van Westendorp, brand tracking, social listening, ethnographic, diary study, grounded theory, town simulation, Hacker News / X / LinkedIn / Slack / email simulation, roast, collaborative brainstorm, divergent ideation) and helps you pick the right one for your question, then dispatches to the matching child skill. Use when the user says "/persona-research", "run a study", "do market research with the personas", "what method should I use for X", or describes a research question without naming the methodology.
 ---
 
 # Persona Research
@@ -52,6 +52,7 @@ Pick by goal, not by name. Each row links to the child skill.
 | Simulate Slack reactions in a channel | Slack simulation | `persona-slack-message` | 5–10 personas |
 | Simulate email replies (cold or warm) | Email simulation | `persona-email` | 4–10 personas |
 | Get brutally honest critique | Roast | `persona-roast` | 3–6 personas |
+| Generate & build on ideas as a group | Collaborative brainstorm | `persona-brainstorm` | 3–7 personas, 2–3 rounds |
 | Divergent / lateral idea generation | "High" (altered-state brainstorm) | `persona-high` | 4–8 personas |
 | Build a theory from open coding (iterative) | Grounded theory | `persona-grounded-theory` | 5–12 personas, multi-cycle |
 | Simulate diffusion / virality through a town | Generative-agent simulation | `persona-town` | 5–15 personas |
@@ -80,7 +81,7 @@ If the user's question doesn't clearly fit one phase, ask: "Are you trying to un
 | Problem understanding | `persona-interview`, `persona-ethnographic`, `persona-jtbd-interview` | `persona-survey`, `persona-focus-group` |
 | Problem prioritization | `persona-interview`, `persona-survey`, `persona-max-diff` | `persona-focus-group`, `persona-turf` |
 | **WHAT** | | |
-| Solution ideation | `persona-focus-group`, `persona-council`, `persona-interview` | `persona-ethnographic` |
+| Solution ideation | `persona-brainstorm`, `persona-focus-group`, `persona-council` | `persona-interview`, `persona-high`, `persona-ethnographic` |
 | Solution design | `persona-interview`, `persona-focus-group`, `persona-concept-test` | `persona-user-test` (on prototype), `persona-tree-test` |
 | Solution validation | `persona-concept-test`, `persona-jtbd-interview`, `persona-interview` | `persona-survey`, `persona-ab-test` |
 | Solution value (pricing / willingness) | `persona-van-westendorp`, `persona-conjoint`, `persona-interview` | `persona-concept-test`, `persona-ab-test` |
@@ -96,7 +97,7 @@ If the user's question doesn't clearly fit one phase, ask: "Are you trying to un
 If the user has a category preference instead of a stage:
 
 - **Observational** (watching how they actually do things): `persona-ethnographic`, `persona-diary-study`
-- **Conversational** (talking with them): `persona-interview`, `persona-jtbd-interview`, `persona-focus-group`, `persona-council`
+- **Conversational** (talking with them): `persona-interview`, `persona-jtbd-interview`, `persona-focus-group`, `persona-council`, `persona-brainstorm`
 - **Testing** (giving them something to react to): `persona-user-test`, `persona-presentation`, `persona-tree-test`, `persona-ab-test`, `persona-concept-test`
 - **Survey** (structured questions at scale): `persona-survey`, `persona-max-diff`, `persona-van-westendorp`, `persona-conjoint`, `persona-turf`, `persona-brand-tracking`
 
@@ -144,9 +145,9 @@ If `./.personas/` is empty or missing, stop and offer `persona-distill` or `pers
 
 ## Meta-skill: `persona-multiverse`
 
-Not a study type — a **wrapper** that runs any dynamic-system study N times (default 4: 1 control + 3 dynamic) and synthesizes across runs to surface what was consistent vs. what was contingent on the social-influence dynamics. The control run strips out the dynamic layer (e.g. for focus-group → only Round 1; for council → only Round 1; for channel sims → no reply round; for town → no inter-persona observation). The synthesis reports reliable findings, rare/contingent findings, and the gap between control and dynamic-average.
+Not a study type — a **wrapper** that runs any dynamic-system study N times (default 4: 1 control + 3 dynamic) and synthesizes across runs to surface what was consistent vs. what was contingent on the social-influence dynamics. The control run strips out the dynamic layer (e.g. for focus-group → only Round 1; for council → only Round 1; for brainstorm → only Round 1, no build rounds; for channel sims → no reply round; for town → no inter-persona observation). The synthesis reports reliable findings, rare/contingent findings, and the gap between control and dynamic-average.
 
-Only applies to studies with a dynamic / social-feedback layer: `persona-focus-group`, `persona-council`, `persona-town`, `persona-x-post` / `persona-linkedin-post` / `persona-hacker-news` (with reply rounds on). Non-dynamic studies (survey, A/B test, interview, etc.) don't benefit — wrapping them in multiverse just burns tokens for the same answer N times.
+Only applies to studies with a dynamic / social-feedback layer: `persona-focus-group`, `persona-council`, `persona-brainstorm`, `persona-town`, `persona-x-post` / `persona-linkedin-post` / `persona-hacker-news` (with reply rounds on). Non-dynamic studies (survey, A/B test, interview, etc.) don't benefit — wrapping them in multiverse just burns tokens for the same answer N times.
 
 Cost = wrapped study × N. Always confirm before launching. Reach for it when an outcome will drive a real decision and you want to know whether the dynamic-system reading is reliable or social-amplification artifact.
 

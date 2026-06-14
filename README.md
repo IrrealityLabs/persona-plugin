@@ -94,6 +94,7 @@ The parent / dispatcher for the full library of research methodologies. Helps yo
 | Slack simulation | `persona-slack-message` | Channel reactions + invisible DM iceberg | 5–10 personas |
 | Email simulation | `persona-email` | Reply rate / latency / tone | 4–10 personas |
 | Roast | `persona-roast` | Brutally honest unfiltered critique | 3–6 personas |
+| Collaborative brainstorm | `persona-brainstorm` | Generate & build on ideas as a group (yes-and) | 3–7, 2–3 rounds |
 | Divergent ideation | `persona-high` | Lateral / off-the-wall brainstorm | 4–8 personas |
 | Ethnographic | `persona-ethnographic` | "Walk me through your day" | 1–3 personas |
 | Diary study | `persona-diary-study` | Behavior over time (7+ days) | 1–3 personas |

@@ -88,20 +88,19 @@ Default response structure for direct asks:
 ```
 ## <Persona display name>'s take
 
-### At-a-glance
-Two sentences max — the headline reaction.
-
-### References
-One line on how well the persona doc supports this response. (Same line as in persona-review's per-persona response.)
-
-### Response
-"First-person quoted reaction from the persona — the substantive answer to the user's question."
-
-**References (persona doc):**
+### Grounding
+The persona-doc material this answer rests on, pulled first:
   - § <Section>: "<short quote or paraphrase>"
   - § <Section>: "<...>"
+**Confidence:** [high|medium|low|off-pattern] — one line on how strong that support is.
 
-**Confidence:** [high|medium|low|off-pattern] — one line on why.
+### Thinking
+2–4 lines of private reasoning over the grounding — what they'd genuinely conclude, where the evidence is thin. The audit trail behind the answer; in a panel it stays with the orchestrator, out of what other personas see.
+
+### Talking
+**At a glance:** two sentences max — the headline reaction.
+
+"First-person quoted reaction from the persona — the substantive answer to the user's question."
 
 ### Follow-ups the persona would have
 - Specific questions the persona would ask the user before committing, if any.
@@ -111,7 +110,7 @@ Close with a one-line disclaimer:
 
 > _— Simulated <persona display name>, distilled from <sources>, last refreshed <last_distilled_at>. Substance-focused simulation, not the real person. Verify load-bearing claims before acting on them._
 
-If the user asked a multi-part question, give one response per part rather than one merged response — each gets its own References block.
+If the user asked a multi-part question, give one response per part rather than one merged response — each gets its own Grounding block.
 
 ## Framing the question (moderator-side)
 
@@ -189,6 +188,16 @@ If the user gave you a narrower question ("does the pricing feel fair?"), use th
 ## Shaping the response (persona subagent–side)
 
 When you, as a persona subagent, write your response, enforce these rules on yourself. The core discipline is **references and confidence**: every reaction must trace back to the persona doc, and every reaction must carry an honest confidence level so the moderator can weight findings in synthesis.
+
+### Ground, think, then talk
+
+Your response has three parts, in this order, and you return **all three**, clearly labelled so the orchestrator can split them:
+
+1. **Grounding** — *first, before you form any view.* Pull the specific persona-doc material that bears on the question: cite each relevant section with a short quote or paraphrase (`§ <Section>: "<…>"`), and read how strong that support is — `[high|medium|low|off-pattern]`. Grounding-first is the point: anchor to what the doc actually says before reasoning, so the opinion comes from evidence, not vibes. If you can't ground it, say so — don't manufacture a position.
+2. **Thinking** — your private reasoning *over that grounding*: what this person would genuinely conclude from it (not the agreeable take), and where the evidence is thin enough to cap your confidence.
+3. **Talking** — your public answer: the first-person quoted reaction, in the format below.
+
+**Grounding + Thinking are the audit trail** — they go to the orchestrator and, in a group, stay out of the digest other personas see; a loop reads them to know *why*. Only **Talking** is public, and what you put there is a choice: you needn't voice everything you concluded, because people in a room don't.
 
 ### The reaction is a quote; the persona doc is the receipt
 

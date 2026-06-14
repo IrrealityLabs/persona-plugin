@@ -44,11 +44,14 @@ If the user named personas, use exactly those. Otherwise use all if ≤6; if mor
 Spawn one subagent per persona, all in a single message. Each prompt:
 - Persona doc path.
 - The topic and any asset.
-- The `persona-ask` reviewer contract (references + confidence).
+- The `persona-ask` reviewer contract (references + confidence), including *Think before you talk* — reason privately first, then decide what you'd actually put on the table (you needn't voice everything you concluded; people in a room don't).
 - The Round 1 response format below.
 
 Round 1 response format:
 ```
+## Thinking (private — for the orchestrator; kept out of the digest other personas see)
+Your private reasoning before you decide what to say: what your doc supports, what you'd genuinely conclude, where you're thin.
+
 ## Position
 2–3 sentences — the take, stated first.
 
@@ -64,7 +67,7 @@ Why, tied to specific persona-doc sections. References inline.
 
 ### Phase 3 — Round 2+ : reactive rounds
 
-After each round, compile the **panel digest** — for each persona, their Position + condensed Reasoning + Open questions, plus question-routing (each open question routed to its addressee).
+After each round, compile the **panel digest** — for each persona, their Position + condensed Reasoning + Open questions, plus question-routing (each open question routed to its addressee). Never include a persona's `Thinking` — that stays with you; only what they chose to say goes in the digest.
 
 Spawn the next round in parallel — each persona's prompt includes:
 - Persona doc path, persona-ask contract.
@@ -75,6 +78,9 @@ Spawn the next round in parallel — each persona's prompt includes:
 
 Round 2+ response format:
 ```
+## Thinking (private — for the orchestrator; kept out of the digest)
+Your private reasoning this round: what the others' positions actually do to your view, before you decide what to say back.
+
 ## Stance change
 held | sharpened | updated | conceded | hardened — one line on what moved.
 
