@@ -9,7 +9,7 @@ A catalog of market-research methodologies adapted to run against your saved per
 
 Every method ultimately uses the personas + `persona-ask` (framing + references + confidence). The methods differ in *structure*: how many personas, how many questions, whether they see each other's answers, what the output looks like.
 
-When a method needs fewer personas than are available in `./.personas/` (or wants a topically-relevant subset rather than the whole roster), the child skill calls **`persona-sample`** — a shared helper that uses QMD semantic search + grep keyword matching to pick the most relevant N. The helper handles QMD installation and persona indexing on first use, so child skills don't each re-implement that.
+Persona selection is the same across every method (see `persona-review` Phase 1): if the user names personas, use exactly those; otherwise use all personas in `./.personas/`. There's no automatic filtering or sampling — when a method would be unwieldy with a very large roster, it asks the user which personas to include (or, for methods that want a diverse subset, the orchestrator picks a spanning set by reading the personas' `## At a glance` lines).
 
 Cost and time estimates come from **`references/cost-estimator.md`**, which pulls live model pricing where available (via LiteLLM's pricing JSON or `ccusage`) and falls back to documented approximations.
 

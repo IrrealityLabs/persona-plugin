@@ -17,7 +17,7 @@ Run a concept past the personas before it exists. The personas react to a short 
 ## Sample size
 
 - **Sweet spot:** 5–8 personas. Below 4 = directional only.
-- Default: all personas if ≤8, else `persona-sample` for 6 (with a relevance bias toward personas the concept actually targets).
+- Default to all personas; if the user named some, use those. If the roster is much larger than ~8, ask the user which to include rather than auto-selecting (the personas the concept actually targets are a useful relevance cue for what to suggest).
 
 ## Inputs
 
@@ -44,9 +44,9 @@ Apply a brief-quality check before fanning out:
 
 If the brief fails any of these, suggest a tightening before running.
 
-### Phase 2 — Sample
+### Phase 2 — Select personas
 
-If >8 personas, call `persona-sample` for 6 with the concept's target audience as the filter. If the concept names a specific user type, lean that filter toward them.
+Default to all personas; if the user named some, use those. If the roster is much larger than ~8, ask the user which to include rather than auto-selecting. If the concept names a specific user type, suggest the personas closest to that type as a relevance cue for what to ask.
 
 ### Phase 3 — Fan out
 

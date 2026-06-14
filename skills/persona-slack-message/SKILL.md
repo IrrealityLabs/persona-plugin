@@ -27,7 +27,7 @@ Sample-size note: Slack engagement is even more lurker-heavy than X or LinkedIn.
 ## Sample size
 
 - **Sweet spot:** 5–10 personas. Slack benefits from breadth — the lurker-rate makes small samples noisy.
-- Default: all personas if ≤10; else `persona-sample` for 8.
+- Default to all personas; if the user named some, use those. If the roster is much larger than ~8, ask the user which to include rather than auto-selecting.
 
 ## Inputs
 

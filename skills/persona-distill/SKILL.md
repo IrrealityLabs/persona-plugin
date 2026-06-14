@@ -75,11 +75,14 @@ If the corpus is small enough to fit comfortably in one agent's context (rough h
 
 ## Phase 4 — Write the persona doc and confirm
 
-Write `./.personas/<slug>.md` using the persona doc template (same template `persona-create` uses, reproduced in `references/distillation.md`). Frontmatter must include `name`, `description`, `last_distilled_at`, `sources` (an array — `[slack]`, `[x]`, `[web]`, or any combination), and a `distilled_from` block with per-source pull dates and corpus sizes.
+The persona doc is two parts: a **synthesized body** (paraphrased, no verbatim — the generalist model) plus a **`## Examples`** section (verbatim few-shot turns). Build them in order:
+
+1. **Write the body** to `./.personas/<slug>.md` using the persona doc template (reproduced in `references/distillation.md`). Frontmatter must include `name`, `description`, `last_distilled_at`, `sources` (an array — `[slack]`, `[x]`, `[web]`, or any combination), and a `distilled_from` block with per-source pull dates and corpus sizes.
+2. **Append `## Examples`** — select up to ~30 verbatim `{context, question, answer}` turns from the assets and render them as the final section (format in `references/distillation.md`). Prioritize any turns in `corrections.jsonl` (known-good ground truth), then choose for coverage and variety over redundancy. This is the distiller's judgment call while reading the assets — there's no separate script, and it's intentionally not deterministic. A *refresh* re-runs exactly this selection against the current assets.
 
 Then show the user the finished doc and ask if anything reads as wrong, overstated, or putting words in the persona's mouth that the source data doesn't actually back. Persona docs distilled from real data almost always need a correction pass — spot-check at least one strong claim per section against the underlying assets before declaring it done.
 
-Close with: "Persona saved to `./.personas/<slug>.md`. Run `persona-review` to use it, or `persona-distill` again to add another."
+Close with: "Persona saved to `./.personas/<slug>.md` (with N examples). Run `persona-review` to use it, `persona-correct` when it answers something wrong, `persona-observe` to add data you already have, or `persona-refresh` to rebuild it from the assets."
 
 ## Privacy
 
@@ -90,5 +93,5 @@ Close with: "Persona saved to `./.personas/<slug>.md`. Run `persona-review` to u
 ## Notes
 
 - **One persona per run.** Multiple personas need multiple runs.
-- **Refreshing an existing persona:** rerun `persona-distill` with the same slug — it overwrites the persona doc and the asset dumps. The previous doc is gone unless the user committed it; remind them before overwriting if the existing doc looks substantially curated.
+- **Refreshing an existing persona:** the `.md` is a disposable projection of the assets, so regenerating it loses nothing the user can't rebuild. Use `persona-refresh` to rebuild from the assets *without* re-pulling sources; rerun `persona-distill` only when you want to pull fresh source data. Corrections (`corrections.jsonl`) and manually-added observations are append-only and survive every rebuild. (Raw source re-pulls currently *replace* the prior dump for that source — making pulls themselves append-only/versioned is a follow-up.)
 - **If the user has already pulled their own data** (e.g. a CSV export of customer interviews) and just wants you to distill it, drop them into Phase 3 directly — point the distillation at the file they provide instead of running the source-specific scripts.

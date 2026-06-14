@@ -26,7 +26,7 @@ Email-specific dynamics:
 ## Sample size
 
 - **Sweet spot:** 4–10 personas. Email responses are individual — the panel size is about variance, not aggregation.
-- Default: `persona-sample` for 5 with the email topic as filter (favoring personas who'd actually be in the recipient set for this kind of email).
+- Default to all personas; if the user named some, use those. If the roster is much larger than ~5, ask the user which to include rather than auto-selecting — when suggesting, favor personas who'd actually be in the recipient set for this kind of email (read their `## At a glance` lines).
 
 ## Inputs
 

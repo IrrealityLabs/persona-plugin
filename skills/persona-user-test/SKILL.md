@@ -61,9 +61,9 @@ Drive through the flow once with `agent-browser`, capturing one screenshot per l
 
 Don't re-drive the browser once per persona — drive once, screenshots are the source. Personas all see the same flow.
 
-### Phase 3 — Sample personas
+### Phase 3 — Select personas
 
-Use `persona-sample` for 5 with the task description as the topic. Override to all if user wants all and count is ≤5.
+Default to all personas; if the user named some, use those. If the roster is much larger than ~5, ask the user which to include rather than auto-selecting (the task description is a useful relevance cue for what to suggest).
 
 ### Phase 4 — Per-persona reactions (parallel)
 

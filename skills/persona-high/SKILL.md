@@ -29,7 +29,7 @@ The "drugs" framing produces more interesting output than "be creative" because 
 ## Sample size
 
 - **Sweet spot:** 4–8 personas. Each persona's altered output is dense and weird; beyond 8 the synthesis becomes hard.
-- Default: all personas if ≤6; else `persona-sample` for 5 with the brainstorm topic as filter (but explicitly tell the helper "maximize diversity over relevance" — for divergence you want personas who'd think *differently*).
+- Default: all personas if ≤6. If the user named personas, use those. If the roster is larger than ~6, don't auto-sample — the orchestrator picks ~5 for *maximum diversity* by reading the personas' `## At a glance` lines (divergent thinking wants different-minded personas, not topical relevance), or asks the user to name the subset.
 
 ## Inputs
 

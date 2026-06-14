@@ -17,7 +17,7 @@ Simulate an HN thread: a submission, top-level comments from each persona, optio
 ## Sample size
 
 - **Sweet spot:** 5–10 personas for top-level comments; reply round multiplies cost.
-- Default: all personas if ≤8; else `persona-sample` for 6 with the submission topic as filter.
+- Default to all personas; if the user named some, use those. If the roster is much larger than ~8, ask the user which to include rather than auto-selecting (the submission topic is a useful relevance cue for what to suggest).
 
 ## Inputs
 

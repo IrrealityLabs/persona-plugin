@@ -35,7 +35,7 @@ TURF answers a specific question: *given N candidate options, what's the smalles
 
 ### Phase 2 — Sample
 
-Use all personas if ≤15; else `persona-sample` for 10 with the option-domain as filter.
+Default to all personas; if the user named some, use those. If the roster is much larger than ~15, ask the user which to include rather than auto-selecting (the option-domain is a useful relevance cue for what to suggest).
 
 ### Phase 3 — Per-persona rating fan-out
 

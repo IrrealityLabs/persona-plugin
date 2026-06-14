@@ -23,12 +23,12 @@ The defining move of PoT: **independent answers → one anonymous joint paragrap
 
 ## Sample size
 
-PoT is a wisdom-of-crowds technique — **more diverse voices make the merged answer more robust.** Default to **all personas in `./.personas/`** (the original technique used ten). Cap around 10–12 for cost/synthesis sanity; if the roster is larger, use `persona-sample` to pick the most diverse/relevant set and say which you used. Named personas or an explicit count override the default.
+PoT is a wisdom-of-crowds technique — **more diverse voices make the merged answer more robust.** Default to **all personas in `./.personas/`** (the original technique used ten). Cap around 10–12 for cost/synthesis sanity; if the roster is larger, the orchestrator picks a diverse set by reading the personas' `## At a glance` lines (or asks the user to name a subset) and says which you used. Named personas or an explicit count override the default.
 
 ## Inputs
 
 - **The question** — required. Anything answerable: a strategy question, an open prompt, or an either/or choice (the original example was "What's a better ad for Jaguar? A) Grace Space Pace  B) Copy Nothing").
-- **Panel** — default all; or named personas; or a sampled subset for a large roster.
+- **Panel** — default all; or named personas; or, for a large roster, a diverse subset the orchestrator picks by reading the personas' docs.
 - **Options (if any)** — if the question presents choices (A/B/…), capture them verbatim so every persona weighs the same options.
 
 If `./.personas/` is empty or missing, stop and point at `persona-create` / `persona-distill`. The whole technique rests on having defined personas to swap in for the "invent ten personas" step of the original prompt.
@@ -41,7 +41,7 @@ If `./.personas/` is empty or missing, stop and point at `persona-create` / `per
 
 ### Phase 1 — Resolve the panel (this replaces "create the personas")
 
-The original PoT prompt begins by *inventing* ten demographic personas. **Here you skip that step entirely** — the personas already exist in `./.personas/`. Resolve them with the same logic as `persona-review` Phase 1: no names → all personas (the default); named → those; large roster → `persona-sample` for a diverse N, and say which you picked. That swap is the only change from the source prompt.
+The original PoT prompt begins by *inventing* ten demographic personas. **Here you skip that step entirely** — the personas already exist in `./.personas/`. Resolve them with the same logic as `persona-review` Phase 1: named → those; otherwise → all personas (the default). If the roster is larger than the ~10–12 cap, the orchestrator picks a diverse N by reading the personas' `## At a glance` lines (or asks the user to name a subset), and says which you picked. That swap is the only change from the source prompt.
 
 ### Phase 2 — Frame the question
 
@@ -94,7 +94,7 @@ Close with the disclaimer:
 - **Independence first.** The strength of PoT comes from each persona answering without contamination from the others. Spawn them in parallel; never feed one persona another's answer. If the user wants cross-talk, they want `persona-council`.
 - **Keep the joint answer clean and singular.** The temptation is to hedge it into a bulleted committee memo. Resist — the technique's output is *one* answer the personas could have co-signed. The nuance lives in the ledger below it.
 - **Options questions are a sweet spot.** "Which is better, A or B?" answered by ten grounded perspectives and merged into one verdict is exactly what this was built for (the original example chose between two Jaguar ad lines). Keep the options verbatim so the merge reflects a real vote, not a reinterpretation.
-- For a large/varied roster, the diversity of the sample matters more than its size — bias `persona-sample` toward value-distance, as `persona-council` does.
+- For a large/varied roster, the diversity of the subset matters more than its size — when picking, the orchestrator favors value-distance (reading the `## At a glance` lines), as `persona-council` does.
 
 ## Appendix — the source prompt, adapted
 

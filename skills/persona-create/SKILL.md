@@ -341,7 +341,7 @@ What we don't know yet about this persona. Per the literature, an explicit gaps 
 1. Ensure `./.personas/` exists.
 2. Set `name:` in frontmatter to match the filename slug.
 3. Write the file.
-4. Tell the user the file path. Offer next steps: persona-review, a persona-research study, or define an audience grouping via persona-audience.
+4. Tell the user the file path. Offer next steps: persona-review, or a persona-research study.
 
 ## Anti-patterns (do not do these)
 

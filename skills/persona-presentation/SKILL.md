@@ -35,7 +35,7 @@ Delivery feedback (from transcript or video) is **directional** — personas rea
 
 ## Sample size
 
-The **audience** is the panel. 3–6 personas. Below 3 you lose the cross-audience pattern; above 6 the per-slide synthesis gets unwieldy. The selection question is "who is this talk actually *for*?" — pick the personas who match the real audience (investors for a raise, practitioners for a conference talk, the buying committee for a sales deck). Use `persona-sample` with the talk's topic + audience as the hint, or take named personas / all if the roster already is the audience.
+The **audience** is the panel. 3–6 personas. Below 3 you lose the cross-audience pattern; above 6 the per-slide synthesis gets unwieldy. The selection question is "who is this talk actually *for*?" — pick the personas who match the real audience (investors for a raise, practitioners for a conference talk, the buying committee for a sales deck). If the user named personas, use those; otherwise default to all personas in `./.personas/`. If the roster is broader than the real audience, the orchestrator picks the matching personas by reading their docs (or asks the user who's in the room).
 
 ## Workflow
 
@@ -84,9 +84,9 @@ Frame rate: talking-head ≈ 1 frame/30s; screen-share of slides ≈ 1 frame/5�
 
 **No rendering tools?** If `libreoffice`/`pdftoppm`/`ffmpeg` aren't installed, fall back to text-only segments (slide text, notes, transcript) and tell the user the personas are reading the talk, not seeing it — visual-design reactions will be absent. Offer the install one-liners (`brew install libreoffice poppler ffmpeg` on macOS).
 
-### Phase 2 — Sample the audience
+### Phase 2 — Select the audience
 
-`persona-sample` for the audience size (default 4–5) with the talk topic + intended audience as the hint. Named personas or all override it.
+If the user named personas, use those; otherwise default to all personas in `./.personas/`. If the roster is broader than the real audience, the orchestrator picks the personas who match who's actually in the room by reading their docs (or asks the user). Aim for ~4–5.
 
 ### Phase 3 — Cost check
 

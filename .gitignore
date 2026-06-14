@@ -16,3 +16,9 @@ node_modules/
 # OS / editor
 .DS_Store
 *.swp
+
+# Local-only design notes (never pushed)
+*.local.md
+
+# CLAUDE.md is local Claude guidance containing Rally strategy — never push to the public repo
+/CLAUDE.md

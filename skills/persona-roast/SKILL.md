@@ -21,7 +21,7 @@ The roast is best paired with another method: roast first to find what's broken,
 ## Sample size
 
 - **Sweet spot:** 3–6 personas. Roast output is dense and overlapping — beyond 6, the value plateaus and the synthesis gets noisy.
-- Default: `persona-sample` for 5 with the thing-being-roasted as topic, biased for diversity.
+- Default to all personas; if the user named some, use those. If the roster is much larger than ~5, ask the user which to include rather than auto-selecting — if narrowing is needed, suggest a diverse spread by reading the personas' docs (the thing being roasted is a useful relevance cue too).
 
 ## Inputs
 

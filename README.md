@@ -8,7 +8,7 @@ A plugin for running **market research with simulated persona panels** — local
 
 Treat every result as a structured prompt for your own judgment, and as a list of hypotheses to validate with real customers before betting on them. Be customer-focused: the personas are stand-ins, not the customers themselves.
 
-## The five main skills
+## The four main skills
 
 These are the entry points you'll use most. Everything else either consumes these or is dispatched by `persona-research`.
 
@@ -50,12 +50,6 @@ Quoted questions get asked verbatim; unquoted questions are reframed for better 
 
 > Invoke: `ask <name>`, `what would <name> think of <X>`, `/persona-ask <name> "<question>"`
 
-### `persona-sample` — filter to the right N personas
-
-Internal helper used by other skills. Given a study question and a target sample size, picks the most relevant personas using **QMD semantic search + grep keyword matching**. Walks the user through QMD installation and indexing on first use. Optionally save the filtered result as an audience for reuse.
-
-You generally won't invoke this directly; it's called by `persona-review` / `persona-research` child skills when filtering is needed.
-
 ### `persona-research` — run a study
 
 The parent / dispatcher for the full library of research methodologies. Helps you pick the right method based on your stage in the product lifecycle (WHY / WHAT / HOW) and dispatches to the matching child skill. Always estimates cost before launching expensive studies (uses live model pricing via LiteLLM / `ccusage`).
@@ -70,7 +64,7 @@ The parent / dispatcher for the full library of research methodologies. Helps yo
 - **`persona-presentation`** — slide-by-slide audience feedback on a deck or talk. Feed it a deck, a run-of-show, and/or a transcript/video; the personas sit through the whole talk and the panel feedback becomes a curated change list.
 - **`persona-of-thought`** — a [reasoning technique](https://askrally.com/article/personas-of-thought): each persona answers a question independently, then the answers are fused into a single anonymous joint response. Use when you want *one* better answer informed by many perspectives, not a panel breakdown.
 - **`persona-copula`** — a third way to *build* personas: fit a Gaussian copula ([SYNC method](https://arxiv.org/abs/2009.09471)) to real survey microdata, sample a synthetic population that preserves the marginals *and* the cross-variable correlations, and turn each synthetic respondent into a persona. Use when you have tabular survey data and want a statistically-representative population, not a few hand-built archetypes.
-- **`persona-audience`** — define named groups of personas you can refer to by name. "Ask stay-at-home-moms about X" expands to the underlying personas automatically.
+- **`persona-observe` / `persona-correct` / `persona-refresh`** — keep a persona current: add real data you already have (`persona-observe`, freeform or CSV), fix a wrong answer so it sticks (`persona-correct`), or rebuild the persona from its source assets (`persona-refresh`).
 
 ## Studies available under `persona-research`
 
@@ -189,18 +183,18 @@ Personas and their source assets live in `.personas/` relative to your current w
 
 ```
 ./.personas/
-├── <slug>.md                         # the persona doc (the deliverable)
-├── audiences/
-│   └── <audience-slug>.md            # named groups of personas
+├── <slug>.md                         # the persona: synthesized body + a ## Examples section
 └── assets/
-    └── <slug>/                       # raw source data the persona was distilled from
-        ├── slack-messages.jsonl
+    └── <slug>/                       # immutable, append-only source of truth
+        ├── slack-messages.jsonl      # raw pulls the persona is distilled from
         ├── x-posts.jsonl
         ├── web-research.md
+        ├── corrections.jsonl         # answers you fixed via persona-correct
+        ├── observations.jsonl        # data you added via persona-observe
         └── ...
 ```
 
-Add `.personas/assets/` to `.gitignore` if your raw source data shouldn't be committed (it usually shouldn't).
+The `<slug>.md` is a disposable **projection** of the assets — `persona-distill` / `persona-refresh` regenerate it. The assets are append-only and never overwritten, so regenerating loses nothing. Add `.personas/assets/` to `.gitignore` if your raw source data shouldn't be committed (it usually shouldn't).
 
 ## Repo layout
 
@@ -222,8 +216,9 @@ persona-plugin/
     │   ├── references/               # per-source walkthroughs + distillation spec
     │   └── scripts/                  # zero-dep Node dump scripts
     ├── persona-ask/                  # one persona, one grounded answer
-    ├── persona-sample/               # QMD + grep filter to relevant N
-    ├── persona-audience/             # named groups of persona slugs
+    ├── persona-observe/              # add real data to a persona (CSV / freeform)
+    ├── persona-correct/              # fix a wrong answer so it sticks
+    ├── persona-refresh/              # rebuild a persona's doc from its assets
     ├── persona-review/               # asset review with line-level critique
     ├── persona-goal/                 # optimize an asset against the panel in a stopping-aware loop (goal feature)
     ├── persona-roleplay/             # rehearse a live conversation; the persona plays the counterpart
@@ -245,6 +240,10 @@ persona-plugin/
 - **Quant methods especially.** Van Westendorp, conjoint, MaxDiff, TURF — all designed for large N. Persona-scale runs give you the shape of the answer, not a defensible number. Validate with real research before pricing decisions, feature commitments, or anything else that bets the budget.
 - **Quality of personas determines quality of research.** A thin persona doc produces thin research outputs no matter which method you pick. Invest in `persona-create` / `persona-distill` before you invest in studies.
 - **Cost can add up fast** for multi-round methods (council, focus group, grounded theory, town, video user testing). Always confirm the cost estimate before launching expensive runs.
+
+## Credits
+
+Created by the team behind [AskRally](https://askrally.com).
 
 ## License
 

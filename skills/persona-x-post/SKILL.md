@@ -28,7 +28,7 @@ The simulation must respect that some personas would just keep scrolling. Forcin
 ## Sample size
 
 - **Sweet spot:** 6–12 personas. X engagement is power-law — many will silent-scroll, a few will engage strongly. You need enough to see the distribution.
-- Default: all personas if ≤10; else `persona-sample` for 8 with the post topic as filter.
+- Default to all personas; if the user named some, use those. If the roster is much larger than ~8, ask the user which to include rather than auto-selecting (when suggesting, you can lean toward personas relevant to the post topic — read their `## At a glance` lines).
 
 ## Inputs
 

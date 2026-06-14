@@ -44,7 +44,7 @@ For a quick implementation, generate sets randomly with a uniform-coverage const
 
 ### Phase 3 — Sample personas
 
-All personas if ≤12; else `persona-sample` for 8 with the dimension as topic filter.
+Default to all personas; if the user named some, use those. If the roster is much larger than ~12, ask the user which to include rather than auto-selecting (the ranking dimension is a useful relevance cue for what to suggest).
 
 ### Phase 4 — Per-persona choice fan-out
 

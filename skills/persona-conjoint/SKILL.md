@@ -49,7 +49,7 @@ If you don't know how to generate a balanced design and the user wants rigor, sa
 
 ### Phase 2 — Sample
 
-All personas if ≤10; else `persona-sample` for 8 with the product domain as filter.
+Default to all personas; if the user named some, use those. If the roster is much larger than ~8, ask the user which to include rather than auto-selecting (when suggesting, lean toward personas relevant to the product domain — read their `## At a glance` lines).
 
 ### Phase 3 — Per-persona choice fan-out
 

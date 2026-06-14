@@ -20,14 +20,14 @@ Subagents are stateless and can't message each other directly. You (the orchestr
 
 - **Sweet spot:** 3–6 personas, 2–4 rounds. 5×3 is the default if not specified.
 - Below 3: not really a "group" — use interview or survey instead.
-- Above 6: digest gets unwieldy; pick the most relevant 6 via `persona-sample`.
+- Above 6: digest gets unwieldy; ask the user which 5–6 personas to include.
 
 ## Inputs
 
 - **Topic / question** — the thing to discuss.
 - **Optional asset** — copy, page, idea to react to.
 - **Round count** (default 3, cap 4).
-- **Persona selection** — default all if ≤6, else `persona-sample` for 5.
+- **Persona selection** — if the user names personas, use those; otherwise default to all if ≤6, else ask the user which 5–6 to include.
 
 ## Workflow
 
@@ -35,9 +35,9 @@ Subagents are stateless and can't message each other directly. You (the orchestr
 
 3 personas × 3 rounds = 9 subagent runs. 6 × 4 = 24. Use the cost estimator in `persona-research/references/cost-estimator.md`. Warn if above ~15 runs.
 
-### Phase 1 — Sample
+### Phase 1 — Select
 
-If >6 personas available, call `persona-sample` for 5 with the topic. Otherwise use all.
+If the user named personas, use exactly those. Otherwise use all if ≤6; if more than ~6 are available, ask the user which 5–6 to include — don't auto-trim the roster.
 
 ### Phase 2 — Round 1: independent reactions
 
@@ -132,6 +132,6 @@ Close with the standard simulation disclaimer.
 
 ## Notes
 
-- Don't pre-filter for *agreement* — a panel of personas who all already agree teaches nothing. The relevance filter (`persona-sample`) is for topic, not viewpoint.
+- Don't pre-filter for *agreement* — a panel of personas who all already agree teaches nothing. When you narrow, narrow for topic, not for agreement.
 - A persona conceding a point in Round 2+ is a real finding, not a failure. Don't push back to undo it.
 - Resist the urge to add more rounds when positions are stable. Diminishing returns set in fast.

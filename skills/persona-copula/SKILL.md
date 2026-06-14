@@ -87,7 +87,7 @@ For large N, `persona-create` Mode 2 fans out in parallel batches and recommends
 
 ### Phase 5 — Honesty and hand-off
 
-Tell the user: N personas saved to `./.personas/`, the fidelity summary, and the honest caveats (below). Offer next steps — a `persona-survey` / `persona-research` study now that the population exists, or `persona-audience` to group them.
+Tell the user: N personas saved to `./.personas/`, the fidelity summary, and the honest caveats (below). Offer next steps — a `persona-survey` / `persona-research` study now that the population exists.
 
 ## Aggregate mode (marginals only — no microdata)
 

@@ -71,6 +71,7 @@ Read the resolved persona file in full before doing anything else. Persona docs 
 - `## What makes them bounce` — highest-signal section for negative reactions.
 - `## What would actually convince them` — highest-signal section for positive reactions.
 - `## How they actually talk` — verbatim phrases and language patterns to ground the response in. Substance, not voice mimicry.
+- `## Examples` — **the strongest grounding there is.** Real `{context, question, answer}` turns showing how this person *actually* responded to real prompts. When the question resembles one of these, let the matching example drive your substance, stance, and level of detail — and cite it. These are observed ground truth, so they outrank the synthesized sections above when they conflict. (Match what they'd *say and decide*, not their accent or catchphrases.)
 - `## Demographics` — context, lighter weight.
 - `## Known gaps` — what you should *not* fabricate a position on.
 

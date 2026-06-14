@@ -41,7 +41,7 @@ You interleave with **theoretical sampling**: you don't decide who to ask up fro
 ## Inputs
 
 - **Research question** — open-ended, not a yes/no. "What drives indie SaaS founders to switch billing platforms?" is good. "Will indie founders switch to Stripe?" is hypothesis-testing.
-- **Initial seed personas** (optional) — 2–4 personas to start with. If unspecified, the orchestrator picks an initially-diverse 3 via `persona-sample` with a diversity hint.
+- **Initial seed personas** (optional) — 2–4 personas to start with. If unspecified, the orchestrator picks an initially-diverse 3 by reading the personas' `## At a glance` lines in `./.personas/` and choosing ones that span the widest range of contexts/viewpoints.
 - **Saturation guess** (optional) — how many cycles to budget. Default: stop after no new categories emerge for 2 cycles, hard cap 5.
 
 ## Storage layout
@@ -72,9 +72,9 @@ Start a `memos.md` — this is where you, the orchestrator, jot theory hunches a
 
 ### Phase 1 — Initial theoretical sampling
 
-If the user didn't name initial personas, call `persona-sample` with the research question as the topic, request 3 personas, pass a hint: "for grounded theory — prefer cognitive/contextual diversity over topical overlap; we want to surface variation early."
+If the user didn't name initial personas, read the `## At a glance` lines of the personas in `./.personas/` and pick an initially-diverse 3 yourself — for grounded theory, prefer cognitive/contextual diversity over topical overlap; we want to surface variation early.
 
-Tell the user the initial sample with `persona-sample`'s explanation.
+Tell the user the initial seed and explain why those 3 span the widest variation.
 
 ### Phase 2 — Cycle (repeat until saturation)
 
@@ -120,7 +120,7 @@ After axial coding, check for saturation. Two signals:
 
 Decide:
 
-- **Continue:** pick next-cycle personas via theoretical sampling. Look at the categories list: which categories have the *fewest* supporting personas, or which were flagged with outliers? Sample personas whose docs suggest they'd have relevant input to those underdeveloped categories. Pass these to `persona-sample` as the topic, request 2–3 personas, mark as "theoretical sampling for grounded theory."
+- **Continue:** pick next-cycle personas via theoretical sampling. Look at the categories list: which categories have the *fewest* supporting personas, or which were flagged with outliers? Read the `## At a glance` lines of the personas in `./.personas/` not yet sampled and pick 2–3 whose docs suggest they'd have relevant input to those underdeveloped categories. Tell the user which you picked and which category each is meant to develop.
 - **Graduate to selective coding** (Phase 3) when saturation signals fire OR hard cap (5 cycles) reached. Tell the user.
 
 Write a memo to `memos.md` per cycle: what categories are looking solid, what hunches you have about the eventual theory, what you'd want to probe next.

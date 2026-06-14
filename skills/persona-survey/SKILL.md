@@ -18,7 +18,7 @@ A fixed question set, run independently across multiple personas, with quantitat
 ## Sample size
 
 - **Sweet spot:** 5–10 personas.
-- **All available** by default. If `./.personas/` has more than 10, call `persona-sample` to pick the most topically-relevant 10 — unless the user explicitly wants all.
+- **All personas in `./.personas/`** by default — surveys want breadth. If the roster is very large and that's unwieldy, ask the user to name the subset (or list slugs); don't auto-trim.
 - Works with as few as 3, but say so in the output (small sample = directional).
 
 ## Inputs
@@ -41,9 +41,9 @@ Before launching, sanity-check the questions:
 
 If the user gave a vague brief ("survey them about pricing"), help them turn it into 5–10 concrete questions before fanning out.
 
-### Phase 2 — Sample
+### Phase 2 — Select
 
-If the available persona count exceeds 10 or the user asked for relevance filtering, call `persona-sample` with the survey topic and N. Otherwise use all personas.
+If the user named specific personas, use exactly those. Otherwise use **all** personas in `./.personas/`. Only narrow if the user asked for a subset — in that case have them name it (or list slugs); never auto-filter.
 
 ### Phase 3 — Fan out
 
@@ -90,7 +90,7 @@ For each question:
 # Survey results: <topic, short>
 
 ## Sample
-N personas (of M available), selected by: <"all" | persona-sample with reason>.
+N personas (of M available), selected by: <"all" | user-named subset, list slugs>.
 
 ## Headline
 One sentence — the dominant pattern across questions.
@@ -110,5 +110,5 @@ Things that only become visible by looking across questions — e.g. "personas w
 ## Notes
 
 - Don't run the same persona twice in the same survey. Don't merge multiple personas into a synthetic "average respondent" — show distributions instead.
-- If the user wants to run the survey on a *segment* of personas (e.g. "just the B2B ones"), use `persona-sample` with the segment as the topic, or let the user list slugs explicitly.
+- If the user wants to run the survey on a *segment* of personas (e.g. "just the B2B ones"), ask them to name the segment or list the slugs explicitly — don't infer the segment automatically.
 - Re-running the same survey at a later date is fine and useful for tracking shifts — save the question set somewhere reusable (the user's own notes; this skill doesn't persist surveys).

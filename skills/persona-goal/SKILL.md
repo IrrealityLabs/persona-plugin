@@ -44,7 +44,7 @@ Older version, or goals disabled — no problem. Run the same loop **manually**:
 ## Inputs
 
 - **The asset** — the thing to optimize, captured verbatim. If it's a file, edit the file in place each round (keep versions). If pasted, track versions in a run dir.
-- **The persona(s)** — one or a panel. Resolve via `persona-review` Phase 1 (named / all / `persona-sample` for a relevant subset). The same panel is used every round — switching panels mid-run makes the score incomparable.
+- **The persona(s)** — one or a panel. Resolve via `persona-review` Phase 1 (named, else all). The same panel is used every round — switching panels mid-run makes the score incomparable.
 - **The objective** — what "better" means: more would-convert, clearer value prop, fewer bounces, a specific persona's approval. This defines the score (below).
 - **Round budget (cap)** — how many rounds, max. **Ask if unspecified**; default 5. This is the user's explicit control over how long it runs.
 - **Patience** — how many no-improvement rounds to tolerate before stopping. Default 2.

@@ -17,7 +17,7 @@ Tree testing evaluates information architecture independent of visual design. Pe
 ## Sample size
 
 - **Sweet spot:** 5–10 personas. Below 5, the per-task success rates aren't meaningful; above 10, returns diminish for IA detection.
-- Default: all personas if ≤8; else `persona-sample` for 6 with the product domain as topic.
+- Default to all personas; if the user named some, use those. If the roster is much larger than ~8, ask the user which to include rather than auto-selecting (the product domain is a useful relevance cue for what to suggest).
 
 ## Inputs
 

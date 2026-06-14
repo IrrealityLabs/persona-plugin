@@ -25,7 +25,7 @@ Structurally similar to `persona-focus-group` (orchestrator-compiled digest each
 - **The proposal / claim / decision** to pressure-test.
 - **Optional supporting material** — the doc, plan, design that supports the claim.
 - **Round count** (default 3, cap 4).
-- **Persona selection** — `persona-sample` for relevance unless user picks slugs explicitly. For council, *cognitive diversity* matters more than topical relevance — prefer a sample that spans the persona roster's value-distance, not just topical-closeness. Mention this in the sample selection.
+- **Persona selection** — if the user names personas, use exactly those; otherwise use all personas in `./.personas/`. For council, *cognitive diversity* matters more than topical relevance: if a large roster needs narrowing, the orchestrator picks a value-spanning subset by reading each persona's `## At a glance` line. State which you picked and why.
 
 ## Workflow
 
@@ -33,11 +33,9 @@ Structurally similar to `persona-focus-group` (orchestrator-compiled digest each
 
 5 × 3 = 15 subagent runs; 7 × 4 = 28. Always confirm before launching.
 
-### Phase 1 — Sample for diversity
+### Phase 1 — Select for diversity
 
-When calling `persona-sample`, pass a hint: "council mode — pick for diversity of values/positions, not just topical relevance." The helper's defaults rank topical-relevance; council overrides this by oversampling and then the orchestrator picks a diverse subset.
-
-In practice: ask `persona-sample` for 2N candidates, then you (orchestrator) pick N that span the most ground (e.g., one optimist, one skeptic, one outside-the-target, etc.) based on reading their `## At a glance` lines.
+If the user named personas, use exactly those. Otherwise default to all personas in `./.personas/`. Council wants *cognitive diversity*, not topical relevance — so if a large roster needs narrowing, don't auto-sample: you (orchestrator) read the personas' `## At a glance` lines and pick the N that span the most ground (e.g., one optimist, one skeptic, one outside-the-target, etc.). State which you picked and why. If you'd rather not choose, ask the user to name the subset.
 
 ### Phase 2 — Round 1: stake positions
 
@@ -115,6 +113,6 @@ Close with the standard simulation disclaimer.
 
 ## Notes
 
-- The council should produce dissent. If Round 1 came back unanimous, that's a sample problem — either the sample was too aligned or the proposal is too obvious. Mention it. Don't manufacture artificial dissent.
+- The council should produce dissent. If Round 1 came back unanimous, that's a selection problem — either the panel was too aligned or the proposal is too obvious. Mention it. Don't manufacture artificial dissent.
 - The moderator (you) does *not* break ties. If the council splits, the user decides — your job is to make the criteria crisp.
 - Do not let a high-status persona (e.g. a "CEO" archetype) carry undue weight. Every council vote counts the same; the *quality* of arguments is the only weighting.

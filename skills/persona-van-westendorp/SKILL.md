@@ -43,7 +43,7 @@ Surface this if the brief is vague. Don't let personas guess at what they're pri
 
 ### Phase 2 — Sample
 
-All personas if ≤10; else `persona-sample` for 8 with the product domain as filter. Strongly bias the sample toward personas who'd plausibly buy this — pricing reactions from personas outside the target segment add noise, not signal.
+Default to all personas; if the user named some, use those. If the roster is much larger than ~8, ask the user which to include rather than auto-selecting — and when suggesting, lean toward personas who'd plausibly buy this (read their `## At a glance` lines), since pricing reactions from personas outside the target segment add noise, not signal.
 
 ### Phase 3 — Per-persona fan-out
 
