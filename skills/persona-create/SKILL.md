@@ -49,6 +49,12 @@ Read this in full before doing anything else. These are the criteria you're hold
 ### Required honesty
 - **Known gaps** — what we *don't* know about this persona. Personas without a Known-gaps section turn into confident hallucinations downstream. Make this honest, not padding.
 
+### Optional signal (capture only when grounded — never invent it)
+Texture that helps specific downstream skills but is *not* the accuracy-bearing core (behavioral / contextual / negative-experience stay primary). Add only when the source actually supports it; otherwise leave it out and note it in Known gaps. Worth looking into:
+- **Relationships to other personas in this store** — how this persona relates to *other personas in `./.personas/`* (by slug): who they'd defer to, clash with, or be swayed by. Folder-scoped and lightweight — not a social database, but in a `persona-focus-group`, `persona-council`, or `persona-town` run it makes the group dynamics far more realistic than treating everyone as strangers.
+- **Daily routine / cadence** — a concrete sketch of a typical day or work rhythm. Behavioral, so it grounds `persona-ethnographic` and `persona-diary-study` well; skip it if those aren't in play.
+- **Conditional traits** — a Big Five anchor with an exception ("usually calm, but blunt under a deadline"). Truer to real people than a flat score, and a cheap richness win.
+
 ### Quality bar — push back on these
 
 - **"A young professional who wants to grow."** Demographics with zero behavioral or contextual signal. Insist on specificity.
@@ -303,6 +309,8 @@ Evidence, social proof, demo flow, structural arguments, or guarantees that move
 - **Pattern they keep repeating that doesn't work:** the workaround they know is wrong but haven't fixed.
 
 ## How they actually talk
+Capturing how the persona really sounds is worth doing well — it's a deliberate goal, not "style noise" to strip out. A persona that talks like the real person is more *immersive* to work with (which makes roleplay land harder, raises the stakes, and gets better work out of you), and it hands you the **actual verbiage** you need for things like marketing copy. Capture it from real language.
+
 5–10 verbatim speech samples covering different registers. Mark each with its context. Sourced from real research / interviews / customer language wherever possible — invented samples are weaker signal but allowed if marked as such.
 
 | # | Register | Sample |
@@ -314,6 +322,7 @@ Evidence, social proof, demo flow, structural arguments, or guarantees that move
 | ... | ... | ... |
 
 Plus:
+- **Voice & style:** 1–2 sentences distilling how they actually sound — recurring phrasings, sentence shape, register range — drawn straight from the samples above. Grounded only: never add a tic the samples don't show.
 - **Terms they use:** (3–6 words / phrases that appear naturally in their language)
 - **Terms they avoid / dislike:** (3–5 words that trigger skepticism)
 - **Where they spend time:** (specific communities, channels, sources they trust — not generic categories)
@@ -322,6 +331,10 @@ Plus:
 *AskRally evidence: psychographics add noise more than signal. Keep brief or omit. Include only if directly grounded in observed behavior.*
 
 If kept: 2–4 sentences max. Values that are *visible in their behavior* (not aspirational); beliefs about this category they've stated or strongly implied. Skip lifestyle adjectives and personality archetypes.
+
+## Relationships (optional)
+*How this persona relates to other personas in the same store (`./.personas/`), by slug. Folder-scoped and optional — capture only real, grounded ties (omit for description-generated personas, or mark them hypothetical in Known gaps). The payoff is group studies: focus group, council, town.*
+- `<other-slug>` — <the tie: e.g. "former manager, still trusts her read"; "competes with for the same budget"; "would reflexively dismiss their take">
 
 ## Known gaps (required)
 What we don't know yet about this persona. Per the literature, an explicit gaps section is the strongest defense against downstream hallucination. Include:
@@ -353,7 +366,7 @@ What we don't know yet about this persona. Per the literature, an explicit gaps 
 - **Adding more demographic fields** to "make the persona richer." Demographics are scaffolding, not signal — beyond the minimal anchor, more demographics is cargo-culted.
 - **Using MBTI, DISC, or Enneagram** instead of Big Five. 47% test-retest reliability for MBTI; Big Five explains ~2× the variance. Use Big Five.
 - **Heavy identity-marker loading** (especially minority-group markers) without paired behavioral / contextual specifics. The caricature literature shows minority personas are disproportionately distorted — counteract with concrete behavioral / situational detail, not by adding identity emphasis.
-- **Writing a separate "voice / style" section.** Not because style doesn't matter — it does, and downstream skills *do* draw on it for register and phrasing. But style belongs in the *grounded* artifacts: the verbatim speech samples and `## Examples`. A standalone style section is fabricated voice (invented dialect / accent / catchphrases), which is the documented failure mode — capture style by keeping good real samples, not by writing a guide to mimic.
+- **Fabricating voice instead of capturing it.** Reproducing a persona's *real* voice is a goal, not a risk — capture it well (see "How they actually talk"). The failure mode is the opposite: *inventing* style the source never shows — a dialect, accent, or catchphrase you can't point to in real language. A distilled voice/style summary is welcome **when every bit of it is grounded in real samples**; what's banned is making it up. (Ungrounded generated prose is the lowest-fidelity input — finding #3 — and for marketing you want their *actual* verbiage anyway, not an invented caricature.)
 - **Inflating speech samples to fake variety.** 10 samples of the same register is worse than 5 samples in genuinely different registers.
 - **Skipping the negative-experiences section.** It's required. A persona without current frustrations or recent setbacks is a marketing fantasy.
 - **(Mode 4) Batch-generating without a spanning plan.** Asking for "10 personas fitting X" and generating them in one undirected pass produces 10 near-clones huddled around the obvious archetype — the documented homogenization failure. Decompose into constraints + diversity axes and lay out the spanning plan *first*.

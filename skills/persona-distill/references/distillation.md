@@ -65,6 +65,8 @@ Specific patterns, claims, design choices that trigger pushback. **Indirect pros
 Evidence / proof / structural arguments that move them, based on observed reasoning patterns.
 
 ## How they actually talk
+Capturing how this person sounds is a deliberate goal, not "style noise" to strip — a persona that talks like them is more immersive (better roleplay, higher stakes) and gives you their real verbiage for things like marketing. Capture it from the corpus; never invent a tic the source doesn't show.
+- **Voice & style:** 1–2 sentences on how they actually sound — recurring phrasings, sentence shape, register range — distilled from the corpus (described, not quoted; verbatim lives in `## Examples`).
 - **Verbatim phrases they use:** real phrases from the corpus, *only* where the phrase is generic enough to be common in the segment and not a personally identifying utterance. If unsure, paraphrase.
 - **Terms they use:**
 - **Terms they avoid:**
@@ -121,7 +123,7 @@ Each worker prompt contains:
 #### Worker contract
 
 - **One pass over the chunk.** Extract evidence; do not synthesize across the corpus (the reducers do that).
-- **Findings: substance, not voice.** In `findings`, describe patterns in indirect prose. Do not quote the source text verbatim. A finding like `claim: "frames feature decisions around reversibility"` is good; `claim: "said 'is this reversible'"` is not.
+- **Findings: described, not quoted.** In `findings`, describe patterns in indirect prose — *including* how they think and decide and how they sound (their register and recurring framings are real signal for the `language` facet). Don't quote the source text verbatim; that's what `examples` is for. A finding like `claim: "frames feature decisions around reversibility"` or `claim: "writes in clipped, declarative one-liners"` is good; `claim: "said 'is this reversible'"` is not.
 - **Examples: nominate verbatim turns.** Separately, in `examples`, surface the best `{context, question, answer}` turns you see in the chunk — real exchanges where the persona *responds* to something. Pull these **verbatim** (the one place verbatim is wanted). Construct a turn by finding the persona's reply (`answer`), the message it responds to (`question`), and a little of the prior thread (`context`, or `""`). For Slack threads: their reply, the preceding message, prior turns. For X: their reply and the parent. For surveys: the item and their answer. For interviews: the interviewer's question and their answer. Skip anything where they're just initiating with no prompt. Return up to ~10 of the strongest/most varied per chunk; the orchestrator picks the final set.
 - **Citation as pointer.** For each finding, attach `evidence: [{source: "slack"|"x"|"web", ref: "<channel/date or url or tweet-id>"}]`.
 - **Negative findings count.** If the chunk shows the persona *not* engaging with something you'd expect them to, that's a finding for the "Known gaps" facet.
@@ -151,7 +153,7 @@ Facet definitions:
 - `contextual` — triggers, constraints, environments in which they engage with this category.
 - `bounce` — patterns / claims / structures they push back on.
 - `convince` — evidence / framings / proofs that move them.
-- `language` — terms they use, terms they avoid, communities they cite. The single facet where (carefully) preserving verbatim phrasing is acceptable if the phrasing is generic to the segment, not personally identifying.
+- `language` — how they sound (register, recurring phrasings, sentence shape), terms they use, terms they avoid, communities they cite. Capturing voice/style is wanted here — described as a pattern, grounded in the corpus, never invented. The single facet where (carefully) preserving verbatim phrasing is acceptable if the phrasing is generic to the segment, not personally identifying.
 
 ### Stage 2 — Reducers (one per persona-doc section, in parallel)
 
@@ -180,7 +182,7 @@ After all seven reducers return:
 2. **Draft `At a glance`** — 2–3 sentences synthesizing across all facets. This is the orchestrator's synthesis, not delegated. Lead with the single most defining trait.
 3. **Draft `Known gaps`** — what the corpus is silent on. Look at facets where the reducer returned thin output, and note them explicitly so the persona-review panel surfaces the gap rather than papering over it.
 4. **Verbatim-leak sweep — body only.** For each *body* section, take a few distinctive 4–6-word substrings and grep them against the underlying corpus files. Any match means a verbatim leak — rewrite that span in indirect prose. (For Slack/X JSONL: grep the `text` fields. For web-research.md: grep the file directly.) **Skip `## Examples`** — it is verbatim by design.
-5. **Select `## Examples`.** From the candidate turns the workers nominated (or, for a small corpus, straight from the assets), choose up to ~30 verbatim `{context, question, answer}` turns. Read `corrections.jsonl` and `observations.jsonl` first and include those as a priority — they're hand-supplied ground truth. Fill the rest choosing for **coverage and variety** (different registers, topics, decision types) over redundancy — drop near-duplicates. This is a judgment call, not a mechanical sample. Render each in the Context/Asked/Replied format from the template, and append as the final section.
+5. **Select `## Examples`.** From the candidate turns the workers nominated (or, for a small corpus, straight from the assets), choose up to ~30 verbatim `{context, question, answer}` turns. Read `corrections.jsonl` and `observations.jsonl` first and include those as a priority — they're hand-supplied ground truth. Fill the rest choosing for **coverage and variety** over redundancy — drop near-duplicates. Pick turns that exemplify *both* how they reason and decide (their thinking) *and* how they actually sound (their voice and register), across different topics. This is a judgment call, not a mechanical sample. Render each in the Context/Asked/Replied format from the template, and append as the final section.
 6. **Assemble frontmatter** from metadata.json + current timestamp.
 7. **Write `./.personas/<slug>.md`.**
 
