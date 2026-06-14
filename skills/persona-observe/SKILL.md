@@ -21,7 +21,7 @@ doesn't create one.
 
 ## Phase 2 — Gather the data into `{context, question, answer}` turns
 
-Two input shapes:
+Input shapes:
 
 - **CSV** — ask for the path. Read the header and the first 2–3 rows. Map columns to
   `question` (the prompt/situation they responded to) and `answer` (what they actually said);
@@ -30,6 +30,7 @@ Two input shapes:
 - **Freeform** — the user describes something they know.
   - If it's an **exchange** ("someone asked them X and they said Y", "in standup they pushed back with…"), capture it as a turn: `question` = what prompted them, `answer` = what they said (verbatim if the user gives words), `context` = the situation.
   - If it's a **bare trait or fact** with no exchange ("they hate long meetings"), do **not** fabricate a Q&A. That's body material — tell the user, and offer to fold it into the synthesis via `persona-refresh`, or ask them to phrase it as something the person was actually asked and actually said.
+- **A file you already have** — an email thread (`.eml`/`.mbox`), PDF, Word/Excel doc, screenshot, or exported chat JSON. For email, run `skills/persona-distill/scripts/parse-email.mjs`; otherwise read/convert it per `skills/persona-distill/references/file-import.md`. Then pull the exchanges out as `{context, question, answer}` turns, same as above.
 
 Verbatim is fine and wanted here — `## Examples` is the verbatim section.
 

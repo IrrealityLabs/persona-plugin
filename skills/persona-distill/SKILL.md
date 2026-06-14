@@ -21,6 +21,8 @@ Three things, in order, before any data moves:
    - **Slack** — messages from a specific user or a specific channel in a Slack workspace the user can access. See `references/slack-source.md`.
    - **X (Twitter)** — posts from one or more X accounts. See `references/x-source.md`.
    - **Web search** — public writing, interviews, podcast transcripts, forum posts, etc. See `references/web-search-source.md`.
+   - **Email** — an `.eml` / `.mbox` / `.txt` export of the person's mail (no API key). See `references/email-source.md`.
+   - **Files the user already has** — a PDF, Word/Excel doc, screenshot, pasted transcript, or exported chat JSON. See `references/file-import.md`.
 
    Multi-source is supported and often better — e.g. pull someone's X posts *and* their public blog posts *and* their Slack messages, then distill from the combined corpus. Ask the user which sources to use; default to whatever they mentioned, otherwise ask.
 
@@ -60,6 +62,8 @@ Per-source mechanics:
 - **Slack** — run `scripts/dump-slack.mjs` per the slack-source reference. Writes `slack-messages.jsonl` + metadata.
 - **X** — run `scripts/dump-x.mjs` per the x-source reference. Writes `x-posts.jsonl` + metadata.
 - **Web search** — fan out a small set of research subagents per the web-search-source reference. Writes `web-research.md` (a structured aggregation, not raw HTML dumps).
+- **Email** — run `scripts/parse-email.mjs` per the email-source reference. Writes `email-messages.jsonl` (same thread shape as Slack) + `email-metadata.json`.
+- **Files the user has** — read/convert per the file-import reference (PDF and images via the Read tool; convert docx/xlsx first). Save the cleaned text/transcript into `assets/<slug>/` (no script).
 
 If a source pull fails or returns nothing meaningful, surface it clearly and ask the user how to proceed. Don't silently distill from a thin or missing source — flag it.
 
