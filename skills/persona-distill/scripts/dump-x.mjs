@@ -5,7 +5,8 @@
 //   node dump-x.mjs --slug=<slug> --user=<handle> [--user=<handle> ...] [--max=1000] [--include-replies]
 //
 // Reads X_BEARER_TOKEN from process.env or ./.env in the cwd.
-// Writes to ./.personas/assets/<slug>/x-posts.jsonl and x-metadata.json.
+// Writes to <store>/assets/<slug>/x-posts.jsonl and x-metadata.json,
+// where <store> is $PERSONA_HOME if set, else ./.personas in the cwd.
 //
 // Requires Node 18+ (built-in fetch). No npm install needed.
 // X API: requires at least Basic tier ($200/mo as of 2026) for read access.
@@ -164,7 +165,10 @@ async function main() {
   const token = process.env.X_BEARER_TOKEN;
   if (!token) die('X_BEARER_TOKEN not set (in env or ./.env)');
 
-  const outDir = resolve(process.cwd(), '.personas', 'assets', args.slug);
+  const storeRoot = process.env.PERSONA_HOME
+    ? resolve(process.env.PERSONA_HOME)
+    : resolve(process.cwd(), '.personas');
+  const outDir = resolve(storeRoot, 'assets', args.slug);
   mkdirSync(outDir, { recursive: true });
   const out = createWriteStream(join(outDir, 'x-posts.jsonl'));
 

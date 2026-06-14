@@ -44,6 +44,8 @@ For web search, no API key is needed — the built-in WebSearch / WebFetch tools
 
 ## Phase 2 — Pull data into the assets folder
 
+The persona store is `$PERSONA_HOME` if that env var is set, else `./.personas/` (the dump scripts honor it automatically). Paths below show the default; substitute `$PERSONA_HOME` for `./.personas` when it's set.
+
 Assets layout:
 
 ```

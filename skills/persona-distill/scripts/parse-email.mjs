@@ -9,7 +9,8 @@
 // Usage:
 //   node parse-email.mjs --slug=<slug> --file=<path.eml|.mbox|.txt> --target="<name or email>"
 //
-// Writes ./.personas/assets/<slug>/email-messages.jsonl and email-metadata.json.
+// Writes <store>/assets/<slug>/email-messages.jsonl and email-metadata.json,
+// where <store> is $PERSONA_HOME if set, else ./.personas in the cwd.
 // Node 18+. No npm install. The persona is identified by --target (whose messages are
 // the "answers" the distiller learns from).
 
@@ -210,7 +211,10 @@ function main() {
     byThread.get(m.norm).push(m);
   }
 
-  const outDir = resolve(process.cwd(), '.personas', 'assets', args.slug);
+  const storeRoot = process.env.PERSONA_HOME
+    ? resolve(process.env.PERSONA_HOME)
+    : resolve(process.cwd(), '.personas');
+  const outDir = resolve(storeRoot, 'assets', args.slug);
   mkdirSync(outDir, { recursive: true });
   const lines = [];
   let threadCount = 0;

@@ -6,7 +6,8 @@
 //   node dump-slack.mjs --slug <persona-slug> --channel <channel-name> [--months=12]
 //
 // Reads SLACK_USER_TOKEN from process.env or ./.env in the cwd.
-// Writes to ./.personas/assets/<slug>/slack-messages.jsonl and slack-metadata.json.
+// Writes to <store>/assets/<slug>/slack-messages.jsonl and slack-metadata.json,
+// where <store> is $PERSONA_HOME if set, else ./.personas in the cwd.
 //
 // Requires Node 18+ (built-in fetch). No npm install needed.
 
@@ -362,7 +363,10 @@ async function main() {
   if (!token) die('SLACK_USER_TOKEN not set (in env or ./.env)');
   if (!token.startsWith('xoxp-')) die('SLACK_USER_TOKEN must be a user token (xoxp-...)');
 
-  const outDir = resolve(process.cwd(), '.personas', 'assets', args.slug);
+  const storeRoot = process.env.PERSONA_HOME
+    ? resolve(process.env.PERSONA_HOME)
+    : resolve(process.cwd(), '.personas');
+  const outDir = resolve(storeRoot, 'assets', args.slug);
   mkdirSync(outDir, { recursive: true });
 
   let metaSource;

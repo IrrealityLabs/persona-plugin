@@ -53,7 +53,7 @@ Spawn one `general-purpose` subagent per persona, **all in one message** so they
 - The persona doc path — read in full, inhabit it.
 - The framed question and any options, verbatim.
 - The instruction: *"Answer this question critically from your perspective, given your background and experience."*
-- The `persona-ask` reviewer contract — first-person, **references to the persona doc + a confidence tag** on the take, honest about disagreement, no generic praise, no voice mimicry.
+- The `persona-ask` reviewer contract — first-person, **references to the persona doc + a confidence tag** on the take, honest about disagreement, no generic praise, voice grounded in the doc's examples (not fabricated).
 
 Each subagent returns a short, grounded answer:
 ```

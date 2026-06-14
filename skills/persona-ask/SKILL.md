@@ -42,7 +42,7 @@ The whole skill is in service of one principle: **bad framing produces bad data,
 
 ## Phase 1 — Resolve the persona
 
-The user names a persona. Match the name against the files in `./.personas/`:
+The user names a persona. Match the name against the files in the persona store — `$PERSONA_HOME` if that env var is set, otherwise `./.personas/` relative to the cwd (resolve it this way everywhere the store is referenced below):
 
 - Strip a leading `@` if present and lowercase the input. Compare against each `*.md` filename (with and without the `.md` suffix). Case-insensitive.
 - Also try matching against the `name:` field in each file's frontmatter and the `description:` field for soft matches (e.g., user says "the cto" → `description` containing "CTO").
@@ -70,8 +70,8 @@ Read the resolved persona file in full before doing anything else. Persona docs 
 - `## Contextual` — the situation and constraints they're operating in. Determines what's relevant to surface.
 - `## What makes them bounce` — highest-signal section for negative reactions.
 - `## What would actually convince them` — highest-signal section for positive reactions.
-- `## How they actually talk` — verbatim phrases and language patterns to ground the response in. Substance, not voice mimicry.
-- `## Examples` — **the strongest grounding there is.** Real `{context, question, answer}` turns showing how this person *actually* responded to real prompts. When the question resembles one of these, let the matching example drive your substance, stance, and level of detail — and cite it. These are observed ground truth, so they outrank the synthesized sections above when they conflict. (Match what they'd *say and decide*, not their accent or catchphrases.)
+- `## How they actually talk` — verbatim phrases and language patterns. Use these to ground *how* the response sounds — register, vocabulary, the way they frame things. This is real style signal; lean on it. The only thing off-limits is inventing voice *beyond* what's here.
+- `## Examples` — **the strongest grounding there is.** Real `{context, question, answer}` turns showing how this person *actually* responded to real prompts. When the question resembles one of these, let the matching example drive your substance, stance, level of detail, *and* phrasing — and cite it. These are observed ground truth, so they outrank the synthesized sections above when they conflict. Match what they'd say and decide *and how they'd say it* — sourced from the example, never a fabricated accent or catchphrase.
 - `## Demographics` — context, lighter weight.
 - `## Known gaps` — what you should *not* fabricate a position on.
 
@@ -221,8 +221,8 @@ The reaction quotes the persona's *voice*. The **Where** field quotes the *asset
 
 A useful review usually has 0–2 blockers, 2–4 importants, and a few nits. If you find yourself with five blockers, ask whether you're really blocked five times or just irritated. Severity and confidence are independent — a low-confidence finding can still be flagged as a blocker *if it landed*, but the moderator will weight it accordingly.
 
-### Reason in the first person, but stay in substance mode
-First-person (the quoted reaction) is for perspective-taking, not voice imitation. Do not invent catchphrases, accents, or stylistic tics for the persona. The persona doc tells you *what they care about*, not how they sound. Substance > style.
+### Reason in the first person — substance first, style from the examples
+First-person (the quoted reaction) is for perspective-taking. Get the substance right first — what they care about and would actually conclude. Then let the persona's real style come through: the `## Examples` and `## How they actually talk` sections show how they sound — register, phrasing, level of detail — and matching that is part of a good reaction, not a distraction. The line is *grounded vs. fabricated*: draw voice from what those sections actually show; never invent catchphrases, accents, or stylistic tics the doc doesn't support.
 
 ### Always offer a concrete suggested change for blockers and importants
 A finding without a suggested change is half a finding. Even "I don't know what would fix this, but the current framing actively repels me" is more useful than no fix at all — name the inability explicitly.

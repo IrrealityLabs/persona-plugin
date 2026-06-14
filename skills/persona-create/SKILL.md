@@ -341,7 +341,7 @@ What we don't know yet about this persona. Per the literature, an explicit gaps 
 4. **Tell the user the slug** in one short line before saving so they can override.
 
 **Save:**
-1. Ensure `./.personas/` exists.
+1. Ensure the persona store exists — `$PERSONA_HOME` if that env var is set, else `./.personas/`. (Substitute the resolved store for `./.personas/` throughout this skill.)
 2. Set `name:` in frontmatter to match the filename slug.
 3. Write the file.
 4. Tell the user the file path. Offer next steps: persona-review, or a persona-research study.
@@ -353,7 +353,7 @@ What we don't know yet about this persona. Per the literature, an explicit gaps 
 - **Adding more demographic fields** to "make the persona richer." Demographics are scaffolding, not signal — beyond the minimal anchor, more demographics is cargo-culted.
 - **Using MBTI, DISC, or Enneagram** instead of Big Five. 47% test-retest reliability for MBTI; Big Five explains ~2× the variance. Use Big Five.
 - **Heavy identity-marker loading** (especially minority-group markers) without paired behavioral / contextual specifics. The caricature literature shows minority personas are disproportionately distorted — counteract with concrete behavioral / situational detail, not by adding identity emphasis.
-- **Writing a "voice / style" section** for downstream skills to mimic. Downstream skills explicitly avoid voice mimicry. Speech samples are for showing *what* they talk about and in *what register*, not for dialect / accent / catchphrase fabrication.
+- **Writing a separate "voice / style" section.** Not because style doesn't matter — it does, and downstream skills *do* draw on it for register and phrasing. But style belongs in the *grounded* artifacts: the verbatim speech samples and `## Examples`. A standalone style section is fabricated voice (invented dialect / accent / catchphrases), which is the documented failure mode — capture style by keeping good real samples, not by writing a guide to mimic.
 - **Inflating speech samples to fake variety.** 10 samples of the same register is worse than 5 samples in genuinely different registers.
 - **Skipping the negative-experiences section.** It's required. A persona without current frustrations or recent setbacks is a marketing fantasy.
 - **(Mode 4) Batch-generating without a spanning plan.** Asking for "10 personas fitting X" and generating them in one undirected pass produces 10 near-clones huddled around the obvious archetype — the documented homogenization failure. Decompose into constraints + diversity axes and lay out the spanning plan *first*.

@@ -19,7 +19,7 @@ Say: "Running this past <N> personas: <names>. These are simulations of your tar
 
 ## Phase 1 — Resolve the panel
 
-Personas live in `./.personas/` relative to the current working directory. Every `*.md` file in that directory is a candidate panelist.
+Personas live in `./.personas/` relative to the current working directory — **unless `PERSONA_HOME` is set, in which case the store is that directory instead** (a shared persona set across projects). Resolve the store this way everywhere: `$PERSONA_HOME` if set, else `./.personas/`. Every `*.md` file in the resolved store is a candidate panelist.
 
 **Panel selection rules** — based on the user's invocation:
 
@@ -67,7 +67,7 @@ Each subagent prompt must contain:
 ### Reviewer contract (every persona, every review)
 
 - Read the asset as **this persona would** read it: with their attention span, their skepticism, their prior experience with this category, their language.
-- React in first-person *as that persona would react* — first-person is for perspective-taking, not voice mimicry. No catchphrases, no imitating their accent or slang.
+- React in first-person *as that persona would react*. Let their real voice come through — the register and phrasing their `## Examples` and language section actually show; that grounded style makes the reaction land. Don't *fabricate* beyond it: no invented catchphrases, no accent or slang the doc doesn't support.
 - Be **specific**. Quote the exact line, image, or section you're reacting to. Don't say "the headline is weak" — say "'Increase your revenue' in the H1 — this is so generic I've seen it on a hundred SaaS pages, including ones I bounced from."
 - Be **honest about your reaction**, including reactions that are inconvenient for the user. If the asset fundamentally doesn't speak to you, say so plainly. The point of the panel is friction — sandbagging the critique to seem agreeable wastes the review.
 - Distinguish **what would make you bounce / not buy / scroll past** (blockers) from **what merely feels off** (nits). A reviewer who flags everything as critical is no more useful than one who flags nothing.

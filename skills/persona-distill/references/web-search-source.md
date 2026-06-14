@@ -19,7 +19,7 @@ If you can't confirm the target unambiguously, stop and ask. Don't distill a per
 
 ## Phase 2 — Fan out research subagents
 
-Use the `Agent` tool (`subagent_type: general-purpose`) to run **3–5 research subagents in parallel**, each focused on a different surface area. Splitting the work parallelizes the search and keeps each subagent's context focused.
+Use the `Agent` tool (`subagent_type: general-purpose`) to run **3–6 research subagents in parallel**, each focused on a different surface area. Splitting the work parallelizes the search and keeps each subagent's context focused.
 
 Suggested splits for a named individual:
 
@@ -28,6 +28,7 @@ Suggested splits for a named individual:
 3. **Conference talks and videos.** Search: `"<name>" talk OR keynote OR "<name>" site:youtube.com`. Pull transcripts or detailed summaries.
 4. **Social discussion *about* them.** What others say they believe, where they've taken public positions, controversies, endorsements. Search: `"<name>" said OR argued OR "according to"`.
 5. **Their company / project pages, if relevant.** What the org they're associated with publicly stands for — useful as context, weighted lower than first-person content.
+6. **Recent trajectory (last ~12 months).** A deliberate recency sweep, working backward roughly month by month: `"<name>" <Month YYYY>`, recent interviews, announcements, posts, news. This captures the *arc* and current focus so the synthesized body reflects who the target is **now**, not a stale snapshot. It's fine for a stretch to be quiet — note that honestly rather than padding. Flag any shift from older positions (people change their minds; the distillation should see the change, not silently average over it).
 
 For an abstract type aggregated from exemplars, give each subagent 1–2 exemplars and the same five-surface brief.
 
@@ -37,16 +38,20 @@ Each research subagent should be instructed to:
 
 - Run 3–6 targeted web searches using `WebSearch`, then `WebFetch` 5–10 of the most substantive results.
 - Skip pages that are: link aggregators, search-result mirrors, or thin content (under ~500 words).
-- **Extract substance, not snippets.** For each useful source, return a 3–6 sentence summary of *what the persona target thinks, says, or does* based on that source, plus the URL. No verbatim long quotes — distill.
+- **Extract substance for the body; capture a few real quotes for the examples.** For each useful source, return a 3–6 sentence summary of *what the persona target thinks, says, or does*, plus the URL — distilled, not pasted (no long verbatim passages, respect source copyright). **But** when a source carries the person's *own on-record words* — a stated position, a characteristic claim, or a real question→answer exchange (an interviewer's question and their reply) — capture it **short, verbatim, and attributed** and mark it as a candidate for the persona's `## Examples`. For a public figure their on-record statements *are* the substance, and these real exchanges are the strongest few-shot grounding the distillation can use.
+- **Tag whose voice each finding is in:** the person's **own words** (self), a **reporter's paraphrase**, or a **third party's characterization**. Self-statements are the highest-confidence signal for positions — don't launder a critic's or reporter's framing into a stated position of the persona.
 - Note where the source contradicts other sources (people's stated positions change over time; flag the shift).
 - Return a single Markdown section, no preamble, format:
 
   ```markdown
-  ### Surface: <which of the 5 surfaces this subagent covered>
+  ### Surface: <which surface this subagent covered>
   
-  - **<short pattern claim>** — distilled in 3–6 sentences. [source: <url>]
-  - **<short pattern claim>** — distilled in 3–6 sentences. [source: <url>, <url>]
+  - **<short pattern claim>** [self|reporter|third-party] — distilled in 3–6 sentences. [source: <url>]
+  - **<short pattern claim>** [self|reporter|third-party] — distilled in 3–6 sentences. [source: <url>, <url>]
   - ...
+  
+  **Candidate examples** (verbatim on-record exchanges, if the surface had any — else omit):
+  - context: <what prompted it> · question: "<verbatim prompt/interviewer question>" · answer: "<their verbatim on-record reply>" [source: <url>, <date if known>]
   
   **Sources reviewed:** <total count>, **sources cited:** <count>, **dead-ends:** <brief note>
   ```
@@ -71,10 +76,13 @@ Compile the subagent outputs into a single file at `./.personas/assets/<slug>/we
 ## Surface: Interviews and podcasts
 <subagent 2 output>
 
+## Surface: Recent trajectory (last ~12 months)
+<recency-sweep subagent output — most recent first>
+
 ...
 ```
 
-This file is the input to Phase 3 of `persona-distill` (the fan-out distillation) — same as `slack-messages.jsonl` and `x-posts.jsonl` for those sources. The distillation step treats `web-research.md` as just another corpus chunk.
+This file is the input to Phase 3 of `persona-distill` (the fan-out distillation) — same as `slack-messages.jsonl` and `x-posts.jsonl` for those sources. The distillation step treats `web-research.md` as just another corpus chunk. The `[self|reporter|third-party]` tags tell the distiller whose voice a claim is in (weight `self` highest for stated positions), and the **Candidate examples** the subagents surfaced are the verbatim on-record exchanges the distiller draws on when selecting `## Examples` — the one place verbatim belongs.
 
 ## Quality bar
 

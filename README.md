@@ -8,6 +8,8 @@ A plugin for running **market research with simulated persona panels** — local
 
 Treat every result as a structured prompt for your own judgment, and as a list of hypotheses to validate with real customers before betting on them. Be customer-focused: the personas are stand-ins, not the customers themselves.
 
+If you build a persona of a **real, identifiable person** (e.g. distilling someone's Slack, posts, or public writing), that's processing personal data and may be regulated where you and they are based — see [Legal & compliance](#legal--compliance) below. Complying with the law that applies to you is your responsibility.
+
 ## The four main skills
 
 These are the entry points you'll use most. Everything else either consumes these or is dispatched by `persona-research`.
@@ -196,6 +198,16 @@ Personas and their source assets live in `.personas/` relative to your current w
 
 The `<slug>.md` is a disposable **projection** of the assets — `persona-distill` / `persona-refresh` regenerate it. The assets are append-only and never overwritten, so regenerating loses nothing. Add `.personas/assets/` to `.gitignore` if your raw source data shouldn't be committed (it usually shouldn't).
 
+### A global persona store (`PERSONA_HOME`)
+
+By default the store is **project-local** — `./.personas/` in whatever directory you're working in — so each project carries its own audience. If you'd rather keep **one shared set of personas across projects**, set the `PERSONA_HOME` environment variable to a directory of your choice and every skill (and the dump scripts) reads and writes there instead:
+
+```bash
+export PERSONA_HOME="$HOME/.personas"   # a global store, reused from any project
+```
+
+When `PERSONA_HOME` is set it fully replaces `./.personas/` — personas live at `$PERSONA_HOME/<slug>.md` and assets at `$PERSONA_HOME/assets/<slug>/`, with the same layout shown above. Leave it unset for the default per-project behavior.
+
 ## Repo layout
 
 ```
@@ -240,6 +252,18 @@ persona-plugin/
 - **Quant methods especially.** Van Westendorp, conjoint, MaxDiff, TURF — all designed for large N. Persona-scale runs give you the shape of the answer, not a defensible number. Validate with real research before pricing decisions, feature commitments, or anything else that bets the budget.
 - **Quality of personas determines quality of research.** A thin persona doc produces thin research outputs no matter which method you pick. Invest in `persona-create` / `persona-distill` before you invest in studies.
 - **Cost can add up fast** for multi-round methods (council, focus group, grounded theory, town, video user testing). Always confirm the cost estimate before launching expensive runs.
+
+## Legal & compliance
+
+Most personas are **synthetic or aggregate** — an ICP, a segment, a batch generated from a description, a population sampled from survey data. Those raise no special legal issue.
+
+But the plugin can also build a persona of a **real, identifiable person** — `persona-distill` pulls someone's Slack, X/Twitter, email, or public web writing into a profile of how they think and decide. That is *processing personal data about a real person*, and depending on where you and they are based it may be regulated by data-protection, privacy, and employment law (e.g. the EU/EEA [GDPR](https://gdpr-info.eu/), workplace/co-determination rules such as Germany's [BetrVG](https://www.gesetze-im-internet.de/englisch_betrvg/), the [EU AI Act](https://artificialintelligenceact.eu/), and comparable laws elsewhere).
+
+**Understanding and complying with the law that applies to you is your responsibility** — this project can't do that for you, and the above is general awareness, not legal advice. Before profiling a named individual:
+
+- **Have a lawful basis and, where appropriate, permission.** Being *able* to read someone's messages doesn't mean you may profile them — for colleagues and other non-public people especially, consider consent and whether they'd be comfortable with the persona existing. Profiling a public figure from their on-the-record public statements is a safer posture than profiling a private individual from internal communications, but "public" is not a blanket exemption everywhere.
+- **Keep raw source data local.** Raw dumps live under `.personas/assets/` and are gitignored by default — keep it that way. The persona body is paraphrased (verbatim source belongs only in `## Examples`); treat the whole persona as private notes about a real person.
+- **A persona is a simulation, not the person.** It can be wrong or out of date — never treat its output as the real person's actual position; verify anything load-bearing with them.
 
 ## Credits
 
