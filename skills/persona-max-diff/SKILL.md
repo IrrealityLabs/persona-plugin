@@ -52,15 +52,20 @@ Spawn one subagent per persona, parallel. Each prompt:
 - Persona doc path.
 - The sets (randomized order per persona).
 - For each set: "From this set of 4, pick the one that is MOST <dimension> for you, and the one that is LEAST <dimension>. Briefly say why your most-pick won and your least-pick lost."
-- `persona-ask` reviewer contract.
+- `persona-ask` Ground, think, then talk (Grounding → Thinking → Talking) contract.
 - MaxDiff response format below.
 
 MaxDiff response format:
 ```
+## Grounding (private — orchestrator only; not tallied)
+The persona-doc sections that bear on these picks, cited first: `§ <Section>: "<…>"` + a per-set confidence read [high|medium|low|off-pattern].
+
+## Thinking (private — orchestrator only)
+Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
+
 ## Set 1: [<item>, <item>, <item>, <item>]
 - **Most:** <item> — short reason
 - **Least:** <item> — short reason
-- **Confidence:** [high|medium|low]
 
 ## Set 2: ...
 ...
@@ -70,6 +75,8 @@ Across all sets, the 1–2 themes that drove my picks. Sanity check on the ranki
 ```
 
 ### Phase 5 — Compute scores
+
+(Per-persona **Grounding** and **Thinking** are audit fields — orchestrator-only and **not** scored; only the public Most/Least picks feed the best-worst math.)
 
 For each item, the simple best-worst score:
 - `score(item) = (# times picked most) − (# times picked least)`

@@ -56,11 +56,17 @@ Spawn one subagent per persona, in parallel. Each prompt:
 - The full tree.
 - All tasks (in randomized order per persona).
 - For each task: instruction to navigate the tree by picking labels at each level, recording the path. They can backtrack at most once per task ("I'd click X, but if I didn't find it I'd go back and try Y").
-- `persona-ask` reviewer contract.
+- The `persona-ask` Ground, think, then talk (Grounding → Thinking → Talking) contract.
 - Tree-test response format below.
 
 Tree-test response format:
 ```
+## Grounding (private — orchestrator only; not aggregated)
+The persona-doc sections that bear on this, cited first: § <Section>: "<…>" + a confidence read [high|medium|low|off-pattern].
+
+## Thinking (private — orchestrator only)
+Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
+
 ## Task 1: <task statement>
 **Path I'd take:** Home > <child> > <grandchild> > ...
 **End node:** <where I'd stop and expect to find the answer>
@@ -122,6 +128,8 @@ For each task with low success: where did personas branch wrong on the first cli
 ## Sample-size caveat
 "N=<N> personas; tree-test results are reliable for first-click direction even at small N (signal is strong), but per-task success rates are *directional* below ~10 personas."
 ```
+
+(Each persona's Grounding + Thinking stay with the orchestrator as per-persona audit fields — never aggregated into the report; only the public path/end-node/confidence-I-picked-right data is scored and rolled up.)
 
 ## Notes
 

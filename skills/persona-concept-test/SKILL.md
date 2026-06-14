@@ -54,11 +54,17 @@ Spawn one subagent per persona, parallel. Each prompt:
 - Persona doc path.
 - The concept brief.
 - The named comparison products, if any.
-- `persona-ask` reviewer contract.
+- The `persona-ask` Ground, think, then talk (Grounding → Thinking → Talking) contract.
 - Concept-test response format below.
 
 Concept-test response format:
 ```
+## Grounding (private — orchestrator only; not aggregated)
+The persona-doc sections that bear on this, cited first: § <Section>: "<…>" + a confidence read [high|medium|low|off-pattern].
+
+## Thinking (private — orchestrator only)
+Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
+
 ## Verdict
 Build it | Refine and retest | Don't build — one line on why.
 
@@ -81,10 +87,9 @@ The minimum thing the concept needs to include for me to take it seriously.
 
 ## Comparison reaction (if alternatives given)
 How this concept lands vs. <named alternatives> from my perspective.
-
-## Confidence
-[high|medium|low] + reason.
 ```
+
+(Grounding + Thinking are per-persona audit fields — kept with the orchestrator, never aggregated; only the public verdict, scores, and feedback are rolled up below. The overall-confidence read lives in Grounding now; the 1–7 appeal/believability/etc. scores stay public answer data.)
 
 ### Phase 4 — Synthesize
 

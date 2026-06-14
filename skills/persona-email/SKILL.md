@@ -64,12 +64,15 @@ Spawn one subagent per persona. Each prompt:
   - Match the formality the sender set (or downgrade one notch).
   - Length proportional to the email and the recipient's investment in the relationship.
   - Stay in your persona's actual voice.
-- `persona-ask` reviewer contract.
+- The `persona-ask` "Ground, think, then talk" contract (Grounding → Thinking → Talking).
 - Response format below.
 
 Response format:
 ```
 ## <persona slug>
+**Grounding:** (private — orchestrator only; not sent) The persona-doc sections that bear on this, cited first: § <Section>: "<…>" + a confidence read [high|medium|low|off-pattern].
+**Thinking:** (private — orchestrator only) Private reasoning over that grounding: what this persona would genuinely conclude, before deciding what to send.
+
 **Action:** archive | read-no-reply | reply | reply-after-thinking | forward | switch-channel
 
 **Reply latency (if replying):** within an hour | today | this week | later than a week | indefinite
@@ -89,10 +92,6 @@ Response format:
 
 **Reasoning:** one sentence on what drove the action.
 
-**References (persona doc):**
-  - § <Section>: "<quote>"
-
-**Confidence:** [high|medium|low]
 **Email-fit:** [strong|partial|forced] — would this email credibly land with this persona? Forced = the simulation pushed a reply that wouldn't actually happen.
 ```
 
@@ -122,7 +121,7 @@ For the repliers: how fast. Fast = high engagement; slow = low priority / needs 
 Reactions to the subject line specifically. If multiple personas would archive without opening, the subject is the failure point — fix that before testing the body again.
 
 ## Reply content patterns
-Cluster the actual replies into 2–4 themes — what people are answering with. Surface specifically:
+Cluster the actual replies into 2–4 themes — what people are answering with. **Cluster the sent reply text only; each persona's private Grounding + Thinking stay with the orchestrator and are never surfaced as reply content.** Surface specifically:
 - **Yes-and-engaged replies:** the desired outcome shape.
 - **Polite-decline replies:** common cold-outreach reception; signal that the email asks for too much too soon.
 - **Push-back / counter-question replies:** the email is engaging but the CTA is off.

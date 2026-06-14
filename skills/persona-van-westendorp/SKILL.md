@@ -55,31 +55,32 @@ Spawn one subagent per persona, parallel. Each prompt:
   2. **Expensive:** "At what price would this product be expensive, but you'd still consider buying it because you see value?"
   3. **Cheap:** "At what price would this product be a bargain — a great deal for the money?"
   4. **Too cheap:** "At what price would this product be so cheap that you'd doubt its quality and not buy it?"
-- `persona-ask` reviewer contract — and add: "Quote the part of your persona doc that grounds your price intuition — what comparable spend, budget anchor, or value calculus is doing the work."
+- `persona-ask` Ground, think, then talk (Grounding → Thinking → Talking) contract — and add: "Quote the part of your persona doc that grounds your price intuition — what comparable spend, budget anchor, or value calculus is doing the work."
 - Van Westendorp response format below.
 
 Response format:
 ```
+## Grounding (private — orchestrator only; not tallied)
+The persona-doc sections that bear on these prices, cited first: `§ <Section>: "<…>"` (comparable spend, budget anchor, value calculus) + a per-question confidence read [high|medium|low|off-pattern].
+
+## Thinking (private — orchestrator only)
+Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
+
 ## Too expensive
 **Price:** $X / <unit>
 **Why:** "First-person reasoning, tied to budget/anchor/value reference."
-**References:** § <Section>: "..."
-**Confidence:** [high|medium|low]
 
 ## Expensive
 **Price:** $X / <unit>
 **Why:** ...
-**Confidence:** [high|medium|low]
 
 ## Cheap (bargain)
 **Price:** $X / <unit>
 **Why:** ...
-**Confidence:** [high|medium|low]
 
 ## Too cheap (quality doubt)
 **Price:** $X / <unit>
 **Why:** ...
-**Confidence:** [high|medium|low]
 
 ## Sanity-check
 For my four numbers: is too-cheap < cheap < expensive < too-expensive? If not, which inversions and why.
@@ -90,6 +91,8 @@ For my four numbers: is too-cheap < cheap < expensive < too-expensive? If not, w
 Discard responses where the four numbers don't satisfy `too-cheap < cheap < expensive < too-expensive`. Flag the inversion as a finding — usually means the persona doesn't have a coherent price model for this product (a real signal: maybe the product is too unfamiliar to price). Don't silently drop; report counts.
 
 ### Phase 5 — Compute curves and key points
+
+(Per-persona **Grounding** and **Thinking** are audit fields — orchestrator-only and **not** tallied; only the four public prices feed the curves.)
 
 For each of the four questions, build a cumulative distribution function:
 - For too-expensive and expensive: cumulative % who would consider the product at or below this price.

@@ -64,12 +64,15 @@ Spawn one subagent per persona. Each prompt:
   - 280 char limit for replies and quote-tweets.
   - Voice should be consistent with your persona doc — no fake-X-influencer voice if your persona isn't one.
   - Emoji / GIFs / "based" / "this" / etc. only if the persona doc supports that voice.
-- `persona-ask` reviewer contract.
+- The `persona-ask` "Ground, think, then talk" contract (Grounding → Thinking → Talking).
 - X-comments response format below.
 
 X-comments response format:
 ```
 ## <persona slug>
+**Grounding:** (private — orchestrator only; not posted) The persona-doc sections that bear on this, cited first: § <Section>: "<…>" + a confidence read [high|medium|low|off-pattern].
+**Thinking:** (private — orchestrator only) Private reasoning over that grounding: what this persona would genuinely conclude, before deciding what to post publicly.
+
 **Action:** scroll | like | reply | quote-tweet
 **Post (if reply or quote-tweet):**
 <the actual tweet text, ≤280 chars>
@@ -77,10 +80,6 @@ X-comments response format:
 
 **Reasoning:** one sentence on why this persona chose this action.
 
-**References (persona doc):**
-  - § <Section>: "<quote>"
-
-**Confidence:** [high|medium|low] + reason.
 **X-voice fit:** [strong|partial|forced] — would this persona credibly post on X? Forced = the simulation pushed them into voice that doesn't match their doc.
 ```
 
@@ -89,8 +88,9 @@ X-comments response format:
 If enabled, second pass: each persona who didn't act in Phase 2 (or who did) sees the *replies and quote-tweets* from Phase 2. Subagent prompt:
 - Persona doc path.
 - The original post.
-- The Phase 2 thread (all replies + quote-tweets, with persona attribution stripped — they're seeing it as "X strangers" on their timeline).
+- The Phase 2 thread — the **posted replies + quote-tweets only**, with persona attribution stripped (they're seeing it as "X strangers" on their timeline). The Phase 2 private Grounding + Thinking are never included; only public posts propagate.
 - "Now, with the discourse forming around this post visible in your feed, would you weigh in? Same four-action choice."
+- Same response format as Phase 2 (lead with private Grounding + Thinking, then the public action/post).
 
 This catches the *meta*-engagement: personas who wouldn't reply to the original but *would* dunk on a bad reply, or amplify a great one.
 
@@ -111,7 +111,7 @@ One sentence — what the thread would actually look like. e.g. "Mostly silent-s
 The scroll-past rate is signal — high = post isn't for these personas, low = it's hitting.
 
 ## The thread (chronological)
-Render the replies in order, then quote-tweets separately.
+Render the replies in order, then quote-tweets separately. **Posted text only — each persona's private Grounding + Thinking are excluded from the rendered thread, kept with the orchestrator.**
 
 Replies:
 @<persona-slug-1>: <text>

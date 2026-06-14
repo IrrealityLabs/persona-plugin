@@ -7,7 +7,7 @@ description: Run structured market research with your personas. Parent skill tha
 
 A catalog of market-research methodologies adapted to run against your saved personas (in `./.personas/`, or `$PERSONA_HOME` if that env var is set — the same store every child skill reads). Each child skill is one method. This parent skill is the menu — it helps you pick the right method for the user's actual question, briefs them on what it'll cost, and dispatches.
 
-Every method ultimately uses the personas + `persona-ask` (framing + references + confidence). The methods differ in *structure*: how many personas, how many questions, whether they see each other's answers, what the output looks like.
+Every method ultimately uses the personas + `persona-ask` (framing + the *Ground, think, then talk* contract: grounding, then private reasoning, then the public answer). The methods differ in *structure*: how many personas, how many questions, whether they see each other's answers, what the output looks like.
 
 Persona selection is the same across every method (see `persona-review` Phase 1): if the user names personas, use exactly those; otherwise use all personas in `./.personas/`. There's no automatic filtering or sampling — when a method would be unwieldy with a very large roster, it asks the user which personas to include (or, for methods that want a diverse subset, the orchestrator picks a spanning set by reading the personas' `## At a glance` lines).
 

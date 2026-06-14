@@ -58,15 +58,20 @@ Spawn one subagent per persona, parallel. Each prompt:
 - All comparison pairs (or full profiles), in randomized order per persona.
 - For each pair: present both profiles side-by-side as attribute-level tables.
 - Choice instruction: "For each pair, pick A or B (or 'neither' if both are unacceptable). Briefly note which attribute drove the choice."
-- `persona-ask` reviewer contract.
+- `persona-ask` Ground, think, then talk (Grounding → Thinking → Talking) contract.
 - Conjoint response format below.
 
 Conjoint response format:
 ```
+## Grounding (private — orchestrator only; not tallied)
+The persona-doc sections that bear on these choices, cited first: `§ <Section>: "<…>"` + a per-pair confidence read [high|medium|low|off-pattern].
+
+## Thinking (private — orchestrator only)
+Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
+
 ## Pair 1: <profile A summary> vs <profile B summary>
 **Pick:** A | B | neither
 **Driver:** which attribute drove the choice; one sentence
-**Confidence:** [high|medium|low]
 
 ## Pair 2: ...
 ...
@@ -76,6 +81,8 @@ Across all pairs, which attribute mattered most to me overall and why. (This is 
 ```
 
 ### Phase 4 — Compute utilities
+
+(Per-persona **Grounding** and **Thinking** are audit fields — orchestrator-only and **not** tallied; only the public Pick per pair feeds the part-worth math.)
 
 For each attribute level, estimate the part-worth utility: how much choosing the level affected the probability of choosing the profile.
 

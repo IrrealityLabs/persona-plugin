@@ -61,7 +61,7 @@ Each subagent prompt must contain:
 - The absolute path to that persona's doc, with instruction to read it in full and inhabit it.
 - The asset, verbatim. (Pasted text inline; for files, the contents; for URLs, the contents you already fetched.)
 - The framed question.
-- The `persona-ask` skill reference — instruct the subagent to load `persona-ask` and follow its response format.
+- The `persona-ask` skill reference — instruct the subagent to load `persona-ask` and follow its response format, including Ground, think, then talk (Grounding → Thinking → Talking): lead with the persona-doc material that bears on the asset plus a confidence read, then private reasoning, then the public findings.
 - The reviewer contract (below).
 
 ### Reviewer contract (every persona, every review)
@@ -78,14 +78,17 @@ Each subagent prompt must contain:
 Required structure. Each finding has both a **severity** tag (how much it matters) and a **confidence** tag (how well the persona doc supports it). The two are independent.
 
 ```
-## At-a-glance reaction
-Two sentences max — would I keep reading / click / buy, and the dominant feeling.
-
-## References
-One line on how well the persona doc supports this response overall. Examples:
+## Grounding (private — orchestrator only)
+The persona-doc sections that bear on this asset, cited first: § <Section>: "<…>" — and one line on how well the doc supports this response overall, with a confidence read [high|medium|low|off-pattern]. Examples:
 - "Strong doc coverage — most findings are [high] confidence."
 - "Doc covers messaging well but is thin on pricing — pricing findings are mostly [medium]/[low]."
-- "Asset is outside the persona's normal engagement; I'm extrapolating throughout."
+- "Asset is outside the persona's normal engagement; I'm extrapolating throughout — [off-pattern]."
+
+## Thinking (private — orchestrator only)
+Private reasoning over that grounding: what this persona would genuinely conclude about the asset, where the evidence is thin.
+
+## At-a-glance reaction
+Two sentences max — would I keep reading / click / buy, and the dominant feeling.
 
 ## Findings
 Repeated block, one per finding. Severity tags: [BLOCKER] [IMPORTANT] [NIT]. Confidence tags: [high] [medium] [low] [off-pattern].

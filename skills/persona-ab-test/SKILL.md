@@ -49,19 +49,24 @@ Spawn one subagent per persona, all in parallel. Each prompt:
 - Persona doc path.
 - All variants, labeled, in randomized order per persona (to control for order effects — track which persona saw which order in case you re-run).
 - The decision question.
-- `persona-ask` reviewer contract.
+- `persona-ask` Ground, think, then talk (Grounding → Thinking → Talking) contract.
 - A/B test response format below.
 
 A/B test response format:
 ```
+## Grounding (private — orchestrator only; not tallied)
+The persona-doc sections that bear on this, cited first:
+  - § <Section>: "<...>"
++ a confidence read [high|medium|low|off-pattern] + reason.
+
+## Thinking (private — orchestrator only)
+Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
+
 ## Pick
 Variant <letter> | None of these (and why)
 
 ## Reasoning
 "First-person quote — why this variant won for me."
-**References (persona doc):**
-  - § <Section>: "<...>"
-**Confidence:** [high|medium|low] + reason.
 
 ## Specifically what worked
 The phrase / element that pushed the choice — quoted from the variant.
@@ -74,6 +79,8 @@ If none of these are great, a one-sentence sketch of a variant that would actual
 ```
 
 ### Phase 4 — Aggregate
+
+(Per-persona **Grounding** and **Thinking** are audit fields — orchestrator-only and **not** tallied; only the public Pick/Reasoning is aggregated into the vote tally.)
 
 ```
 # A/B test: <decision question>

@@ -71,11 +71,17 @@ Spawn one subagent per persona. Each prompt includes:
 - Persona doc path.
 - The task flow description.
 - All screenshots (inline images) with captions, in order.
-- The `persona-ask` reviewer contract.
+- The `persona-ask` Ground, think, then talk (Grounding → Thinking → Talking) contract.
 - The user-test response format below.
 
 User-test response format:
 ```
+## Grounding (private — orchestrator only; not aggregated)
+The persona-doc sections that bear on this, cited first: § <Section>: "<…>" + a confidence read [high|medium|low|off-pattern].
+
+## Thinking (private — orchestrator only)
+Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
+
 ## At-a-glance
 Did I complete the task / would I have? Where, on a scale of 1–7, would I rate the ease of this flow for me?
 
@@ -115,6 +121,8 @@ Where multiple personas would have left, and why.
 ## Per-persona sentiment trajectory
 For each persona: their 1–7 ratings per step, surfacing where each one's experience diverged.
 ```
+
+(Each persona's Grounding + Thinking stay with the orchestrator as per-persona audit fields — never aggregated into the report; only the public answer fields above are rolled up.)
 
 ## Workflow — video mode
 

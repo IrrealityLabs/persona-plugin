@@ -43,11 +43,17 @@ Spawn one subagent per persona, parallel. Each prompt:
 - Persona doc path.
 - The full options list with descriptions, in a randomized order per persona.
 - Rating instruction: "Rate each option on a 1–7 scale of <reach criterion>. For each rating ≥5, quote the part of your persona doc that backs it. For each rating ≤3, briefly say why this doesn't apply / doesn't appeal to you."
-- `persona-ask` reviewer contract.
+- `persona-ask` Ground, think, then talk (Grounding → Thinking → Talking) contract.
 - TURF rating response format below.
 
 TURF rating response format:
 ```
+## Grounding (private — orchestrator only; not tallied)
+The persona-doc sections that bear on these ratings, cited first: `§ <Section>: "<…>"` + a confidence read [high|medium|low|off-pattern] + reason.
+
+## Thinking (private — orchestrator only)
+Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
+
 ## Ratings
 - <Option 1 name>: [N] — short reason if rating ≥5 or ≤3
 - <Option 2 name>: [N] — ...
@@ -55,12 +61,11 @@ TURF rating response format:
 
 ## What I'd add if it were on the list
 Anything that would have rated ≥5 that wasn't included. Catches blind spots.
-
-## Confidence
-[high|medium|low] + reason.
 ```
 
 ### Phase 4 — Compute reach
+
+(Per-persona **Grounding** and **Thinking** are audit fields — orchestrator-only and **not** tallied; only the public Ratings feed the reach math.)
 
 For each persona, mark options "reached" (rating ≥ threshold).
 

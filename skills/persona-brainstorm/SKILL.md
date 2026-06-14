@@ -46,11 +46,14 @@ Named personas → exactly those. Otherwise all if ≤7; if more, pick a cogniti
 
 Spawn one subagent per persona, in parallel. Each prompt:
 - Persona doc path; the challenge and any constraints.
-- The `persona-ask` reviewer contract — including *Think before you talk* (return **Thinking** + **Talking**), and references + confidence on the *reasoning*, not on each idea.
+- The `persona-ask` reviewer contract — including *Ground, think, then talk* (return **Grounding** + **Thinking** + **Talking**), with grounding + confidence on the *reasoning*, not on each idea.
 - **Generate with Verbalized Sampling, not your first instinct.** Ask the persona to produce a *probability-weighted spread* of ideas — some obvious, some from the low-probability tail — and keep the unusual-but-valid ones, not just the archetypal answer. This is the mode-collapse counter that keeps Round 1 from returning five versions of the same idea (see `persona-create`, finding #10).
 
 Round 1 response format:
 ```
+## Grounding (private — for the orchestrator; kept out of the pool digest)
+The persona-doc signal your ideas draw on: `§ <Section>: "<…>"`.
+
 ## Thinking (private — for the orchestrator; kept out of the pool digest)
 What angles your doc pushes you toward, what's been overdone, where the unusual ideas might be.
 
@@ -61,12 +64,15 @@ What angles your doc pushes you toward, what's been overdone, where the unusual 
 
 ### Phase 3 — Round 2+ : build
 
-Compile the **idea pool** from the prior round — every idea's title + one-line, deduped, with the proposing persona. (Never include anyone's `Thinking`.) Re-spawn each persona in parallel, with:
+Compile the **idea pool** from the prior round — every idea's title + one-line, deduped, with the proposing persona. (Never include anyone's `Grounding` or `Thinking`.) Re-spawn each persona in parallel, with:
 - Their own prior ideas + the full pool.
 - An explicit **additive** directive: "Build on the pool. Combine two ideas into a stronger one, push an idea further, or fill a gap nobody hit. *Yes-and* — do not critique or rank. Credit the idea(s) you built from."
 
 Round 2+ response format:
 ```
+## Grounding (private — for the orchestrator)
+The persona-doc signal behind your builds: `§ <Section>: "<…>"`.
+
 ## Thinking (private — for the orchestrator)
 Which pool ideas have the most room to grow, what combination or extension you see that others missed.
 

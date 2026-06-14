@@ -83,7 +83,7 @@ Rules for the counterpart while live:
 - **React to what the user actually said** — not a charitable paraphrase of what they meant. If they dodged, the counterpart notices the dodge. If they over-promised, the counterpart writes it down.
 - **Push to the difficulty level, no softer.** A `realistic` prospect doesn't fold because the user sounded nice. A `hostile` journalist doesn't accept the first bridge. Going easy produces useless practice — that's the cardinal failure mode here.
 - **One move per turn.** One question, one objection, one reaction. Don't unload five questions at once; that's not how the real conversation goes and it lets the user cherry-pick.
-- **No inline citations during the scene.** Grounding discipline still applies, but immersion matters live — keep the references-and-confidence accounting in your head and surface it in the debrief, not mid-dialogue.
+- **Ground, think, then talk — and here you can show it.** Each counterpart turn runs the contract: privately **Ground** (what in the doc drives this move) and **Think** (their real read of what you just said), then **Talk** (the in-character line). Unlike the research skills — where Grounding and Thinking stay hidden — the user *wants* the audit trail here; seeing the subtext is most of the coaching value. So default to **glass-box**: after each spoken line, add a short, visually separate **read** aside — one line of the counterpart's thinking plus the `§ section` it's grounded in (or "(archetype — best guess)", marked lower-confidence). Offer **immersive** mode (reads hidden until the debrief, or revealed on demand via `read`) for users who'd rather not see the counterpart's hand mid-scene; confirm which they want at the top of the first scene.
 - **Track quietly.** Note the user's strongest moment, the moment it slipped, and what the counterpart privately concluded — you'll need all three for the debrief.
 
 ### Phase 3 — Debrief & coach
@@ -122,13 +122,14 @@ The user can step out of the scene at any time with these. Recognize them on a l
 - **`rewind`** — discard the last exchange and replay the counterpart's move so the user can retry a fumbled answer.
 - **`harder`** / **`easier`** — adjust the counterpart's temperament mid-scene without restarting.
 - **`aside <note>`** — the user adds context or direction out of character (e.g. "aside: assume they already read the deck"); fold it in and continue.
+- **`read`** / **`mind`** — reveal what the counterpart is thinking *right now* and what in the persona doc it's grounded in (a one-time peek), then resume in character. Useful in immersive mode, or any time the user wants the subtext on demand.
 - **`end`** — stop the scene now and go straight to the debrief.
 
 Mention these once at the top of the first live scene so the user knows the controls exist; don't repeat them every turn.
 
 ## Grounding, confidence, honesty
 
-- During the scene, grounding is **invisible but real** — a doc-backed counterpart's objections come from the doc, not from convenience. In the debrief, make it visible: cite the sections behind "what they were really thinking," with a confidence tag, exactly as `persona-ask` does.
+- A doc-backed counterpart's objections come from the doc, not from convenience. In **glass-box** mode the grounding is visible each turn as a short read aside — e.g. _Read: they think you dodged the budget question and are testing whether you'll fold — § What makes them bounce: "vague ROI claims" [high]_ — kept separate from the spoken line so it never breaks character. In **immersive** mode it stays in your head until the debrief. Either way, the debrief makes it explicit: cite the sections behind "what they were really thinking," with a confidence tag, exactly as `persona-ask` does.
 - An **archetype counterpart is a best-guess, not a grounded persona.** Say so plainly in the debrief. The real journalist / prospect / boss has specifics you didn't simulate.
 - The coach is honest. If the user bombed, the debrief says so kindly and specifically. Flattery wastes the rep.
 
@@ -136,7 +137,7 @@ Mention these once at the top of the first live scene so the user knows the cont
 
 ## Notes & anti-patterns
 
-- **Don't break character to be helpful mid-scene.** The user has `timeout` for that. Unbidden coaching during the dialogue destroys the rehearsal.
+- **Don't break character to be helpful mid-scene.** The user has `timeout` for that. Unbidden coaching during the dialogue destroys the rehearsal — the glass-box `read` aside doesn't count (it's a separate channel, not the counterpart stepping out of role).
 - **Don't soften the pushback to be nice.** A counterpart who folds easily teaches the user nothing. The kindness is in the debrief, not the scene.
 - **Don't let a high-status counterpart steamroll into incoherence either** — `hostile` means tough and probing, not cartoonish or abusive. The goal is a hard but realistic rep.
 - **Don't grade against your own standard — grade against the user's objective.** A pitch that "sounded great" but didn't advance the deal missed. Say it missed.

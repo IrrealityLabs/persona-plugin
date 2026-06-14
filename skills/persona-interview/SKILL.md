@@ -40,9 +40,14 @@ Don't ask the guide all at once. The interview is a *dialog* — you ask, they a
 ### Phase 2 — Conduct (one question per subagent call)
 
 For each question:
-1. Spawn one `general-purpose` subagent. Prompt: persona doc path, the running transcript so far, the next question, the `persona-ask` reviewer contract.
-2. The subagent answers as the persona, in first-person, with references + confidence (per `persona-ask`).
-3. Append the answer to the transcript.
+1. Spawn one `general-purpose` subagent. Prompt: persona doc path, the running transcript so far, the next question, the Ground, think, then talk (Grounding → Thinking → Talking) contract from `persona-ask`.
+2. The subagent answers as the persona, in first-person. **Each turn leads with two private fields, in this order, before the spoken answer:**
+   - **Grounding:** (private) The persona-doc sections that bear on this, cited first: `§ <Section>: "<…>"` + a confidence read [high|medium|low|off-pattern].
+   - **Thinking:** (private) Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
+   - Then the spoken first-person answer ("Talking").
+
+   Grounding + Thinking lead **every** turn, not just the first. They're the audit trail — orchestrator-only, kept out of the transcript/synthesis; only the spoken answer is public.
+3. Append the spoken answer to the transcript.
 4. Decide: is the answer interesting enough to deserve a follow-up? Look for:
    - Surprising claims you didn't expect.
    - Vague answers where the persona seems to be skimming.
@@ -75,9 +80,11 @@ Their stated or implied "what would actually move me" — if it came up.
 ## Open questions
 What this interview *didn't* answer that would matter. Candidates for a follow-up interview, a different method, or a real-user interview.
 
-## References & confidence rollup
-Aggregate: where were answers [high] confidence (well-supported by the doc) vs [low]? If the persona was extrapolating a lot, the whole interview should be treated as directional.
+## Grounding & confidence rollup
+Aggregate from the per-turn Grounding fields: where were answers [high] confidence (well-supported by the doc) vs [low]? If the persona was extrapolating a lot, the whole interview should be treated as directional.
 ```
+
+The per-turn Grounding and Thinking fields are audit material, not transcript content — synthesize only the spoken answers into the themes; the rollup above is the one place the grounding feeds the write-up.
 
 Close with the standard simulation disclaimer.
 

@@ -49,22 +49,22 @@ Each prompt:
 - The topic, framed as a writing prompt: "Write a <platform-style> post (<length spec>) about <topic>. Write it the way *you* would post it — voice, length, what you'd actually choose to share. No prompting on what to include; this is a free post."
 - Platform style spec (Twitter: ≤280 chars or short thread; LinkedIn: 100–300 words; Reddit: 50–400 words, conversational).
 - **No mention of the brand under measurement, no mention of competitors, no list of tools the persona might use.** The post must be generated cold.
-- `persona-ask` reviewer contract (references + confidence on the *reasoning* about what to post, not on the post content itself).
+- The `persona-ask` "Ground, think, then talk" contract (Grounding → Thinking → Talking) — applied to the *reasoning* about what to post, not to the post content itself.
 - Response format below.
 
 Response format per post:
 ```
+## Grounding (private — orchestrator only; not posted)
+The persona-doc sections that bear on what this persona would post, cited first: § <Section>: "<quote backing why this is something they'd post>" + a confidence read [high|medium|low|off-pattern]. (Was the persona doc rich enough to produce a confidently-in-character post on this topic?)
+
+## Thinking (private — orchestrator only)
+Private reasoning over that grounding: what this persona would genuinely choose to share, before writing the post.
+
 ## Post (<platform>)
 <the actual post text>
 
 ## Reasoning
 1–2 sentences on why this persona would post this — what they'd want their network to see / discuss / learn.
-
-## References (persona doc)
-- § <Section>: "<quote backing why this is something they'd post>"
-
-## Confidence
-[high|medium|low] + reason. Was the persona doc rich enough to produce a confidently-in-character post on this topic?
 ```
 
 ### Phase 3 — Detect mentions
@@ -81,7 +81,7 @@ For each detected mention, capture:
 - The persona that wrote the post.
 - The sentiment (positive / neutral / negative / mixed) — judge from the surrounding sentence, not the brand name alone.
 
-Run mention detection as a small per-post coding subagent (lightweight prompt) rather than relying on regex alone — language is too messy for exact-match to catch implicit mentions ("I just switched to that anthropic chatbot thing"). The subagent gets the post + brand-and-variants list + competitor list and returns structured mentions.
+Run mention detection as a small per-post coding subagent (lightweight prompt) rather than relying on regex alone — language is too messy for exact-match to catch implicit mentions ("I just switched to that anthropic chatbot thing"). The subagent gets the **posted text only** (never the private Grounding + Thinking) + brand-and-variants list + competitor list and returns structured mentions.
 
 ### Phase 4 — Synthesize
 

@@ -47,18 +47,18 @@ Spawn one subagent per persona. Each prompt:
   > - Asking a sharper question instead of asserting an opinion is also a valid comment.
   > - 1 short paragraph to 3 paragraphs. Don't bullet-list unless you really would. No emoji."
 - Important: "If your persona is non-technical or wouldn't actually be on HN, comment as yourself — don't try to fake technical voice. The output is more useful if some commenters are clearly outside HN's typical audience."
-- `persona-ask` reviewer contract.
+- The `persona-ask` "Ground, think, then talk" contract (Grounding → Thinking → Talking).
 - HN comment response format below.
 
 HN comment response format:
 ```
 ## <persona slug>
+**Grounding:** (private — orchestrator only; not posted) The persona-doc sections that bear on this, cited first: § <Section>: "<…>" + a confidence read [high|medium|low|off-pattern].
+**Thinking:** (private — orchestrator only) Private reasoning over that grounding: what this persona would genuinely conclude, before deciding what to post publicly.
+
 <the comment, formatted as it would appear>
 
 ---
-**References (persona doc):**
-  - § <Section>: "<quote>"
-**Confidence:** [high|medium|low] + one-line reason.
 **HN-voice fit:** [strong|partial|forced] — whether this persona would credibly post on HN as themselves. Forced = the simulation pushed them into voice that doesn't match their doc.
 ```
 
@@ -69,9 +69,10 @@ If reply round is on:
 For each persona, identify the comment they'd most likely reply to (the orchestrator picks — usually the one most directly relevant to the persona's stated positions, or the one most provocative). Spawn one subagent per persona, prompt:
 - Persona doc path.
 - The original submission.
-- The full top-level thread (all personas' top-level comments).
+- The full top-level thread (all personas' top-level comments) — the **posted comments only**; each commenter's private Grounding + Thinking stay with the orchestrator and are never shown to another persona.
 - The specific comment they're replying to.
 - Instruction: "Write one reply. Could be agreement, disagreement, expansion, a sharper question. Same HN-voice guidance as before. Keep it shorter than a top-level comment — replies on HN are typically tighter."
+- Same response format as Phase 2 (lead with private Grounding + Thinking, then the posted reply).
 
 Replies are appended to the thread under their target.
 
@@ -84,7 +85,7 @@ Replies are appended to the thread under their target.
 <title + 2-sentence summary of content>
 
 ## Thread
-Render as a flat HN-style thread:
+Render as a flat HN-style thread — **posted comments and replies only; each persona's private Grounding + Thinking are excluded from the rendered thread and any digest, kept with the orchestrator:**
 
 <persona-slug-1> | comment text
   ↳ <persona-slug-3> reply text

@@ -44,13 +44,21 @@ Spawn one subagent (sequential, not parallel — each day builds on prior days).
 - **All prior days' entries**, in order. The persona "remembers" their week.
 - Today's day number, and any trigger events occurring today.
 - Instruction: "Write your diary entry for day N. Cover: what happened today (specific to the topic), how it felt, what (if anything) you did differently than recent days, any patterns you're noticing in yourself. Aim for ~200 words. First-person."
-- `persona-ask` reviewer contract.
+- The Ground, think, then talk (Grounding → Thinking → Talking) contract from `persona-ask`.
 - Diary entry response format below.
+
+Each day's entry leads with the two private fields (Grounding, Thinking) before the spoken entry — they lead **every** day, not just day 1. They're the audit trail: orchestrator-only, kept out of the cross-day synthesis; only the entry narrative is public.
 
 Diary entry response format:
 ```
 ## Day N
 *(Day-of-week if helpful for context.)*
+
+### Grounding (private — orchestrator only)
+The persona-doc sections that bear on today's entry, cited first: § <Section>: "..." + a confidence read [high|medium|low|off-pattern].
+
+### Thinking (private — orchestrator only)
+Private reasoning over that grounding: what this persona would genuinely conclude today, where the evidence is thin.
 
 ### What happened
 2–4 sentences on the day's relevant events, in narrative form.
@@ -63,10 +71,6 @@ Either: a specific change, or "same as the last few days" with a one-line note o
 
 ### Patterns I'm noticing
 What's becoming a habit, what's recurring as friction, what I keep forgetting / avoiding. Skip on day 1 (no patterns yet).
-
-### References & confidence
-**References (persona doc):** § <Section>: "..."
-**Confidence:** [high|medium|low] + one-line reason.
 ```
 
 ### Phase 3 — Synthesize across days

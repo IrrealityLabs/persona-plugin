@@ -53,13 +53,13 @@ Spawn one `general-purpose` subagent per persona, **all in one message** so they
 - The persona doc path — read in full, inhabit it.
 - The framed question and any options, verbatim.
 - The instruction: *"Answer this question critically from your perspective, given your background and experience."*
-- The `persona-ask` reviewer contract — first-person, **references to the persona doc + a confidence tag** on the take, honest about disagreement, no generic praise, voice grounded in the doc's examples (not fabricated).
+- The `persona-ask` reviewer contract — Ground, think, then talk (Grounding → Thinking → Talking): first-person, the persona-doc material cited *first* plus a confidence read, then private reasoning, then the take; honest about disagreement, no generic praise, voice grounded in the doc's examples (not fabricated).
 
-Each subagent returns a short, grounded answer:
+Each subagent returns a short, grounded answer that leads with Grounding, then Thinking, then the public Answer:
 ```
+**Grounding:** (private) The persona-doc sections that bear on this, cited first — § <Section>: "<quote/paraphrase>" + a confidence read [high|medium|low|off-pattern] with a one-line reason.
+**Thinking:** (private) Private reasoning over that grounding — what this persona would genuinely conclude, where the evidence is thin.
 **Answer:** "First-person, critical take on the question — and, if options were given, which one and why."
-**References (persona doc):** § <Section>: "<quote/paraphrase>"
-**Confidence:** [high|medium|low] + one-line reason.
 ```
 
 ### Phase 4 — Combine into a single anonymous joint answer
@@ -74,7 +74,7 @@ Rules for the merge:
 - **Faithful to the weight of opinion.** If the panel leaned toward option B, the joint answer leans toward B and carries the strongest shared reasons; surface a genuine minority view as a clause ("though some would push back that…") rather than erasing it. Don't manufacture false consensus, and don't average two opposite positions into mush.
 - **Confidence-aware.** Lean on the high-confidence, well-grounded takes; let thin/low-confidence ones inform tone, not conclusions (same weighting principle as `persona-ask`).
 
-Then, **below** the joint answer, add a compact grounding ledger — this is the plugin's references-and-confidence backbone, layered on top of the original technique so the merged answer is auditable:
+Then, **below** the joint answer, add a compact grounding ledger — this rolls up each persona's private Grounding (cited material + confidence read), layered on top of the original technique so the merged answer is auditable:
 
 ```
 ---

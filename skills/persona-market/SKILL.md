@@ -86,21 +86,21 @@ For each round within a world, fan out one subagent per persona, in parallel. Ea
 - For independent condition: no count visibility.
 - Picks-per-round count (usually 1).
 - Instruction: "Pick N item(s) you would actually choose / engage with / want. Brief reasoning per pick (one sentence)."
-- `persona-ask` reviewer contract.
+- The `persona-ask` "Ground, think, then talk" contract (Grounding → Thinking → Talking).
 - Pick response format below.
 
 Pick response format:
 ```
 ## Pick (round <N>, world <W>)
+**Grounding:** (private — orchestrator only) The persona-doc sections that bear on this, cited first: § <Section>: "..." + a confidence read [high|medium|low|off-pattern].
+**Thinking:** (private — orchestrator only) Private reasoning over that grounding: what this persona would genuinely conclude, before committing to a pick.
 **Choice:** <item name(s)>
 **Reasoning:** one or two sentences — why this stood out.
 **Did the running counts influence me?:** yes / no / partially — honest answer (only relevant in social-influence condition).
-**References (persona doc):** § <Section>: "..."
-**Confidence:** [high|medium|low]
 ```
 
 After all personas' picks for a round are in, the orchestrator:
-1. Updates the world's `state.json` with the new cumulative counts.
+1. Updates the world's `state.json` with the new cumulative counts. Only the **public pick (Choice)** feeds the running counts other personas see next round; each persona's private Grounding + Thinking stay with the orchestrator and never propagate into the social-influence visibility.
 2. Appends each pick to `picks.jsonl`.
 3. Snapshots state after this round to `snapshots/round-N.json` (lets the dashboard show the evolution).
 4. Moves on to the next round of this world (or the first round of the next world).

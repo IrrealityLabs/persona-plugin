@@ -66,22 +66,21 @@ Spawn one subagent per persona. Each prompt:
   - Comments: sincere, professional, anecdote-friendly. No emoji unless your persona doc supports it.
   - Reposts-with-thoughts: 100–400 characters of your own framing on top of the repost.
   - Stay in your persona's actual professional voice — a junior PM persona shouldn't sound like a VP.
-- `persona-ask` reviewer contract.
+- The `persona-ask` "Ground, think, then talk" contract (Grounding → Thinking → Talking).
 - Response format below.
 
 Response format:
 ```
 ## <persona slug>
+**Grounding:** (private — orchestrator only; not posted) The persona-doc sections that bear on this, cited first: § <Section>: "<…>" + a confidence read [high|medium|low|off-pattern].
+**Thinking:** (private — orchestrator only) Private reasoning over that grounding: what this persona would genuinely conclude, before deciding what to post publicly.
+
 **Action:** scroll | react (<which>) | comment | repost (with-thoughts?) | DM-share
 **Content (if comment / repost-with-thoughts):**
 <the actual text>
 
 **Reasoning:** one sentence on why this persona chose this action.
 
-**References (persona doc):**
-  - § <Section>: "<quote>"
-
-**Confidence:** [high|medium|low]
 **LinkedIn-voice fit:** [strong|partial|forced] — would this persona credibly engage on LinkedIn? Forced = the simulation pushed them into voice that doesn't match their doc.
 ```
 
@@ -101,7 +100,7 @@ One sentence — the engagement shape this post would have. e.g. "Strong sincere
 - DM-share: N (X%)
 
 ## Comment thread
-Render comments in order, with persona attribution.
+Render comments in order, with persona attribution. **Posted comment text only — each persona's private Grounding + Thinking are excluded from the rendered thread, kept with the orchestrator.**
 
 ## Repost activity
 List the personas who'd repost, with their commentary (if with-thoughts). Reposts are LinkedIn's high-leverage action — these are who'd extend the post's reach.

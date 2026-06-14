@@ -75,12 +75,18 @@ Spawn one subagent per persona. Each prompt:
   > "You're <persona name> at a campfire / on a couch / in the living room, three hours into being <substance>. The topic of <topic> comes up. Riff. Don't analyze. Free-associate. Follow tangents. Don't self-censor — the worst-sounding idea might be a good one in disguise. Stay in your persona's underlying perspective (their values, their context, their concerns) but loosen the logical chains.
   > Length: 100–400 words of genuine free-association. Half-finished thoughts are fine. Going off-topic is allowed if the tangent is interesting. End by surfacing the 2–3 wildest takes from your riff explicitly so the listener doesn't miss them.
   > Voice notes: cannabis makes you observational and food-curious. Mushrooms make you pattern-seeking. Ayahuasca makes you declarative and gut-truth-oriented. Don't fake the voice — let the substance just loosen *your* voice. Stay you, just freer."
-- `persona-ask` reviewer contract (references + confidence still apply — even weird ideas should be traceable to the persona doc, just more loosely).
+- `persona-ask` reviewer contract — Ground, think, then talk (Grounding → Thinking → Talking) still applies; even weird ideas should be traceable to the persona doc, just more loosely.
 - Response format below.
 
 Response format:
 ```
 ## <persona slug> (on <substance>)
+
+### Grounding (private — orchestrator only)
+Light grounding: which persona signal the ideas spring from — § <Section>: "<quote that grounds the riff in the persona's actual perspective>" + a confidence read [high|medium|low|off-pattern] (low is expected and fine here).
+
+### Thinking (private — orchestrator only)
+Private reasoning over that grounding: what this persona's loosened perspective would genuinely riff toward, where the thread is thin.
 
 ### The riff
 <100–400 words of free-association on the topic, in this persona's loosened voice>
@@ -93,10 +99,8 @@ Response format:
 ### What's underneath the weirdness
 2–3 sentences pulling out the *actual* insight or signal that the riff produced, in normal voice. This is the bridge from divergent to usable.
 
-### References & confidence
-**References (persona doc):** § <Section>: "<quote that grounds the riff in the persona's actual perspective>"
-**Confidence:** [high|medium|low] — note: low confidence is *expected* and acceptable here. The divergent method isn't trying to be precise.
-**Substance-fit:** [worked|forced|threw the persona off] — if the substance assignment broke the simulation, flag it.
+### Substance-fit
+[worked|forced|threw the persona off] — if the substance assignment broke the simulation, flag it.
 ```
 
 ### Phase 4 — Synthesize

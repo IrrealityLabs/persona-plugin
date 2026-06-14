@@ -25,7 +25,13 @@ A structured Jobs-to-be-Done "switch interview" with one persona: walks back thr
 
 ## Workflow
 
-For each persona, sequentially:
+For each persona, sequentially. Every persona subagent answers under the Ground, think, then talk (Grounding → Thinking → Talking) contract from `persona-ask`: **each turn leads with two private fields, before the spoken answer:**
+
+- **Grounding:** (private) The persona-doc sections that bear on this, cited first: `§ <Section>: "<…>"` + a confidence read [high|medium|low|off-pattern].
+- **Thinking:** (private) Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
+- Then the spoken first-person answer ("Talking").
+
+Grounding + Thinking lead **every** timeline stage and force turn, not just the first. They're the audit trail — orchestrator-only, kept out of the synthesis; only the spoken answers are clustered into the four-force map.
 
 ### Phase 1 — Establish the moment
 

@@ -40,7 +40,7 @@ Spawn one subagent per persona. Each prompt:
 - Persona doc path.
 - The category framing (kept consistent across personas).
 - The full question set (all sections, in canonical order — unaided always before aided to avoid priming).
-- `persona-ask` reviewer contract.
+- The `persona-ask` Ground, think, then talk (Grounding → Thinking → Talking) contract.
 - Brand-tracking response format below.
 
 **Canonical question order — do not vary:**
@@ -64,6 +64,12 @@ Repeat for competitors if requested.
 ### Brand-tracking response format
 
 ```
+## Grounding (private — orchestrator only; not aggregated)
+The persona-doc sections that bear on this, cited first: § <Section>: "<…>" + a confidence read [high|medium|low|off-pattern].
+
+## Thinking (private — orchestrator only)
+Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
+
 ## Unaided recall (Section 1)
 Listed brands, in order they came up:
 1. <brand>
@@ -88,10 +94,9 @@ Stopped at <N>. Confidence: [high|medium|low]
 ## Recommend intent
 - <brand>: <0–10>. Reason: <one sentence>. Confidence: [high|medium|low]
 - <competitor>: ...
-
-## References (persona doc)
-The 2–3 most load-bearing references that grounded the answers, especially for the recommend-intent reasoning.
 ```
+
+(Grounding + Thinking are per-persona audit fields — kept with the orchestrator, never aggregated; only the public answer sections are rolled up below.)
 
 ### Phase 3 — Aggregate
 

@@ -39,12 +39,15 @@ If the user named personas, use exactly those. Otherwise default to all personas
 
 ### Phase 2 — Round 1: stake positions
 
-Spawn one subagent per persona, in parallel. Prompt difference vs. focus-group: explicitly direct the persona to take a *position*, not just react. "You're being asked to judge this proposal. Take the strongest position your decision-making patterns support — agreement or rejection, with stakes." Apply `persona-ask`'s *Think before you talk* first: reason privately, then stake the position you'd actually defend out loud.
+Spawn one subagent per persona, in parallel. Prompt difference vs. focus-group: explicitly direct the persona to take a *position*, not just react. "You're being asked to judge this proposal. Take the strongest position your decision-making patterns support — agreement or rejection, with stakes." Apply `persona-ask`'s *Ground, think, then talk* first: ground in the doc, reason privately, then stake the position you'd actually defend out loud.
 
 Round 1 response format:
 ```
+## Grounding (private — for the orchestrator; kept out of the digest)
+The persona-doc sections that bear on this proposal, cited first: `§ <Section>: "<…>"` + a confidence read.
+
 ## Thinking (private — for the orchestrator; kept out of the digest)
-Your private reasoning before you stake a position: what your doc supports, what you'd genuinely conclude, where you're thin.
+Your private reasoning over that grounding: what you'd genuinely conclude, where you're thin.
 
 ## Verdict
 Endorse | Reject | Conditional (state condition) | Decline (out of my domain)
@@ -61,13 +64,16 @@ The single objection or condition you'd refuse to drop even under pressure.
 
 ### Phase 3 — Debate rounds (2 through cap)
 
-Compile the digest each round: each persona's Verdict + condensed Argument + pushback — never their `Thinking`, which stays with you. Then re-spawn each persona with:
+Compile the digest each round: each persona's Verdict + condensed Argument + pushback — never their `Grounding` or `Thinking`, which stay with you. Then re-spawn each persona with:
 - Their own prior round response.
 - The digest of others' positions.
 - An explicit directive: "engage the opposing positions — by name. Name what's strong about them, name what's wrong about them. You may update or harden; do not soften out of politeness."
 
 Round 2+ response format:
 ```
+## Grounding (private — for the orchestrator; kept out of the digest)
+The persona-doc sections behind your position this round: `§ <Section>: "<…>"` + a confidence read.
+
 ## Thinking (private — for the orchestrator; kept out of the digest)
 Your private reasoning this round: what the opposing arguments actually do to your position, before you decide what to argue back.
 

@@ -72,12 +72,15 @@ Spawn one subagent per persona. Each prompt:
   - Internal company-wide: more measured, brand-aware.
   - Customer/community: politeness up, vendor-customer dynamic in play.
   - DM: most candid.
-- `persona-ask` reviewer contract.
+- The `persona-ask` "Ground, think, then talk" contract (Grounding → Thinking → Talking).
 - Response format below.
 
 Response format:
 ```
 ## <persona slug>
+**Grounding:** (private — orchestrator only; not posted) The persona-doc sections that bear on this, cited first: § <Section>: "<…>" + a confidence read [high|medium|low|off-pattern].
+**Thinking:** (private — orchestrator only) Private reasoning over that grounding: what this persona would genuinely conclude, before deciding what to post publicly.
+
 **Action(s):** nothing | emoji (<which>) | thread reply | channel reply | DM-sender | DM-other
 (can be multiple, e.g. ":eyes: + thread reply")
 
@@ -89,10 +92,6 @@ Response format:
 
 **Reasoning:** one sentence on why this persona chose this action set.
 
-**References (persona doc):**
-  - § <Section>: "<quote>"
-
-**Confidence:** [high|medium|low]
 **Slack-channel-fit:** [strong|partial|forced] — would this persona credibly engage in this kind of Slack channel? Forced = the simulation pushed them into voice/behavior that doesn't match.
 ```
 
@@ -113,7 +112,7 @@ One sentence. e.g. "Mostly lurked (6 of 8 personas), 2 emoji reactions (:eyes: +
 - DM someone else: N
 
 ## Visible thread
-Render the in-channel reactions and threaded replies as they'd appear in Slack.
+Render the in-channel reactions and threaded replies as they'd appear in Slack. **Sent message content only (channel/thread/DM text) — each persona's private Grounding + Thinking are excluded from these renders, kept with the orchestrator.**
 
 ## Invisible thread (DMs)
 The DMs — both to the sender and to third parties. This is the iceberg-under-the-water signal. For DM-someone-else: who they'd DM and what about. Often more useful than the visible thread for surfacing the *actual* reception.

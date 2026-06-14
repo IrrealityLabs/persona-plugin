@@ -100,16 +100,19 @@ Each subagent prompt contains:
 - The persona doc path — read in full, inhabit it, you are this audience member.
 - The full ordered segment list: each segment's image (inline), slide/notes text, and spoken text, with its index + caption, **in order**.
 - The talk's **goal** (from Phase 0) and the audience framing — "you are sitting in the audience for this; react as you actually would."
-- The `persona-ask` reviewer contract (load it) — references + confidence on every finding, severity tagged honestly, no generic praise, quote the exact slide/line.
+- The `persona-ask` Ground, think, then talk (Grounding → Thinking → Talking) contract (load it) — ground every finding before reasoning, severity tagged honestly, no generic praise, quote the exact slide/line.
 - The presentation response format below.
 
 **Presentation response format (per persona):**
 ```
+## Grounding (private — orchestrator only; not aggregated)
+The persona-doc sections that bear on this, cited first: § <Section>: "<…>" + a confidence read [high|medium|low|off-pattern]. One line on how well my persona doc supports these reactions overall.
+
+## Thinking (private — orchestrator only)
+Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
+
 ## At-a-glance
 Would this talk achieve its goal *for me*? One line. Plus my engagement arc in a word or two ("hooked early, lost me mid, recovered at the ask").
-
-## References
-One line on how well my persona doc supports these reactions overall (per persona-ask).
 
 ## Slide-by-slide
 One block per segment I had a real reaction to (skip the ones I'd have no reaction to — silence is data, don't pad).
@@ -143,7 +146,7 @@ A finding with no persona-doc reference is malformed — the subagent drops or r
 
 ### Phase 5 — Synthesize and curate
 
-Compile one panel report. Weight by severity × confidence × cross-persona convergence, exactly as `persona-review` Phase 5. Don't summarize away disagreement — where two audience personas split, that's a real targeting decision.
+Compile one panel report. Weight by severity × confidence × cross-persona convergence, exactly as `persona-review` Phase 5. Don't summarize away disagreement — where two audience personas split, that's a real targeting decision. Each persona's Grounding + Thinking stay with you as per-persona audit fields — never aggregated into the report; only the public reactions are synthesized.
 
 ```
 # Presentation feedback: <talk descriptor>  ·  Goal: <the goal>

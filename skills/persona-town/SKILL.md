@@ -112,8 +112,8 @@ One subagent per persona. Each prompt:
 - Current `world.json` (positions of all personas, buildings, current tick).
 - This persona's `memory.jsonl` (their accumulated observations).
 - The action choices: `move {dx, dy}` (one tile any of 8 directions), `speak {to: slug, content: "..."}` (only valid if adjacent or co-located with target), `observe` (stay in place, listen for nearby speech).
-- A simple decision frame: "What would you do this tick, given who's around you and what you know? Decide and write your `intent.json` in this format: `{thinking: <private reasoning — why this action; logged by the orchestrator, never broadcast to other personas>, action: 'move'|'speak'|'observe', target: <slug or null>, content: <speech text or null>, dx: <int>, dy: <int>}`."
-- The `persona-ask` reviewer contract — references + confidence on the *reasoning*, even if the action is mechanical. Apply *Think before you talk*: reason privately first, then choose your action and decide what (if anything) you'd actually say — a persona needn't repeat or pass on something they wouldn't.
+- A simple decision frame: "What would you do this tick, given who's around you and what you know? Decide and write your `intent.json` in this format: `{grounding: <the persona-doc trait that drives this choice>, thinking: <private reasoning — why this action; logged by the orchestrator, never broadcast>, action: 'move'|'speak'|'observe', target: <slug or null>, content: <speech text or null>, dx: <int>, dy: <int>}`."
+- The `persona-ask` reviewer contract — grounding + confidence on the *reasoning*, even if the action is mechanical. Apply *Ground, think, then talk*: ground in the doc, reason privately, then choose your action and decide what (if anything) you'd actually say — a persona needn't repeat or pass on something they wouldn't.
 
 The persona doc determines behavior: an introvert persona may speak less; a community-organizer persona may seek out others; a skeptical persona may not pass along messages they don't believe.
 
@@ -128,7 +128,7 @@ Read every `personas/<slug>/intent.json`. Resolve:
 
 Write the new world state: positions updated, `speech` field populated for any persona who spoke this tick (clears next tick), tick incremented.
 
-Append the tick's events to `events.jsonl` (one event per line) — include each persona's `thinking` on its action event so the run is auditable (why the diffusion went the way it did). `thinking` never enters another persona's `memory.jsonl`; only spoken `content` propagates.
+Append the tick's events to `events.jsonl` (one event per line) — include each persona's `grounding` + `thinking` on its action event so the run is auditable (why the diffusion went the way it did). Neither ever enters another persona's `memory.jsonl`; only spoken `content` propagates.
 
 #### Step D — Brief pause
 

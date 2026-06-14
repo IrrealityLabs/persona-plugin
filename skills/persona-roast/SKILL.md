@@ -52,13 +52,19 @@ Spawn one subagent per persona. Each prompt:
   > - **Be the harshest version of *yourself*** — not a generic mean person. Stay in your persona's actual voice and decision-making patterns; just unfilter the criticism that would normally come out diplomatic. A polite persona being harsh sounds different from a sharp persona being harsh.
   > - **Aim at the user's confident parts**, if you can tell what those are. The roast is most useful when it punctures what the creator thinks is strong, not when it agrees with what they already worry about.
   > - **Stay on the work.** Roast the idea, the asset, the product. Don't roast the person."
-- `persona-ask` reviewer contract (references + confidence still apply — even a roast must be grounded).
+- `persona-ask` reviewer contract — Ground, think, then talk (Grounding → Thinking → Talking) still applies; even a roast must be grounded.
 - Sensitivity floor (if any).
 - Response format below.
 
 Response format:
 ```
 ## <persona slug>'s roast
+
+### Grounding (private — orchestrator only)
+The persona-doc sections that bear on this, cited first: § <Section>: "<…>" + a confidence read [high|medium|low|off-pattern]. Evidence before reasoning — even a roast must be grounded.
+
+### Thinking (private — orchestrator only)
+Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
 
 ### Headline
 One sentence — the single most damning thing about this.
@@ -74,12 +80,6 @@ The aspect the creator probably feels confident about that this persona is unimp
 
 ### What you'd need to even reconsider
 The bar this would have to clear for you to take it seriously — not a polite "what to fix," a high bar.
-
-### References
-- § <Section>: "<quote>"
-
-### Confidence
-[high|medium|low] + reason.
 ```
 
 ### Phase 3 — Synthesize

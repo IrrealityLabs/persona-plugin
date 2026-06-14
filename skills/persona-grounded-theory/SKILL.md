@@ -85,6 +85,12 @@ Each cycle has four steps: collect data, open code, axial code, decide next.
 For each persona in the current cycle's sample:
 - Draft 2–4 open-ended questions tied to the research question. Cycle 1: broad starter questions ("Tell me about the last time you considered <thing>"). Cycle 2+: questions targeted at gaps the emerging categories don't yet explain.
 - Apply the `persona-ask` framing checklist. Questions should be non-leading and behavioral.
+- Each persona subagent answers under the Ground, think, then talk (Grounding → Thinking → Talking) contract from `persona-ask`. **Each (persona, question) response leads with two private fields, before the spoken answer:**
+  - **Grounding:** (private) The persona-doc sections that bear on this, cited first: `§ <Section>: "<…>"` + a confidence read [high|medium|low|off-pattern].
+  - **Thinking:** (private) Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
+  - Then the spoken first-person answer ("Talking").
+
+  Grounding + Thinking lead **every** response (every cycle, every persona), not just cycle 1. They're the audit trail — orchestrator-only. **Code only the spoken answer:** open coding (Step B) clusters the Talking part; the Grounding and Thinking fields are not coded into labels/categories.
 - For each (persona, question) pair, spawn a subagent and save the response to `examples/<slug>__<question-id>.md`.
 
 Cycle-1 starters that work well for grounded theory:
@@ -95,7 +101,7 @@ Cycle-1 starters that work well for grounded theory:
 #### Step B — Open coding (constant comparison)
 
 For each example written in Step A, spawn a coding subagent. Each prompt:
-- The example response.
+- The example response. **Code only the spoken answer (the Talking part); ignore the Grounding and Thinking fields — they're audit material, not data to cluster.**
 - The full `labels.jsonl` so far (so they can re-use labels rather than coining new ones for the same idea).
 - Instruction: "Code this example. For each distinct meaning unit in it, propose a short label (3–6 words) describing what's going on. If an existing label fits, reuse it. Output JSON list: `[{label, quote_from_example, persona_slug, confidence}]`."
 

@@ -36,8 +36,13 @@ For each persona, sequentially:
 Spawn one subagent. Prompt:
 - Persona doc path.
 - The activity to narrate, framed as an invitation: "I want to understand how you actually do <activity> today, in detail. Walk me through it as if you were narrating to a friend who's never seen you do this — start from the trigger that puts you in the activity, end when you'd consider it 'done.' Include the boring parts."
-- The `persona-ask` reviewer contract — references + confidence apply.
-- Format: prose narrative, broken into stages.
+- The Ground, think, then talk (Grounding → Thinking → Talking) contract from `persona-ask`.
+- Format: **each narrative turn (the initial narrative and every probe response) leads with two private fields, before the prose:**
+  - **Grounding:** (private) The persona-doc sections that bear on this, cited first: `§ <Section>: "<…>"` + a confidence read [high|medium|low|off-pattern].
+  - **Thinking:** (private) Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
+  - Then the prose narrative, broken into stages ("Talking").
+
+  Grounding + Thinking lead **every** turn, not just the initial narrative. They're the audit trail — orchestrator-only, kept out of the narrative summary/synthesis; only the prose narrative is public.
 
 Get back the initial narrative. Expect 400–1000 words of structured story.
 
@@ -94,8 +99,10 @@ What the persona didn't say outright but the narrative implies. Frame as opportu
 If the user named what they're trying to build / understand, frame the takeaways for that — without forcing fit. If the narrative doesn't support a clean insight on that, say so.
 
 ## Confidence rollup
-Where in the narrative the persona was [high] confident vs. [low]. Low-confidence stretches are extrapolation from the persona doc and should be weighted accordingly.
+Aggregate from the per-turn Grounding fields: where in the narrative the persona was [high] confident vs. [low]. Low-confidence stretches are extrapolation from the persona doc and should be weighted accordingly.
 ```
+
+The per-turn Grounding and Thinking fields are audit material, not narrative content — synthesize only the prose narrative into the sections above; the confidence rollup is the one place the grounding feeds the write-up.
 
 If multiple personas, add a cross-persona section: where their workflows converge, where they diverge, what the divergence implies about audience segmentation.
 

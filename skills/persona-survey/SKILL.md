@@ -50,7 +50,7 @@ If the user named specific personas, use exactly those. Otherwise use **all** pe
 Spawn one `general-purpose` subagent per persona, all in a single message so they run in parallel. Each prompt:
 - Persona doc path.
 - The full question set, in order.
-- The `persona-ask` reviewer contract — references + confidence on every answer.
+- The `persona-ask` Ground, think, then talk (Grounding → Thinking → Talking) contract on every answer.
 - The required response format below.
 
 Each persona answers all questions in one pass (not one subagent per question — that's wasteful).
@@ -61,15 +61,17 @@ Each persona answers all questions in one pass (not one subagent per question �
 ## <persona slug>
 
 ### Q1: <question text>
+**Grounding:** (private — not tallied) The persona-doc sections that bear on this, cited first: `§ <Section>: "<…>"` + a confidence read [high|medium|low|off-pattern].
+**Thinking:** (private) Private reasoning over that grounding: what this persona would genuinely conclude, where the evidence is thin.
 **Answer:** <for closed Q's: the chosen option / scale value; for open: 1–3 sentences>
-**Confidence:** [high|medium|low]
-**Why:** brief reasoning, citing persona doc sections where load-bearing
 
 ### Q2: ...
 ...
 ```
 
 ### Phase 4 — Aggregate
+
+(Per-persona **Grounding** and **Thinking** are audit fields — they stay with the orchestrator and are **not** tallied; only the public **Answer** is aggregated.)
 
 For each question:
 
