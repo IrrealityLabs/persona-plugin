@@ -23,6 +23,8 @@ Persona docs that produce useful LLM simulation are *not* what most product / ma
 8. **Prompt-based "be neutral" / "answer honestly" instructions DO NOT WORK and often backfire.** "Answer honestly" preambles +44% bias; "objective analyst" priming +38% bias; reverse-coding +134% bias. *Implication:* don't paper over LLM biases with "be unbiased" instructions in the persona doc. They will harm accuracy.
 9. **Caricature lives in broad topics; specifics reduce it.** Same source: minority-identity personas are caricatured more than majority ones, and broad/abstract topics produce more caricature than narrow specific ones. *Implication:* if a persona spans an underrepresented group, the persona doc needs more *concrete behavioral and situational specifics* (not more identity markers) to counteract the caricature pull.
 
+10. **Alignment causes mode collapse; Verbalized Sampling reverses it.** Preference-tuning (RLHF/DPO) biases models toward the most *typical* output — raters prefer familiar-sounding text — which compresses the output distribution. This is the same dynamic behind #4. *Verbalized Sampling* (VS) counters it: instead of asking for one answer, ask the model to **generate several candidates each with an explicit probability reflecting its full distribution**, then deliberately keep the lower-probability (less-stereotypical but still valid) ones. It recovers ~1.6–2.1× diversity on creative/generative tasks, is training-free, costs nothing in quality/accuracy, and stacks with temperature. *Implication:* anywhere this skill asks the model to **generate** varied material — a spanning batch of personas (Mode 4), speech samples across registers, a range of negative-experience anchors — prompt for a probability-weighted spread and sample across it, rather than taking the first, most-typical answer.
+
 These findings are *built into the template and the quality bar below*. The skill is not just "fill out these sections"; it's "fill these sections in a way that reflects what's been shown to actually work."
 
 A short references list lives at the bottom of this file.
@@ -118,7 +120,7 @@ The subagent returns a markdown summary sectioned by persona-doc dimension, each
 
 ### Phase 4 — Draft and confirm
 
-Synthesize interview (primary) + research (secondary) into the template below. **For the speech samples specifically:** start from the user's verbatim phrases, then add 2–7 more drawn from research findings to reach 5–10, ensuring register coverage (peer / authority / frustrated / casual / written / spoken). Mark each sample with its register.
+Synthesize interview (primary) + research (secondary) into the template below. **For the speech samples specifically:** start from the user's verbatim phrases, then add 2–7 more drawn from research findings to reach 5–10, ensuring register coverage (peer / authority / frustrated / casual / written / spoken). Mark each sample with its register. When you generate the added phrases, use Verbalized Sampling — ask for a probability-weighted spread of candidates per register and keep the varied ones, not the single most generic phrasing (per finding #10).
 
 **Counter-steer the Big Five defaults explicitly.** If the persona is below 5 on Agreeableness, Conscientiousness, or above 5 on Neuroticism, the doc must include specific behavioral anchors that *show* this — because the LLM will otherwise default upward / downward.
 
@@ -221,6 +223,7 @@ Before generating anything, lay out an **N-row plan**: one row per persona, each
 - Vary the **motivation** behind the shared criterion across rows (the single biggest guard against clones — same constraint, different *why*).
 - Vary **negative experiences** deliberately (different current frustration / recent setback per persona) — it's a required field *and* a strong differentiator, and it counters the LLM's positivity drift across the batch.
 - Spread **Big Five** across rows — don't let all N drift to the default high-A / high-C / low-N; assign some disagreeable, disorganized, anxious profiles where the constraints allow.
+- **Fill the cells with Verbalized Sampling, not the model's first guess.** When you ask the model to propose values for a diversity axis (motivations, triggers, negative experiences, Big Five profiles), prompt it to *verbalize a distribution* — e.g. "list 8 distinct motivations this buyer could have, each with a probability of how typical it is" — then spread your N rows across that distribution, deliberately reaching into the low-probability tail. The spanning plan picks the axes; VS keeps the values off the obvious archetype. This is the most direct counter to the homogenization failure (#4, #10).
 - Show the plan as a compact table (persona → its defining cell). Let the user edit it. The plan *is* the uniqueness guarantee; the docs just flesh out each cell.
 
 ### Phase 3 — Ground once, then generate in parallel
@@ -380,6 +383,7 @@ The persona-doc structure and quality bar above are grounded in:
 - *Scaling Personality Control in LLMs with Big Five Scaler Prompts* (2025). https://arxiv.org/pdf/2508.06149 — numeric scaler format achieves r > 0.85 with measured traits.
 - Frontiers Comp. Neuroscience (2026). *Critical analysis of MBTI-based LLM persona profiling*. — MBTI 47% test-retest; Big Five explains 2× the variance.
 - Sarstedt et al. (2024). *Using LLMs to Generate Silicon Samples in Consumer and Marketing Research*. *Psychology & Marketing*. — variance compression; magnitude unreliable, direction reliable.
+- Zhang, J., Yu, S., Shi, W., et al. (incl. Manning) (2025). *Verbalized Sampling: How to Mitigate Mode Collapse and Unlock LLM Diversity*. https://arxiv.org/abs/2510.01171 — prompting for a probability-weighted distribution of candidates recovers 1.6–2.1× diversity, training-free, with no quality/safety cost; a direct mitigation for the variance-compression / mode-collapse failure mode (#4, #10).
 - Hu & Collier (2024). *Quantifying the Persona Effect in LLM Simulations*. https://arxiv.org/pdf/2402.10811 — persona axes only help when they actually predict the outcome in real data.
 - Liu et al. (2025). *Race and Gender in LLM-Generated Personas: 41-occupation audit*. https://arxiv.org/html/2510.21011v1 — provider safety scores don't predict bias direction.
 
