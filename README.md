@@ -21,7 +21,7 @@ The best-practice walkthrough for creating a persona doc. Three modes:
 - **Interview** — answer ~6 questions about your target customer; auto-research the segment; draft and save.
 - **Bulk import** — point at a CSV (one row per persona, one column per question); spawns subagents to turn each row into a persona doc.
 - **Pre-supplied research** — paste an ICP doc, customer-research summary, or prior persona work; we structure it into our format.
-- **Batch from a description** — give one description and a count ("10 potential Jaguar buyers aged 40–60 who value British heritage"); it pins down the must-hold criteria, plans a deliberate diversity frame, and generates that many *unique, non-duplicated* personas that all strictly fit. (For a population grounded in real survey data instead of a description, use `persona-copula`.)
+- **Batch from a description** — give one description and a count ("10 potential Jaguar buyers aged 40–60 who value British heritage"); it pins down the must-hold criteria, plans a deliberate diversity frame, and generates that many *unique, non-duplicated* personas that all strictly fit.
 
 Every persona doc captures the four dimensions plus verbatim language: **demographics**, **psychographics**, **behavioral**, **contextual**, and **how they actually talk**.
 
@@ -64,8 +64,7 @@ The parent / dispatcher for the full library of research methodologies. Helps yo
 - **`persona-goal`** — *optimize* an asset against the panel in a loop: review → edit → re-score, driven by the native goal feature in Claude Code and Codex. Stops on a principled signal — the score stops improving, the panel runs out of blockers, or your round budget is hit — and tells done apart from stuck.
 - **`persona-roleplay`** — rehearse a high-stakes conversation against a persona who plays the counterpart: a journalist interviewing you, a prospect you're pitching, your boss in a 1:1. Inverts the usual setup — *you* are the one being tested, and you get coached at the end.
 - **`persona-presentation`** — slide-by-slide audience feedback on a deck or talk. Feed it a deck, a run-of-show, and/or a transcript/video; the personas sit through the whole talk and the panel feedback becomes a curated change list.
-- **`persona-of-thought`** — a [reasoning technique](https://askrally.com/article/personas-of-thought): each persona answers a question independently, then the answers are fused into a single anonymous joint response. Use when you want *one* better answer informed by many perspectives, not a panel breakdown.
-- **`persona-copula`** — a third way to *build* personas: fit a Gaussian copula ([SYNC method](https://arxiv.org/abs/2009.09471)) to real survey microdata, sample a synthetic population that preserves the marginals *and* the cross-variable correlations, and turn each synthetic respondent into a persona. Use when you have tabular survey data and want a statistically-representative population, not a few hand-built archetypes.
+- **`persona-of-thought`** — each persona answers a question independently, then the answers are fused into a single anonymous joint response. Use when you want *one* better answer informed by many perspectives, not a panel breakdown.
 - **`persona-observe` / `persona-correct` / `persona-refresh`** — keep a persona current: add real data you already have (`persona-observe`, freeform or CSV), fix a wrong answer so it sticks (`persona-correct`), or rebuild the persona from its source assets (`persona-refresh`).
 
 ## Studies available under `persona-research`
@@ -95,18 +94,10 @@ The parent / dispatcher for the full library of research methodologies. Helps yo
 | Email simulation | `persona-email` | Reply rate / latency / tone | 4–10 personas |
 | Roast | `persona-roast` | Brutally honest unfiltered critique | 3–6 personas |
 | Collaborative brainstorm | `persona-brainstorm` | Generate & build on ideas as a group (yes-and) | 3–7, 2–3 rounds |
-| Divergent ideation | `persona-high` | Lateral / off-the-wall brainstorm | 4–8 personas |
 | Ethnographic | `persona-ethnographic` | "Walk me through your day" | 1–3 personas |
 | Diary study | `persona-diary-study` | Behavior over time (7+ days) | 1–3 personas |
-| Grounded theory | `persona-grounded-theory` | Build theory iteratively from data | 5–12, multi-cycle |
-| Town simulation | `persona-town` | How an idea spreads through a population | 5–15 personas |
-| Market simulation | `persona-market` | Multi-world cultural-market; predictability of winner | 6–12 × 3–5 worlds |
 
 All methods know their sweet spot for sample size and **always run with whatever you have**, marking the output as `directional` when running below the methodology's preferred N.
-
-### Meta-skill: `persona-multiverse`
-
-Wraps any dynamic-system study (focus group / council / town / market / channel-sims-with-reply-rounds) and runs it N times — one *control* universe with the social-influence layer stripped out, plus N−1 *dynamic* universes from the same starting conditions. Synthesizes across runs to show what was reliable vs. what was contingent on social dynamics, and how the control differed from the dynamic average. Costs N× the wrapped study — reach for it when an outcome will drive a real decision and you want to know whether the dynamic-system reading is robust or social-amplification artifact.
 
 ## What it looks like
 
@@ -237,9 +228,6 @@ persona-plugin/
     ├── persona-roleplay/             # rehearse a live conversation; the persona plays the counterpart
     ├── persona-presentation/         # slide-by-slide audience feedback on a deck / talk
     ├── persona-of-thought/           # independent answers fused into one anonymous joint answer
-    ├── persona-copula/               # synthesize a persona population from survey distributions (Gaussian copula)
-    │   └── scripts/
-    │       └── sync_copula.py        # copula fit + sample (numpy/scipy/pandas)
     ├── persona-research/             # parent: catalog + dispatcher
     │   └── references/
     │       └── cost-estimator.md     # live model-pricing-aware cost rules
@@ -252,7 +240,7 @@ persona-plugin/
 - **Sample sizes are small.** Real market research often needs hundreds or thousands of respondents. A persona panel of 5–15 produces *directional* results for most methods — useful for narrowing options, generating hypotheses, killing weak ideas cheaply. Not useful for statistical claims.
 - **Quant methods especially.** Van Westendorp, conjoint, MaxDiff, TURF — all designed for large N. Persona-scale runs give you the shape of the answer, not a defensible number. Validate with real research before pricing decisions, feature commitments, or anything else that bets the budget.
 - **Quality of personas determines quality of research.** A thin persona doc produces thin research outputs no matter which method you pick. Invest in `persona-create` / `persona-distill` before you invest in studies.
-- **Cost can add up fast** for multi-round methods (council, focus group, grounded theory, town, video user testing). Always confirm the cost estimate before launching expensive runs.
+- **Cost can add up fast** for multi-round methods (council, focus group, video user testing). Always confirm the cost estimate before launching expensive runs.
 
 ## Legal & compliance
 

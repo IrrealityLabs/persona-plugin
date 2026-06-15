@@ -3,6 +3,9 @@
 .persona-research-runs/
 .env
 
+# Local-only eval staging — raw study data + notes, never committed alongside the plugin
+dev/
+
 # Python
 __pycache__/
 *.pyc
@@ -20,5 +23,5 @@ node_modules/
 # Local-only design notes (never pushed)
 *.local.md
 
-# CLAUDE.md is local Claude guidance containing Rally strategy — never push to the public repo
+# CLAUDE.md is local Claude guidance — never push to the public repo
 /CLAUDE.md
