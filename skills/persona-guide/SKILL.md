@@ -24,10 +24,14 @@ like:
 ├── <slug>.md                  # THE PERSONA — one file per person
 └── assets/
     └── <slug>/                # immutable, append-only source data
-        ├── slack-messages.jsonl   # whatever the persona was built from
+        ├── slack.jsonl            # whatever the persona was built from (slack/x/web/…)
         ├── corrections.jsonl      # answers the user fixed (persona-correct)
         └── observations.jsonl     # data the user added (persona-observe)
 ```
+
+Every asset file uses the same row — `{context, question, answer, source}`, where `answer` is
+always the person's own verbatim words and `source` points back to where it came from. One
+format, every source.
 
 - **The `.md` has two parts.** A synthesized **body** (paraphrased prose — the general model of
   the person) and a **`## Examples`** section of up to ~30 verbatim `{context, question, answer}`

@@ -6,8 +6,13 @@
 //   node dump-slack.mjs --slug <persona-slug> --channel <channel-name> [--months=12]
 //
 // Reads SLACK_USER_TOKEN from process.env or ./.env in the cwd.
-// Writes to <store>/assets/<slug>/slack-messages.jsonl and slack-metadata.json,
+// Writes to <store>/assets/<slug>/slack.jsonl and slack-metadata.json,
 // where <store> is $PERSONA_HOME if set, else ./.personas in the cwd.
+//
+// slack.jsonl uses the universal asset row — {context, question, answer, source}:
+// answer is the person's own verbatim message, question is the last thing someone
+// else said before it (empty if unprompted), context is the channel/thread setting,
+// source is a permalink (or slack:<channel_id>:<ts>) that resolves back to it.
 //
 // Requires Node 18+ (built-in fetch). No npm install needed.
 
@@ -176,6 +181,42 @@ async function fetchThread(token, channelId, threadTs, nameCache) {
   return all;
 }
 
+// ---------- universal asset rows ----------
+
+const truncate = (s, n) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
+
+const safeOrigin = (permalink) => {
+  try { return new URL(permalink).origin; } catch { return null; }
+};
+
+function messageLink(origin, channelId, ts) {
+  return origin
+    ? `${origin}/archives/${channelId}/p${ts.replace('.', '')}`
+    : `slack:${channelId}:${ts}`;
+}
+
+// One row per emitted message in a thread. question = nearest preceding message
+// by a different speaker; context carries the channel and the thread root.
+function threadRows({ msgs, channelName, channelId, origin, shouldEmit, speakerInContext }) {
+  const rows = [];
+  const root = msgs[0];
+  for (let i = 0; i < msgs.length; i++) {
+    const m = msgs[i];
+    if (!m.text || !shouldEmit(m)) continue;
+    let question = '';
+    for (let j = i - 1; j >= 0; j--) {
+      if (msgs[j].user !== m.user && msgs[j].text) { question = msgs[j].text; break; }
+    }
+    let context = `Slack #${channelName}`;
+    if (m !== root && root.text && root.user !== m.user) {
+      context += ` — thread started by ${root.user_name || 'someone'}: "${truncate(root.text, 160)}"`;
+    }
+    if (speakerInContext) context += ` — said by ${m.user_name || 'unknown'}`;
+    rows.push({ context, question, answer: m.text, source: messageLink(origin, channelId, m.ts) });
+  }
+  return rows;
+}
+
 // ---------- mode A: dump user messages ----------
 
 async function dumpUser(token, slug, username, months, outDir) {
@@ -185,11 +226,13 @@ async function dumpUser(token, slug, username, months, outDir) {
   const sinceUnix = Math.floor(Date.now() / 1000) - months * 30 * 24 * 3600;
   const sinceISO = new Date(sinceUnix * 1000).toISOString().slice(0, 10);
 
-  const out = createWriteStream(join(outDir, 'slack-messages.jsonl'));
+  const out = createWriteStream(join(outDir, 'slack.jsonl'));
   let total = 0;
   let threads = 0;
   let standalones = 0;
+  let rows = 0;
   let capped = false;
+  let origin = null;
   const seenThreads = new Set();
   const channels = new Map();
 
@@ -208,47 +251,29 @@ async function dumpUser(token, slug, username, months, outDir) {
       const channelId = m.channel?.id;
       const channelName = m.channel?.name || 'unknown';
       channels.set(channelId, channelName);
-      if (m.thread_ts && m.thread_ts !== m.ts) {
-        // belongs to a thread we'll expand from root
+      if (!origin && m.permalink) origin = safeOrigin(m.permalink);
+      if (m.thread_ts) {
+        // any thread message — expand once from the root
         const key = `${channelId}:${m.thread_ts}`;
         if (seenThreads.has(key)) continue;
         seenThreads.add(key);
         const msgs = await fetchThread(token, channelId, m.thread_ts, nameCache);
-        out.write(JSON.stringify({
-          kind: 'thread',
-          channel_id: channelId,
-          channel_name: channelName,
-          thread_ts: m.thread_ts,
-          permalink: m.permalink,
-          messages: msgs,
-        }) + '\n');
+        for (const row of threadRows({
+          msgs, channelName, channelId, origin,
+          shouldEmit: (x) => x.user === user.id,
+        })) {
+          out.write(JSON.stringify(row) + '\n');
+          rows++;
+        }
         threads++;
-      } else if (m.thread_ts === m.ts) {
-        // root of a thread
-        const key = `${channelId}:${m.ts}`;
-        if (seenThreads.has(key)) continue;
-        seenThreads.add(key);
-        const msgs = await fetchThread(token, channelId, m.ts, nameCache);
+      } else if (m.text) {
         out.write(JSON.stringify({
-          kind: 'thread',
-          channel_id: channelId,
-          channel_name: channelName,
-          thread_ts: m.ts,
-          permalink: m.permalink,
-          messages: msgs,
+          context: `Slack #${channelName}`,
+          question: '',
+          answer: m.text,
+          source: m.permalink || messageLink(origin, channelId, m.ts),
         }) + '\n');
-        threads++;
-      } else {
-        out.write(JSON.stringify({
-          kind: 'standalone',
-          channel_id: channelId,
-          channel_name: channelName,
-          ts: m.ts,
-          user: user.id,
-          user_name: user.name,
-          text: m.text || '',
-          permalink: m.permalink,
-        }) + '\n');
+        rows++;
         standalones++;
       }
     }
@@ -265,6 +290,7 @@ async function dumpUser(token, slug, username, months, outDir) {
     months_covered: months,
     date_range: { from: sinceISO, to: new Date().toISOString().slice(0, 10) },
     total_records: total,
+    rows,
     threads,
     standalones,
     channels: [...channels.entries()].map(([id, name]) => ({ id, name })),
@@ -280,10 +306,11 @@ async function dumpChannel(token, slug, channelName, months, outDir) {
   const nameCache = new NameCache(token);
   const sinceUnix = Math.floor(Date.now() / 1000) - months * 30 * 24 * 3600;
 
-  const out = createWriteStream(join(outDir, 'slack-messages.jsonl'));
+  const out = createWriteStream(join(outDir, 'slack.jsonl'));
   let total = 0;
   let threads = 0;
   let standalones = 0;
+  let rows = 0;
   const userCounts = new Map();
 
   let cursor;
@@ -301,26 +328,23 @@ async function dumpChannel(token, slug, channelName, months, outDir) {
       if (u) userCounts.set(u, (userCounts.get(u) || 0) + 1);
       if (m.thread_ts && m.reply_count) {
         const msgs = await fetchThread(token, channel.id, m.thread_ts, nameCache);
-        out.write(JSON.stringify({
-          kind: 'thread',
-          channel_id: channel.id,
-          channel_name: channel.name,
-          thread_ts: m.thread_ts,
-          permalink: null,
-          messages: msgs,
-        }) + '\n');
+        for (const row of threadRows({
+          msgs, channelName: channel.name, channelId: channel.id, origin: null,
+          shouldEmit: (x) => !!x.text,
+          speakerInContext: true, // channel dumps aggregate many voices
+        })) {
+          out.write(JSON.stringify(row) + '\n');
+          rows++;
+        }
         threads++;
-      } else {
+      } else if (m.text) {
         out.write(JSON.stringify({
-          kind: 'standalone',
-          channel_id: channel.id,
-          channel_name: channel.name,
-          ts: m.ts,
-          user: u,
-          user_name: await nameCache.lookup(u),
-          text: m.text || '',
-          permalink: null,
+          context: `Slack #${channel.name} — said by ${await nameCache.lookup(u) || 'unknown'}`,
+          question: '',
+          answer: m.text,
+          source: messageLink(null, channel.id, m.ts),
         }) + '\n');
+        rows++;
         standalones++;
       }
     }
@@ -348,6 +372,7 @@ async function dumpChannel(token, slug, channelName, months, outDir) {
       to: new Date().toISOString().slice(0, 10),
     },
     total_records: total,
+    rows,
     threads,
     standalones,
     top_contributors: contributors,
@@ -391,7 +416,7 @@ async function main() {
   };
   await import('node:fs/promises').then((fs) => fs.writeFile(metaPath, JSON.stringify(meta, null, 2)));
 
-  console.error(`done. ${metaSource.total_records} records (${metaSource.threads} threads, ${metaSource.standalones} standalone) → ${outDir}`);
+  console.error(`done. ${metaSource.rows} rows from ${metaSource.total_records} records (${metaSource.threads} threads, ${metaSource.standalones} standalone) → ${outDir}/slack.jsonl`);
 }
 
 main().catch((err) => {

@@ -33,10 +33,11 @@ actually say — a correction needs the corrected answer.
 
 ## Phase 3 — Append to the assets
 
-Append one JSON line to `./.personas/assets/<slug>/corrections.jsonl` (create if needed):
+Append one JSON line to `./.personas/assets/<slug>/corrections.jsonl` (create if needed) — the
+same universal row every asset file uses:
 
 ```json
-{"context": "<situation, or empty>", "question": "<what was asked>", "answer": "<the correct answer, verbatim>"}
+{"context": "<situation, or empty>", "question": "<what was asked>", "answer": "<the correct answer, verbatim>", "source": "user correction, <YYYY-MM-DD>"}
 ```
 
 Append only — never rewrite existing lines.
@@ -56,7 +57,8 @@ A single correction usually shouldn't churn the whole synthesis; default to ligh
 ## Notes
 
 - One correction per run is fine; the user can run it again.
-- Format is exactly `{context, question, answer}` — we don't store what the persona said wrong.
+- Format is the universal asset row — `{context, question, answer, source}`; we don't store what
+  the persona said wrong.
 - The distiller prioritizes `corrections.jsonl` when selecting examples, so corrections stick
   across refreshes.
 - To add real data that isn't a fix (a CSV of exchanges, something you observed), use

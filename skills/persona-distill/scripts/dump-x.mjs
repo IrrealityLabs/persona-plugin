@@ -5,8 +5,12 @@
 //   node dump-x.mjs --slug=<slug> --user=<handle> [--user=<handle> ...] [--max=1000] [--include-replies]
 //
 // Reads X_BEARER_TOKEN from process.env or ./.env in the cwd.
-// Writes to <store>/assets/<slug>/x-posts.jsonl and x-metadata.json,
+// Writes to <store>/assets/<slug>/x.jsonl and x-metadata.json,
 // where <store> is $PERSONA_HOME if set, else ./.personas in the cwd.
+//
+// x.jsonl uses the universal asset row — {context, question, answer, source}:
+// answer is the post text verbatim, question is empty (posts are unprompted),
+// context notes kind/date/likes, source is the post URL.
 //
 // Requires Node 18+ (built-in fetch). No npm install needed.
 // X API: requires at least Basic tier ($200/mo as of 2026) for read access.
@@ -124,26 +128,22 @@ async function dumpUserTimeline(token, user, max, includeReplies, out) {
     if (tweets.length === 0) break;
 
     for (const t of tweets) {
+      if (!t.text) continue;
       const refs = t.referenced_tweets || [];
       const replyRef = refs.find((r) => r.type === 'replied_to');
       const quoteRef = refs.find((r) => r.type === 'quoted');
-      const kind = replyRef ? 'reply' : quoteRef ? 'quote' : 'post';
+      const kind = replyRef ? 'reply' : quoteRef ? 'quote tweet' : 'post';
+      const likes = t.public_metrics?.like_count ?? 0;
+      let context = `X ${kind} by @${user.handle}`;
+      if (t.created_at) context += `, ${t.created_at.slice(0, 10)}`;
+      if (likes) context += ` (${likes} likes)`;
+      if (replyRef) context += ` — replying to https://x.com/i/status/${replyRef.id}`;
+      if (quoteRef) context += ` — quoting https://x.com/i/status/${quoteRef.id}`;
       out.write(JSON.stringify({
-        id: t.id,
-        author_handle: user.handle,
-        author_name: user.name,
-        created_at: t.created_at,
-        text: t.text || '',
-        kind,
-        in_reply_to: replyRef?.id || null,
-        quoted_id: quoteRef?.id || null,
-        metrics: {
-          retweets: t.public_metrics?.retweet_count ?? 0,
-          likes: t.public_metrics?.like_count ?? 0,
-          replies: t.public_metrics?.reply_count ?? 0,
-          quotes: t.public_metrics?.quote_count ?? 0,
-        },
-        url: `https://x.com/${user.handle}/status/${t.id}`,
+        context,
+        question: '',
+        answer: t.text,
+        source: `https://x.com/${user.handle}/status/${t.id}`,
       }) + '\n');
       pulled++;
       if (!earliest || t.created_at < earliest) earliest = t.created_at;
@@ -170,7 +170,7 @@ async function main() {
     : resolve(process.cwd(), '.personas');
   const outDir = resolve(storeRoot, 'assets', args.slug);
   mkdirSync(outDir, { recursive: true });
-  const out = createWriteStream(join(outDir, 'x-posts.jsonl'));
+  const out = createWriteStream(join(outDir, 'x.jsonl'));
 
   const perUser = [];
   for (const handle of args.users) {

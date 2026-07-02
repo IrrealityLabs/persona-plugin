@@ -1,8 +1,8 @@
 # Email source
 
-Turn an email archive into the same thread records the Slack source produces, so the
-distillation fan-out extracts `{context, question, answer}` turns from email exactly as it does
-from Slack. No API key — you point at a file the user already has.
+Turn an email archive into the same universal asset rows every source produces —
+`{context, question, answer, source}`, one row per message the target person wrote. No API
+key — you point at a file the user already has.
 
 ## What it accepts
 
@@ -34,17 +34,18 @@ node skills/persona-distill/scripts/parse-email.mjs --slug=<slug> --file=<path> 
 - **strips quoted reply text** (`> …` lines and "On … wrote:" trailers) so each message is what
   that person actually wrote, not the history,
 - groups messages into threads by normalized subject (ignoring `Re:` / `Fwd:`), ordered by date,
-- writes `email-messages.jsonl` (thread records, same shape as `slack-messages.jsonl`) and
-  `email-metadata.json` (with the target) to `./.personas/assets/<slug>/`.
+- writes `email.jsonl` (universal rows — `answer` = the target's message verbatim, `question` =
+  the last thing someone else wrote before it, `context` = thread subject + participants,
+  `source` = the export file + subject + timestamp) and `email-metadata.json` to
+  `./.personas/assets/<slug>/`. Only the target's messages become rows.
 
 If it warns that no messages matched `--target`, it prints the senders it saw — re-run with the
 right name/email.
 
 ## Then
 
-Distillation reads `email-messages.jsonl` like any other source: the target's replies become
-`answer`s, the message they replied to becomes the `question`, and earlier thread messages become
-`context`. Add `email` to the doc's `sources` frontmatter.
+Distillation reads `email.jsonl` like any other source. Add `email` to the doc's `sources`
+frontmatter.
 
 ## Privacy
 

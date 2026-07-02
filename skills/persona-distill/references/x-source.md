@@ -1,6 +1,6 @@
 # X (Twitter) source
 
-How to obtain X API credentials, store them, and run the dump script that pulls posts into `./.personas/assets/<slug>/x-posts.jsonl`.
+How to obtain X API credentials, store them, and run the dump script that pulls posts into `./.personas/assets/<slug>/x.jsonl` (universal asset rows).
 
 ## A note on X API access (as of 2026)
 
@@ -57,28 +57,20 @@ Flags:
 
 ```
 ./.personas/assets/<slug>/
-├── x-posts.jsonl         # one JSON record per line
+├── x.jsonl               # universal asset rows; see below
 └── x-metadata.json       # users, date range, post counts, whether rate-limited
 ```
 
-JSONL record shape:
+Every row is the universal asset format — `answer` is the post text verbatim,
+`question` is empty (posts are unprompted), `context` carries kind/date/likes and
+what it replied to or quoted, `source` is the post URL:
 
-```jsonc
-{
-  "id": "...",
-  "author_handle": "...",
-  "author_name": "...",
-  "created_at": "2026-…",
-  "text": "...",
-  "kind": "post" | "reply" | "quote",
-  "in_reply_to": "..." | null,
-  "metrics": {"retweets": N, "likes": N, "replies": N},
-  "url": "https://x.com/..."
-}
+```jsonl
+{"context": "X post by @handle, 2026-05-12 (340 likes)", "question": "", "answer": "Hot take: most A/B tests are just expensive coin flips.", "source": "https://x.com/handle/status/18923…"}
 ```
 
 ## Limits and failure modes
 
 - Basic tier rate limits are tight (~15-min windows). Long pulls will sleep between pages — be patient or reduce `--max`.
 - Protected accounts can't be read. The script will report and skip.
-- Reposts (RTs) without comment aren't included — they aren't the persona's own writing. Quote-tweets are included with `kind: "quote"`.
+- Reposts (RTs) without comment aren't included — they aren't the persona's own writing. Quote-tweets are included, marked in `context`.

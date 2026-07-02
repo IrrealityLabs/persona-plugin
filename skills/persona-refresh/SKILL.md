@@ -32,8 +32,8 @@ Follow `skills/persona-distill/references/distillation.md`, treating the **exist
 corpus — do not pull anything**. That means:
 
 - **Full refresh:** run the distillation fan-out / single-pass over the current assets to
-  re-synthesize the body (paraphrased, no verbatim), then select up to ~30 verbatim
-  `{context, question, answer}` turns for `## Examples`, prioritizing `corrections.jsonl` and
+  re-synthesize the body (paraphrased, no verbatim), then select up to ~30 of the best asset
+  rows verbatim for `## Examples`, prioritizing `corrections.jsonl` and
   `observations.jsonl` and choosing the rest for coverage and variety. Overwrite the `.md`.
 - **Light refresh:** read the current `.md`, re-select only the `## Examples` section from the
   assets (same prioritization), and rewrite just that section — leave the body as-is.

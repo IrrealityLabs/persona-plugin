@@ -9,7 +9,11 @@
 // Usage:
 //   node parse-email.mjs --slug=<slug> --file=<path.eml|.mbox|.txt> --target="<name or email>"
 //
-// Writes <store>/assets/<slug>/email-messages.jsonl and email-metadata.json,
+// Writes <store>/assets/<slug>/email.jsonl and email-metadata.json,
+// email.jsonl uses the universal asset row — {context, question, answer, source}:
+// answer is the target's own message verbatim (only their messages become rows),
+// question is the last thing someone else wrote before it in the thread,
+// context is the thread subject + participants, source points into the export file.
 // where <store> is $PERSONA_HOME if set, else ./.personas in the cwd.
 // Node 18+. No npm install. The persona is identified by --target (whose messages are
 // the "answers" the distiller learns from).
@@ -218,17 +222,32 @@ function main() {
   mkdirSync(outDir, { recursive: true });
   const lines = [];
   let threadCount = 0;
+  let rowCount = 0;
+  const speaker = (m) => m.email || m.user_name;
   for (const [, msgs] of byThread) {
     msgs.sort((a, b) => (a.ts || '').localeCompare(b.ts || ''));
-    lines.push(JSON.stringify({
-      kind: 'thread',
-      channel_name: 'email',
-      subject: msgs[0].subject,
-      messages: msgs.map((m) => ({ ts: m.ts, user_name: m.user_name, text: m.text })),
-    }));
     threadCount++;
+    const subject = msgs[0].subject || '(no subject)';
+    for (let i = 0; i < msgs.length; i++) {
+      const m = msgs[i];
+      if (!isTarget({ name: m.user_name, email: m.email }, args.target)) continue;
+      let question = '';
+      for (let j = i - 1; j >= 0; j--) {
+        if (speaker(msgs[j]) !== speaker(m) && msgs[j].text) { question = msgs[j].text; break; }
+      }
+      const others = [...new Set(msgs.filter((x) => speaker(x) !== speaker(m)).map((x) => x.user_name))];
+      let context = `Email thread "${subject}"`;
+      if (others.length) context += ` with ${others.join(', ')}`;
+      lines.push(JSON.stringify({
+        context,
+        question,
+        answer: m.text,
+        source: `${args.file} · "${subject}" · ${m.ts || 'undated'}`,
+      }));
+      rowCount++;
+    }
   }
-  writeFileSync(join(outDir, 'email-messages.jsonl'), lines.join('\n') + '\n');
+  writeFileSync(join(outDir, 'email.jsonl'), lines.join('\n') + '\n');
 
   const tgt = parseFrom(args.target.includes('@') ? `<${args.target}>` : args.target);
   const dates = messages.map((m) => m.ts).filter(Boolean).sort();
@@ -240,12 +259,13 @@ function main() {
     target: { name: tgt.name || args.target, email: tgt.email },
     total_messages: messages.length,
     target_messages: targetSeen,
+    rows: rowCount,
     threads: threadCount,
     date_range: dates.length ? { from: dates[0].slice(0, 10), to: dates[dates.length - 1].slice(0, 10) } : null,
   };
   writeFileSync(join(outDir, 'email-metadata.json'), JSON.stringify(meta, null, 2));
 
-  console.error(`done. ${messages.length} messages (${targetSeen} from target) in ${threadCount} threads → ${outDir}`);
+  console.error(`done. ${rowCount} rows from ${targetSeen} target messages (${messages.length} total, ${threadCount} threads) → ${outDir}/email.jsonl`);
 }
 
 main();

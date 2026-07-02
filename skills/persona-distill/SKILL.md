@@ -46,6 +46,14 @@ For web search, no API key is needed — the built-in WebSearch / WebFetch tools
 
 The persona store is `$PERSONA_HOME` if that env var is set, else `./.personas/` (the dump scripts honor it automatically). Paths below show the default; substitute `$PERSONA_HOME` for `./.personas` when it's set.
 
+**Every source writes the same universal asset row** — one JSONL line per thing the person said:
+
+```jsonl
+{"context": "what was happening", "question": "what prompted it (empty if unprompted)", "answer": "their words, verbatim", "source": "permalink / URL / file — resolves back to the origin"}
+```
+
+`answer` is always the person's own verbatim words — that's the whole invariant. Adding a new source to the plugin means nothing more than emitting this file.
+
 Assets layout:
 
 ```
@@ -53,19 +61,20 @@ Assets layout:
 ├── <slug>.md                       # the persona doc (written in Phase 4)
 └── assets/
     └── <slug>/
-        ├── slack-messages.jsonl    # if Slack source used
-        ├── x-posts.jsonl           # if X source used
-        ├── web-research.md         # if web search source used
+        ├── slack.jsonl             # if Slack source used
+        ├── x.jsonl                 # if X source used
+        ├── web.jsonl               # if web search source used
+        ├── email.jsonl             # if email source used
         └── metadata.json           # which sources, when pulled, counts
 ```
 
 Per-source mechanics:
 
-- **Slack** — run `scripts/dump-slack.mjs` per the slack-source reference. Writes `slack-messages.jsonl` + metadata.
-- **X** — run `scripts/dump-x.mjs` per the x-source reference. Writes `x-posts.jsonl` + metadata.
-- **Web search** — fan out a small set of research subagents per the web-search-source reference. Writes `web-research.md` (a structured aggregation, not raw HTML dumps).
-- **Email** — run `scripts/parse-email.mjs` per the email-source reference. Writes `email-messages.jsonl` (same thread shape as Slack) + `email-metadata.json`.
-- **Files the user has** — read/convert per the file-import reference (PDF and images via the Read tool; convert docx/xlsx first). Save the cleaned text/transcript into `assets/<slug>/` (no script).
+- **Slack** — run `scripts/dump-slack.mjs` per the slack-source reference. Writes `slack.jsonl` + metadata.
+- **X** — run `scripts/dump-x.mjs` per the x-source reference. Writes `x.jsonl` + metadata.
+- **Web search** — fan out a small set of research subagents per the web-search-source reference. Writes `web.jsonl` — **only things the person themselves said** (interview answers, podcast quotes, their own posts); third-party commentary is not collected.
+- **Email** — run `scripts/parse-email.mjs` per the email-source reference. Writes `email.jsonl` + `email-metadata.json`.
+- **Files the user has** — read/convert per the file-import reference (PDF and images via the Read tool; convert docx/xlsx first). Extract the rows into `assets/<slug>/<name>.jsonl`, keeping the original alongside (no script).
 
 If a source pull fails or returns nothing meaningful, surface it clearly and ask the user how to proceed. Don't silently distill from a thin or missing source — flag it.
 
@@ -84,7 +93,7 @@ If the corpus is small enough to fit comfortably in one agent's context (rough h
 The persona doc is two parts: a **synthesized body** (paraphrased, no verbatim — the generalist model) plus a **`## Examples`** section (verbatim few-shot turns). Build them in order:
 
 1. **Write the body** to `./.personas/<slug>.md` using the persona doc template (reproduced in `references/distillation.md`). Frontmatter must include `name`, `description`, `last_distilled_at`, `sources` (an array — `[slack]`, `[x]`, `[web]`, or any combination), and a `distilled_from` block with per-source pull dates and corpus sizes.
-2. **Append `## Examples`** — select up to ~30 verbatim `{context, question, answer}` turns from the assets and render them as the final section (format in `references/distillation.md`). Prioritize any turns in `corrections.jsonl` (known-good ground truth), then choose for coverage and variety over redundancy. This is the distiller's judgment call while reading the assets — there's no separate script, and it's intentionally not deterministic. A *refresh* re-runs exactly this selection against the current assets.
+2. **Append `## Examples`** — select up to ~30 of the best asset rows and render them verbatim as the final section (format in `references/distillation.md`). Prioritize rows from `corrections.jsonl` (known-good ground truth), then choose for coverage and variety over redundancy. This is the distiller's judgment call while reading the assets — there's no separate script, and it's intentionally not deterministic. A *refresh* re-runs exactly this selection against the current assets.
 
 Then show the user the finished doc and ask if anything reads as wrong, overstated, or putting words in the persona's mouth that the source data doesn't actually back. Persona docs distilled from real data almost always need a correction pass — spot-check at least one strong claim per section against the underlying assets before declaring it done.
 

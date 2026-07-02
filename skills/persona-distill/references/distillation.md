@@ -8,14 +8,18 @@ The current Claude session is the **orchestrator** — it chunks the corpus, dis
 
 The assets folder is **immutable and append-only** — pulls and corrections only ever get *added*, never rewritten or deleted. The persona `.md` is a disposable *projection* of this folder; distilling or refreshing regenerates it. So nothing the user curated in assets is ever lost, and the assets are the persona's real history.
 
-Any combination of these files in `./.personas/assets/<slug>/`:
+**Every `.jsonl` file in `./.personas/assets/<slug>/` is the same universal asset row** —
+`{context, question, answer, source}`, where `answer` is always the person's own verbatim
+words, `question` is what prompted it (empty if unprompted), `context` is what was
+happening, and `source` resolves back to the origin. The filename says where it came from:
 
-- `slack-messages.jsonl` — one JSON record per line; standalone or thread (see `slack-source.md`).
-- `x-posts.jsonl` — one JSON record per line; post / reply / quote (see `x-source.md`).
-- `web-research.md` — pre-distilled markdown (see `web-search-source.md`).
-- `corrections.jsonl` — `{context, question, answer}` turns from `persona-correct` (the right answer after a wrong one).
-- `observations.jsonl` — `{context, question, answer}` turns from `persona-observe` (real data added by hand). Both files are known-good ground truth — **prioritize their turns when you select `## Examples`**.
-- `metadata.json` / `slack-metadata.json` — source metadata across all dumps; tells you what's present and who the target person is.
+- `slack.jsonl`, `x.jsonl`, `web.jsonl`, `email.jsonl` — pulled by the source extractors.
+- `interview.jsonl` — the user's own answers from `persona-create`'s interview, or an imported interview transcript.
+- Any other `<name>.jsonl` — imported files (see `file-import.md`).
+- `corrections.jsonl` — rows from `persona-correct` (the right answer after a wrong one).
+- `observations.jsonl` — rows from `persona-observe` (real data added by hand). Corrections and observations are known-good ground truth — **prioritize their rows when you select `## Examples`**.
+- `metadata.json` / `<source>-metadata.json` — source metadata; tells you what's present and who the target person is.
+- Non-`.jsonl` files (an imported PDF's text, a pasted transcript) are the raw artifacts rows were extracted from — reference material, not a second corpus; the rows are the input.
 
 ## Output
 
@@ -98,17 +102,13 @@ Rough heuristic:
 - **Combined corpus < ~50KB** → skip fan-out. Read everything in one pass, draft the doc directly. Fast and accurate for small corpora.
 - **Combined corpus ≥ ~50KB** → fan out per the stages below. A year of someone's active Slack runs 5–10MB; a year of X posts runs 1–3MB. These do not fit in a single agent's working context, period.
 
-If sources are mixed sizes (e.g. small `web-research.md` + huge `slack-messages.jsonl`), still fan out — the workers handle the big file, the reducers fold in the small one.
+If sources are mixed sizes (e.g. a small `web.jsonl` + a huge `slack.jsonl`), still fan out — chunk the big file; replicate the small ones into each worker's prompt.
 
 ## Two-stage fan-out
 
 ### Stage 1 — Workers (parallel, in batches of ~8)
 
-Chunk the corpus:
-
-- For `.jsonl` files: split into ~100-record chunks (≈100K tokens each).
-- For `web-research.md`: pass the whole file to *every* worker as supplementary context (it's small and already distilled).
-- For mixed corpora: chunk the largest file; replicate smaller files into each worker's prompt.
+Chunk the corpus: all files are the same row format, so split each `.jsonl` into ~100-row chunks (≈100K tokens each); small files ride along whole.
 
 Dispatch one worker subagent per chunk, all in a single message so they run in parallel. Use `Agent` with `subagent_type: general-purpose`.
 
@@ -125,8 +125,8 @@ Each worker prompt contains:
 - **One pass over the chunk.** Extract evidence; do not synthesize across the corpus (the reducers do that).
 - **Findings: described, not quoted.** In `findings`, describe patterns in indirect prose — *including* how they think and decide and how they sound (their register and recurring framings are real signal for the `language` facet). Don't quote the source text verbatim; that's what `examples` is for. A finding like `claim: "frames feature decisions around reversibility"` or `claim: "writes in clipped, declarative one-liners"` is good; `claim: "said 'is this reversible'"` is not.
 - **Record frequency and provenance for any named framework or coinage.** When the person leans on a memorable framework, model, or coined phrase, note *how often* it actually shows up and *where* — one essay, or across many talks and interviews. A framework that appears in a single blog post is a footnote, not their operating system; say so, so the reducers don't over-generalize it. And capture the **concrete specifics** — named products, real examples, anecdotes, the numbers they cite — as first-class findings, not afterthoughts: they're the substance a web persona most often lacks.
-- **Examples: nominate verbatim turns.** Separately, in `examples`, surface the best `{context, question, answer}` turns you see in the chunk — real exchanges where the persona *responds* to something. Pull these **verbatim** (the one place verbatim is wanted). Construct a turn by finding the persona's reply (`answer`), the message it responds to (`question`), and a little of the prior thread (`context`, or `""`). For Slack threads: their reply, the preceding message, prior turns. For X: their reply and the parent. For surveys: the item and their answer. For interviews: the interviewer's question and their answer. Skip anything where they're just initiating with no prompt. Return up to ~10 of the strongest/most varied per chunk; the orchestrator picks the final set.
-- **Citation as pointer.** For each finding, attach `evidence: [{source: "slack"|"x"|"web", ref: "<channel/date or url or tweet-id>"}]`.
+- **Examples: nominate the best rows.** The chunk's rows already *are* verbatim `{context, question, answer}` turns — in `examples`, return up to ~10 of the strongest/most varied rows verbatim (crafting a sharper `question`/`context` framing from the row's fields is allowed; inventing words for `answer` is not). Favor rows where the persona *responds* to something over unprompted remarks. The orchestrator picks the final set.
+- **Citation as pointer.** For each finding, attach `evidence: ["<row source string>", ...]` — the `source` field of the rows that back it.
 - **Negative findings count.** If the chunk shows the persona *not* engaging with something you'd expect them to, that's a finding for the "Known gaps" facet.
 - **Return JSON only**, schema below — no preamble, no Markdown wrapping.
 
@@ -183,7 +183,7 @@ After all seven reducers return:
 1. **Read the six sections.**
 2. **Draft `At a glance`** — 2–3 sentences synthesizing across all facets. This is the orchestrator's synthesis, not delegated. Lead with the single most defining trait.
 3. **Draft `Known gaps`** — what the corpus is silent on. Look at facets where the reducer returned thin output, and note them explicitly so the persona-review panel surfaces the gap rather than papering over it.
-4. **Verbatim-leak sweep — body only.** For each *body* section, take a few distinctive 4–6-word substrings and grep them against the underlying corpus files. Any match means a verbatim leak — rewrite that span in indirect prose. (For Slack/X JSONL: grep the `text` fields. For web-research.md: grep the file directly.) **Skip `## Examples`** — it is verbatim by design.
+4. **Verbatim-leak sweep — body only.** For each *body* section, take a few distinctive 4–6-word substrings and grep them against the `answer` fields of the corpus `.jsonl` files. Any match means a verbatim leak — rewrite that span in indirect prose. **Skip `## Examples`** — it is verbatim by design.
 5. **Select `## Examples`.** From the candidate turns the workers nominated (or, for a small corpus, straight from the assets), choose up to ~30 verbatim `{context, question, answer}` turns. Read `corrections.jsonl` and `observations.jsonl` first and include those as a priority — they're hand-supplied ground truth. Fill the rest choosing for **coverage and variety** over redundancy — drop near-duplicates. Pick turns that exemplify *both* how they reason and decide (their thinking) *and* how they actually sound (their voice and register), across different topics. This is a judgment call, not a mechanical sample. Render each in the Context/Asked/Replied format from the template, and append as the final section.
 6. **Assemble frontmatter** from metadata.json + current timestamp.
 7. **Write `./.personas/<slug>.md`.**
@@ -193,4 +193,4 @@ After all seven reducers return:
 - Every claim in the persona doc should be defensible from the assets. The orchestrator can spot-check by picking 3 strong claims (one from a `bounce` finding, one from a `convince` finding, one from a `language` finding) and tracing them back to evidence.
 - If a section is uncanny — putting opinions in the persona's mouth that the data doesn't back — re-run that one reducer with the critique. Don't ship a section you wouldn't defend to the persona's face.
 - "Known gaps" is not failure; it's accuracy. Don't pad it away.
-- **Concrete over abstract; their register, not a tidier one.** A persona that threads one framework through every answer, or sounds more systematic and buttoned-up than the corpus shows, has over-fit. The fix is breadth and concreteness — more spoken sources, more named products and anecdotes — **not** more confident guessing. Honest abstention on a premise the corpus doesn't cover is correct behaviour, not a bug to paper over; a persona that admits "I don't have a grounded position on that" is more useful than one that fabricates a plausible one.
+- **Concrete over abstract; their register, not a tidier one.** A persona that threads one framework through every answer, or sounds more systematic and buttoned-up than the corpus shows, has over-fit. The fix is breadth and concreteness — more spoken sources, more named products and anecdotes — **not** padding the doc with guesses. Mark what the corpus doesn't cover in `Known gaps` honestly; at answer time the persona extrapolates from what *is* there, in character, with the confidence tag showing it's an extrapolation.

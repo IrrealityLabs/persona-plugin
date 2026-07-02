@@ -155,24 +155,18 @@ Read first 2–3 rows. Confirm:
 For each non-skipped row:
 1. Determine slug (per naming rules).
 2. `./.personas/assets/<slug>/`
-3. `survey-source.json`:
-   ```json
-   {
-     "slug": "<slug>",
-     "source_file": "<path>",
-     "source_row_index": <N>,
-     "imported_at": "<ISO>",
-     "answers": { "<header>": "<value>", ... }
-   }
+3. `survey.jsonl` — one universal asset row per answered question:
+   ```jsonl
+   {"context": "<survey/study name>", "question": "<column header>", "answer": "<their response>", "source": "<file path>, row <N>"}
    ```
-4. `source-metadata.json` with import context.
+4. `metadata.json` with import context (source file, row, imported_at).
 
 Tell the user the count + slug list before fanning out.
 
 ### Phase 3 — Fan out persona generation
 
 Dispatch one `general-purpose` subagent per row, parallel batches of ~8. Each prompt:
-- Path to `survey-source.json`.
+- Path to the persona's `survey.jsonl`.
 - The full persona doc template (below).
 - The quality bar (above).
 - The "what the research says" principles — especially: do not fabricate speech samples from multiple-choice data; do not invent missing dimensions; mark them in Known gaps.
@@ -355,9 +349,10 @@ What we don't know yet about this persona. Per the literature, an explicit gaps 
 
 **Save:**
 1. Ensure the persona store exists — `$PERSONA_HOME` if that env var is set, else `./.personas/`. (Substitute the resolved store for `./.personas/` throughout this skill.)
-2. Set `name:` in frontmatter to match the filename slug.
-3. Write the file.
-4. Tell the user the file path. Offer next steps: persona-review, or a persona-research study.
+2. **Save the raw inputs to `assets/<slug>/` first** — the `.md` is always a projection of assets, so what it was built from must survive it. Mode 1: the interview Q&A as `interview.jsonl` universal rows (`{"context": "persona-create interview — the user describing this persona", "question": "<interview question>", "answer": "<the user's answer>", "source": "persona-create interview, <YYYY-MM-DD>"}`). Mode 3: the rows extracted from the supplied transcript/research per `persona-distill`'s file-import reference (plus the original file). Mode 2 already staged `survey.jsonl` in Phase 2. Mode 4 has no real utterances — no row files, which is itself honest.
+3. Set `name:` in frontmatter to match the filename slug.
+4. Write the file.
+5. Tell the user the file path. Offer next steps: persona-review, or a persona-research study.
 
 ## Anti-patterns (do not do these)
 

@@ -33,7 +33,7 @@ Turn real source data into a persona via fan-out distillation. Supports:
 
 - **Slack** — dump messages from a user or channel (with a token walkthrough).
 - **X (Twitter)** — dump posts from one or more accounts.
-- **Web research** — aggregate public writing, interviews, podcast transcripts.
+- **Web research** — mine public interviews, podcasts, and their own writing for what they've actually said.
 - **Multi-source** — combine the above into one persona corpus.
 
 Distillation runs a two-stage worker/reducer fan-out and produces a doc in the same format as `persona-create`.
@@ -180,13 +180,15 @@ Personas and their source assets live in `.personas/` relative to your current w
 ├── <slug>.md                         # the persona: synthesized body + a ## Examples section
 └── assets/
     └── <slug>/                       # immutable, append-only source of truth
-        ├── slack-messages.jsonl      # raw pulls the persona is distilled from
-        ├── x-posts.jsonl
-        ├── web-research.md
+        ├── slack.jsonl               # pulls the persona is distilled from
+        ├── x.jsonl
+        ├── web.jsonl
         ├── corrections.jsonl         # answers you fixed via persona-correct
         ├── observations.jsonl        # data you added via persona-observe
         └── ...
 ```
+
+Every asset file uses one universal row — `{"context": "what was happening", "question": "what prompted it", "answer": "their words, verbatim", "source": "permalink/URL/file"}` — whatever the source. Adding a new source to the plugin means nothing more than emitting this file.
 
 The `<slug>.md` is a disposable **projection** of the assets — `persona-distill` / `persona-refresh` regenerate it. The assets are append-only and never overwritten, so regenerating loses nothing. Add `.personas/assets/` to `.gitignore` if your raw source data shouldn't be committed (it usually shouldn't).
 

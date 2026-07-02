@@ -1,6 +1,6 @@
 # Slack source
 
-How to obtain a Slack API token, store it, and run the dump script that pulls messages into `./.personas/assets/<slug>/slack-messages.jsonl`.
+How to obtain a Slack API token, store it, and run the dump script that pulls messages into `./.personas/assets/<slug>/slack.jsonl` (universal asset rows).
 
 ## Token acquisition (one-time)
 
@@ -65,21 +65,23 @@ The script pulls `conversations.history` for the channel across the time window 
 
 ```
 ./.personas/assets/<slug>/
-├── slack-messages.jsonl     # one JSON record per line; see schema below
+├── slack.jsonl              # universal asset rows; see below
 └── slack-metadata.json      # source info: mode, target, date range, counts
 ```
 
-JSONL record shapes:
+Every row is the universal asset format — `answer` is the person's own verbatim
+message, `question` is the last thing someone else said before it in the thread
+(empty if unprompted), `context` is the channel plus the thread root, `source` is a
+permalink (or `slack:<channel_id>:<ts>`) that resolves back to the message:
 
-```jsonc
-// Standalone message
-{"kind": "standalone", "channel_id": "...", "channel_name": "...", "ts": "...", "user": "...", "user_name": "...", "text": "...", "permalink": "..."}
-
-// Thread (root + replies)
-{"kind": "thread", "channel_id": "...", "channel_name": "...", "thread_ts": "...", "permalink": "...", "messages": [{"ts": "...", "user": "...", "user_name": "...", "text": "..."}, ...]}
+```jsonl
+{"context": "Slack #product-feedback — thread started by Ben: \"Thoughts on the new pricing page?\"", "question": "Would you pay $99/mo for this?", "answer": "Honestly no — we'd build it in-house first.", "source": "https://acme.slack.com/archives/C024BE91L/p1715023456000200"}
 ```
 
-DMs and multi-person DMs are excluded by design — personas are grounded in public/channel conversation only.
+In user mode only the target's messages become rows. In channel mode every message
+becomes a row and the context names the speaker (the persona aggregates the channel's
+voices). DMs and multi-person DMs are excluded by design — personas are grounded in
+public/channel conversation only.
 
 ## Limits and failure modes
 
