@@ -126,6 +126,15 @@ The 1–3 highest-utility profiles based on the math, with reach % per `persona-
 "N=<N> personas; conjoint methodology assumes 30+ respondents for stable utilities. Treat these as <directional|preliminary> — confirm with a quant study on real customers before betting on the bundle."
 ```
 
+### Phase 6 — Render the report
+
+Write `report.html` to `./.persona-research-runs/conjoint-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the attribute importances and part-worth utilities, one card per persona with
+their verbatim public answers + confidence and collapsible grounding, and the insights.
+Tell the user the path.
+
 ## Notes
 
 - Personas will weight price more honestly than real respondents in conjoint — they have no purchase pain. Discount panel price-sensitivity findings slightly.

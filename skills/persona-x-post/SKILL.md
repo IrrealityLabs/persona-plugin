@@ -141,6 +141,15 @@ Personas marked `forced` on X-voice fit had distorted reactions. If a significan
 Strip away the X performance — what substantive critiques came up that you'd want to address regardless of where you post? Those are the takeaway. The X-voice wrapping is the cosmetic; the underlying objections are the real findings.
 ```
 
+### Phase 5 — Render the report
+
+Write `report.html` to `./.persona-research-runs/x-post-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the simulated posts/replies threaded, one card per persona with their verbatim
+public answers + confidence and collapsible grounding, and the insights. Tell the user
+the path.
+
 ## Notes
 
 - **Honor scroll-past.** A simulation where every persona replies is a tell that the prompt is forcing engagement. Real X threads have engagement rates of 1–5% on most posts; expect most personas to scroll past most things.

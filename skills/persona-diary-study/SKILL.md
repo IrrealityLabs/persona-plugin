@@ -105,6 +105,15 @@ If a trigger event was injected, how the persona responded and how long the effe
 A diary study from a persona simulation is *more* prone to monotony than a real one — the persona may write similar entries day after day if not prompted by changing context. Note if entries felt forced or repetitive; weight low.
 ```
 
+### Phase 4 — Render the report
+
+Write `report.html` to `./.persona-research-runs/diary-study-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the day-by-day diary timeline, one card per persona with their verbatim
+public answers + confidence and collapsible grounding, and the insights. Tell the user
+the path.
+
 ## Notes
 
 - **Sequential, not parallel.** Each day reads prior days. This costs more in tokens (each day's prompt carries growing context) and runs slower than parallel methods, but the temporal coherence requires it.

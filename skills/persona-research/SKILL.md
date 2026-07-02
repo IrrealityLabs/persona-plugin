@@ -132,6 +132,16 @@ The expensive ones to flag specifically:
 
 For cheap methods (single interview, small survey, simple A/B test) just launch — don't pre-estimate trivially small jobs.
 
+## Every study ships an HTML report
+
+Every method ends by writing one **self-contained `report.html`** — inline CSS/JS, run
+data embedded, opens with a double-click, no server — to
+`./.persona-research-runs/<method>-<date>-<slug>/` and telling the user the path. The
+chat synthesis is the summary; the report is the full shareable artifact (question,
+method + N caveat, tally/visuals, every persona's public answer with confidence and
+collapsible grounding, insights). The shared spec is `references/html-report.md`; every
+child skill's final phase points there.
+
 ## Dispatch
 
 Once you've picked the method:

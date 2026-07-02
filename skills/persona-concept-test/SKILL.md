@@ -123,6 +123,15 @@ Where the concept landed very differently for different personas. Often surfaces
 Build / refine / kill — with the reasoning that the panel best supports. If split, give decision criteria, not a verdict.
 ```
 
+### Phase 5 — Render the report
+
+Write `report.html` to `./.persona-research-runs/concept-test-<YYYY-MM-DD>-<slug>/` per
+the shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the verdict tally and per-criterion score summary, one card per persona with
+their verbatim public answers + confidence and collapsible grounding, and the insights.
+Tell the user the path.
+
 ## Notes
 
 - Personas have no skin in the game and no purchase pain. They will over-rate appeal and under-rate friction. Discount appeal scores; weight believability and broken/missing feedback more.

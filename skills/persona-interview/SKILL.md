@@ -88,6 +88,15 @@ The per-turn Grounding and Thinking fields are audit material, not transcript co
 
 Close with the standard simulation disclaimer.
 
+### Phase 4 — Render the report
+
+Write `report.html` to `./.persona-research-runs/interview-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the full Q&A transcript and the themes, one card per persona with their verbatim
+public answers + confidence and collapsible grounding, and the insights. Tell the user
+the path.
+
 ## Notes
 
 - A persona interview is not a transcript-of-a-real-conversation — there's no rapport, no body language, no ums. The persona is reasoning from a static doc, not remembering. The methodology gets you *substantive* depth, not *experiential* depth.

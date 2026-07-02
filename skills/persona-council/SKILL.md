@@ -123,6 +123,15 @@ What the simulation can't settle.
 
 Close with the standard simulation disclaimer.
 
+### Phase 5 — Render the report
+
+Write `report.html` to `./.persona-research-runs/council-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the vote tally and strongest cases for and against, one card per persona with
+their verbatim public answers + confidence and collapsible grounding, and the insights.
+Tell the user the path.
+
 ## Notes
 
 - The council should produce dissent. If Round 1 came back unanimous, that's a selection problem — either the panel was too aligned or the proposal is too obvious. Mention it. Don't manufacture artificial dissent.

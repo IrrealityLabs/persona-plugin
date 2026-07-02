@@ -109,6 +109,14 @@ Things that only become visible by looking across questions — e.g. "personas w
 "N=<N> personas; survey methodology assumes <larger N>. Results are <directional|robust> at this sample size. To strengthen: add personas via persona-distill or persona-create."
 ```
 
+### Phase 6 — Render the report
+
+Write `report.html` to `./.persona-research-runs/survey-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the questions, N caveat,
+per-question distributions as bar charts, one card per persona with their verbatim
+answers + confidence and collapsible grounding, and the insights. Tell the user the path.
+
 ## Notes
 
 - Don't run the same persona twice in the same survey. Don't merge multiple personas into a synthetic "average respondent" — show distributions instead.

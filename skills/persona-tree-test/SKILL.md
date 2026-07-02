@@ -131,6 +131,14 @@ For each task with low success: where did personas branch wrong on the first cli
 
 (Each persona's Grounding + Thinking stay with the orchestrator as per-persona audit fields — never aggregated into the report; only the public path/end-node/confidence-I-picked-right data is scored and rolled up.)
 
+### Phase 5 — Render the report
+
+Write `report.html` to `./.persona-research-runs/tree-test-<YYYY-MM-DD>-<slug>/` per
+the shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the task success paths, one card per persona with their verbatim public answers
++ confidence and collapsible grounding, and the insights. Tell the user the path.
+
 ## Notes
 
 - **First-click accuracy is the gold-standard tree-test metric** — research consistently shows it predicts real-user task success better than full-path success. Surface first-click error patterns specifically.

@@ -133,6 +133,15 @@ Personas marked `forced` on Slack-channel-fit had distorted reactions. Common ca
 Sometimes the issue isn't the message, it's the channel choice. If the simulation suggests lots of DM-traffic and little public engagement, consider sending this message somewhere else (a smaller channel, a DM, a real meeting) or restructuring it.
 ```
 
+### Phase 4 — Render the report
+
+Write `report.html` to `./.persona-research-runs/slack-message-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the simulated posts/replies threaded, one card per persona with their verbatim
+public answers + confidence and collapsible grounding, and the insights. Tell the user
+the path.
+
 ## Notes
 
 - **The DM iceberg is the most-undersold output of this method.** Slack messages get critiqued and dissected in DMs that the sender never sees. Surfacing the would-be DM reactions is the single most useful thing this simulation does.

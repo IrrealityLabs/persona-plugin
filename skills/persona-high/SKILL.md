@@ -127,6 +127,15 @@ Suggest the next step — usually persona-concept-test, persona-review, or perso
 This was divergent ideation, not analysis. The outputs are *prompts for your own creative thinking*, not findings. Don't let any single weird take drive a decision — that's not what this method is for.
 ```
 
+### Phase 5 — Render the report
+
+Write `report.html` to `./.persona-research-runs/high-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the collected wildest takes and the bridged insights, one card per persona with
+their verbatim public answers + confidence and collapsible grounding, and the insights.
+Tell the user the path.
+
 ## Notes
 
 - **The point is the cull.** Generating 30 weird ideas is cheap. Evaluating which 2 are actually good is the user's job, possibly with a follow-up method. Don't try to pre-filter the riffs into "good" and "bad" — the user benefits from seeing the noise too.

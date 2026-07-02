@@ -158,6 +158,14 @@ Same shape as URL mode synthesis, but:
 - "Step-by-step friction" → "sentiment timeline" — chart whose attention dropped where.
 - "Abandonment" → "where they'd have stopped watching."
 
+### Phase 4 — Render the report
+
+Write `report.html` into the run dir per the shared spec in
+`skills/persona-research/references/html-report.md` — self-contained (inline CSS/JS,
+data embedded, opens with a double-click): the question, method + N caveat, per-step
+reactions and friction points, one card per persona with their verbatim public answers
++ confidence and collapsible grounding, and the insights. Tell the user the path.
+
 ## Notes
 
 - `agent-browser` reads HTML and screenshots — it can't simulate a user's actual cursor or detect things only visible during interaction (hover states, animations). Flag this limitation in the output if relevant.

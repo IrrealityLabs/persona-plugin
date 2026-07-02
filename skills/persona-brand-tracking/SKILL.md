@@ -155,6 +155,15 @@ List the exact question set used and the sample size — re-running with the sam
 "N=<N> personas; brand tracking on a panel of this size shows *direction* but not statistical significance. To detect shifts at this scale, look for changes ≥15-20 percentage points between runs."
 ```
 
+### Phase 5 — Render the report
+
+Write `report.html` to `./.persona-research-runs/brand-tracking-<YYYY-MM-DD>-<slug>/`
+per the shared spec in `skills/persona-research/references/html-report.md` —
+self-contained (inline CSS/JS, data embedded, opens with a double-click): the question,
+method + N caveat, the unaided/aided recall, association, and NPS results, one card per
+persona with their verbatim public answers + confidence and collapsible grounding, and
+the insights. Tell the user the path.
+
 ## Notes
 
 - **Do not reverse unaided and aided order.** Aided recall primes the persona; if you ask aided first, unaided is contaminated. Always unaided first.

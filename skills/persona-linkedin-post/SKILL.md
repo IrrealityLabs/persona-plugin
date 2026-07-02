@@ -124,6 +124,15 @@ Strip away the LinkedIn-professional wrapping — what substantive engagement ca
 LinkedIn boosts posts with early high-quality comments. Of the comments above, which would be early-cohort engagement that could trigger algorithmic boost? This is heuristic, not modeled — but flag the comments that look "engagement-starting" vs. "engagement-extending."
 ```
 
+### Phase 4 — Render the report
+
+Write `report.html` to `./.persona-research-runs/linkedin-post-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the simulated posts/replies threaded, one card per persona with their verbatim
+public answers + confidence and collapsible grounding, and the insights. Tell the user
+the path.
+
 ## Notes
 
 - **LinkedIn's dunking is rare and reads badly.** If a persona's reaction comes back snarky / dismissive in tone, that's *more* notable than the same reaction on X — it suggests the post is genuinely off-key.

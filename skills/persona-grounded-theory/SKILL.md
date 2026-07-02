@@ -180,6 +180,14 @@ This theory was built from persona simulations, not real interview transcripts. 
 - A theory built from N personas is fundamentally bounded by the variance present in those personas. If they shared a blind spot, so does the theory.
 ```
 
+### Phase 5 — Render the report
+
+Write `report.html` into the run dir per the shared spec in
+`skills/persona-research/references/html-report.md` — self-contained (inline CSS/JS,
+data embedded, opens with a double-click): the question, method + N caveat, the coding
+tree and the theory, one card per persona with their verbatim public answers +
+confidence and collapsible grounding, and the insights. Tell the user the path.
+
 ## Notes
 
 - **Coding is interpretive.** Two careful coders working from the same examples will produce different labels. That's fine for grounded theory; the discipline is the constant comparison and the audit trail, not perfect inter-rater agreement.

@@ -106,6 +106,15 @@ The one objection that, if fixed, would change the most personas' reception. Oft
 Re-read the roast in a day, not now. Half of it is noise; half of it is real. The half that still stings in 24 hours is the part to address.
 ```
 
+### Phase 4 — Render the report
+
+Write `report.html` to `./.persona-research-runs/roast-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the burns grouped by target, one card per persona with their verbatim public
+answers + confidence and collapsible grounding, and the insights. Tell the user the
+path.
+
 ## Notes
 
 - **The roast is not gospel.** It's calibrated to surface negative signal, which means it over-weights critique by design. Don't make decisions purely from the roast — use it to find what's broken, then evaluate fixes with a balanced method.

@@ -106,6 +106,15 @@ The per-turn Grounding and Thinking fields are audit material, not narrative con
 
 If multiple personas, add a cross-persona section: where their workflows converge, where they diverge, what the divergence implies about audience segmentation.
 
+### Phase 5 — Render the report
+
+Write `report.html` to `./.persona-research-runs/ethnographic-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the day/workflow walkthroughs, one card per persona with their verbatim
+public answers + confidence and collapsible grounding, and the insights. Tell the user
+the path.
+
 ## Notes
 
 - Ethnographic narrative from a persona simulation is *less* reliable than from a real human ethnographic session. Personas extrapolate from their doc; they don't have lived experience. Mark the output as inherently directional — best for surfacing *hypotheses* about pain and opportunity, which you then validate with real customers.

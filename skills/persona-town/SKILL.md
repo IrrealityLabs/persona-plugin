@@ -171,6 +171,17 @@ Personas whose participation was load-bearing for diffusion ("everyone heard it 
 This is a simulation, not real social-network behavior. Use the patterns as *hypotheses about viral mechanics*, not as a prediction of real spread. Note any persona that seemed to be acting out of character compared to their persona doc.
 ```
 
+### Render the report
+
+After the synthesis, write `report.html` into the run dir per the shared spec in
+`skills/persona-research/references/html-report.md` — self-contained (inline CSS/JS,
+run data embedded; unlike the live `town.html` viewer, no server needed). Results
+sections: the spread curve, who-told-whom graph (inline SVG), variant drift,
+never-heard list, bottlenecks/amplifiers; plus the spec's invariants (header with N
+caveat, per-persona cards with confidence + collapsible grounding, insights). Tell the
+user the path. The live Phaser viewer stays what it is — a during-run window, served
+locally; the report is the artifact that survives the run.
+
 ## Notes
 
 - The simulation is **deliberately simple.** Sophisticated agent architectures (planning, memory hierarchy, etc.) are out of scope for v1. Personas decide per-tick from current world + memory + persona doc. That's it.

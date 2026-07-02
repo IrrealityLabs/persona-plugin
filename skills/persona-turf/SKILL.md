@@ -102,6 +102,15 @@ Aggregated from the "what I'd add" field. Real signal for product/messaging gaps
 "N=<N> personas; TURF assumes <larger N> for stable reach estimates. Results are <directional|robust> at this sample size."
 ```
 
+### Phase 6 — Render the report
+
+Write `report.html` to `./.persona-research-runs/turf-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the reach curve and reach per combination, one card per persona with their
+verbatim public answers + confidence and collapsible grounding, and the insights.
+Tell the user the path.
+
 ## Notes
 
 - TURF is a *coverage* tool. The single-best option isn't always in the best K=3 subset — sometimes a less-loved option fills a gap that the top option misses. The synthesis should make this explicit when it happens.

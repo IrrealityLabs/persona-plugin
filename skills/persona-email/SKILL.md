@@ -137,6 +137,15 @@ The single most impactful change to subject / body / CTA / sender context that w
 Personas marked `forced` on email-fit had distorted reactions. Common cause: the email doesn't realistically reach this persona via email (they're a different generation, different role, different channel).
 ```
 
+### Phase 4 — Render the report
+
+Write `report.html` to `./.persona-research-runs/email-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the reply set with sentiment split, one card per persona with their verbatim
+public answers + confidence and collapsible grounding, and the insights. Tell the user
+the path.
+
 ## Notes
 
 - **Subject lines do most of the work.** If the simulation shows lots of archive-without-open, fix the subject before iterating on the body.

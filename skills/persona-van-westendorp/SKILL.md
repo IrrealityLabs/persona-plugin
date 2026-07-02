@@ -139,6 +139,15 @@ Where the price ranges split sharply by persona segment (e.g. consumer vs. enter
 "N=<N> personas; Van Westendorp methodology was designed for 50+ respondents. The OPP and range here are *directional* — best for narrowing a 10x price spread to a 2x spread, not for finalizing a price point. Validate with real customers (a few real prospects with budget context will sharpen this fast)."
 ```
 
+### Phase 7 — Render the report
+
+Write `report.html` to `./.persona-research-runs/van-westendorp-<YYYY-MM-DD>-<slug>/`
+per the shared spec in `skills/persona-research/references/html-report.md` —
+self-contained (inline CSS/JS, data embedded, opens with a double-click): the question,
+method + N caveat, the four price curves and the acceptable range, one card per persona
+with their verbatim public answers + confidence and collapsible grounding, and the
+insights. Tell the user the path.
+
 ## Notes
 
 - Personas anchored on something concrete (their current spend on a comparable) will produce useful answers. Personas with no anchor will produce noise. Always surface the anchors.

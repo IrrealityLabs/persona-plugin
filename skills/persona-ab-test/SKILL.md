@@ -112,6 +112,15 @@ If picks varied in confidence, recompute the tally weighting [high] picks fully 
 If <5 personas, note the limit on confidence in the result.
 ```
 
+### Phase 5 — Render the report
+
+Write `report.html` to `./.persona-research-runs/ab-test-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the vote split per variant, one card per persona with their verbatim
+public answers + confidence and collapsible grounding, and the insights. Tell the user
+the path.
+
 ## Notes
 
 - Order effects matter even in persona-land. Randomize variant order per persona (track for repeatability).

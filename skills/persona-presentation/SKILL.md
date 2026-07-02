@@ -181,6 +181,15 @@ Close with the disclaimer:
 
 > _— Simulated audience panel, grounded in the persona docs in `./.personas/`. Not a real dry-run or focus group; delivery feedback from a transcript/video is directional (the personas read frames and words, they don't watch you present). Use this to prioritize edits, then pressure-test the talk with real people before it matters._
 
+### Phase 6 — Render the report
+
+Write `report.html` into the run dir per the shared spec in
+`skills/persona-research/references/html-report.md` — self-contained (inline CSS/JS,
+data embedded, opens with a double-click): the question, method + N caveat, the
+slide-by-slide heat map and curated change list, one card per persona with their
+verbatim public answers + confidence and collapsible grounding, and the insights. Tell
+the user the path.
+
 ## Notes
 
 - **Why whole-deck-per-persona, not per-slide-per-persona:** a deck is one continuous experience. Fanning out per slide multiplies cost by the slide count *and* blinds each subagent to the arc, which is half of what makes a talk work. Reserve chunked dispatch for inputs that can't fit one context.

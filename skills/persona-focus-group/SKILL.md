@@ -142,6 +142,15 @@ If consensus is strong enough to act on, the action. If split, the decision crit
 
 Close with the standard simulation disclaimer.
 
+### Phase 6 — Render the report
+
+Write `report.html` to `./.persona-research-runs/focus-group-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the rounds and how positions moved, one card per persona with their verbatim
+public answers + confidence and collapsible grounding, and the insights. Tell the user
+the path.
+
 ## Notes
 
 - Don't pre-filter for *agreement* — a panel of personas who all already agree teaches nothing. When you narrow, narrow for topic, not for agreement.

@@ -147,6 +147,15 @@ A rough single number: "X of N dynamic universes produced substantively the same
 Pointers to the per-universe artifacts on disk: `./.personas/assets/multiverse-runs/<run-id>/universe-<N>/...`
 ```
 
+### Phase 6 — Render the report
+
+Write `report.html` into the run dir per the shared spec in
+`skills/persona-research/references/html-report.md` — self-contained (inline CSS/JS,
+data embedded, opens with a double-click): the question, method + N caveat, consistent
+vs contingent findings across runs with the control comparison, one card per persona
+with their verbatim public answers + confidence and collapsible grounding, and the
+insights. Tell the user the path.
+
 ## Notes
 
 - **Multiverse buys you variance estimation, nothing else.** It will not give you a *better* answer to the wrapped study's question — it tells you how trustworthy the answer is. If the user has a low-stakes question, run the wrapped study once. If they're betting real budget on the outcome, the multiverse cost is often justified.

@@ -108,6 +108,15 @@ For each persona: did the HN-voice constraint distort their input? Personas mark
 Strip away the HN performance — what substantive critiques came up that you'd want to address regardless of whether you're actually posting to HN? Those are the takeaway. The HN-voice wrapping is the cosmetic; the underlying objections are the real findings.
 ```
 
+### Phase 5 — Render the report
+
+Write `report.html` to `./.persona-research-runs/hacker-news-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the simulated thread with scores, one card per persona with their verbatim
+public answers + confidence and collapsible grounding, and the insights. Tell the user
+the path.
+
 ## Notes
 
 - Real HN comments are written by a self-selected audience that skews technical, contrarian, and male. Your persona panel may not match that demographic — that's a *feature* of this simulation, not a bug. Use it to ask "what would HN find that my actual audience would miss?" and vice versa.

@@ -122,6 +122,15 @@ Which persona segments mentioned the brand vs. went elsewhere. Useful for segmen
 "N=<N> posts across <N> personas; social listening on a panel of this size produces *directional* mention rates. Real social-listening tools sample millions of public posts — treat these patterns as hypotheses about salience, not as audience-wide measurements."
 ```
 
+### Phase 5 — Render the report
+
+Write `report.html` to `./.persona-research-runs/social-listening-<YYYY-MM-DD>-<slug>/`
+per the shared spec in `skills/persona-research/references/html-report.md` —
+self-contained (inline CSS/JS, data embedded, opens with a double-click): the question,
+method + N caveat, the mention rates, share of voice, and sentiment, one card per
+persona with their verbatim public answers + confidence and collapsible grounding, and
+the insights. Tell the user the path.
+
 ## Notes
 
 - **Do not coach the personas toward the brand in any prompt, anywhere.** If you tell them what brands to consider, the data is contaminated. The whole methodology relies on cold generation.

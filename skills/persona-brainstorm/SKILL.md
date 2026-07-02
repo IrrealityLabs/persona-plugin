@@ -110,6 +110,15 @@ The 1–2 ideas worth developing with humans, and the open question each still h
 
 Close with the standard simulation disclaimer.
 
+### Phase 6 — Render the report
+
+Write `report.html` to `./.persona-research-runs/brainstorm-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the idea list with build chains, one card per persona with their verbatim
+public answers + confidence and collapsible grounding, and the insights. Tell the user
+the path.
+
 ## Notes
 
 - **Diverge before you converge.** Don't let Round 1 self-censor toward "good" ideas — that kills the tail. Ranking and clustering happen only in synthesis.

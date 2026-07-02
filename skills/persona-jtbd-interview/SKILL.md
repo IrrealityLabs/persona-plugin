@@ -77,6 +77,15 @@ For each force, the strongest specific claims across personas — with persona a
 The 2–3 patterns that would meaningfully change strategy if confirmed against real customers. Personas can't replace this.
 ```
 
+### Phase 5 — Render the report
+
+Write `report.html` to `./.persona-research-runs/jtbd-interview-<YYYY-MM-DD>-<slug>/` per
+the shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the timeline stages and the four-force map, one card per persona with their
+verbatim public answers + confidence and collapsible grounding, and the insights. Tell
+the user the path.
+
 ## Notes
 
 - Personas reconstructing a past decision are *less* reliable than personas reacting to a present asset — they're inferring a memory they don't have. Mark JTBD interview findings as inherently more directional than other persona-research outputs.

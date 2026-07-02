@@ -1,6 +1,6 @@
 ---
 name: persona-market
-description: Simulate a cultural market — give the personas a set of items (songs, products, posts, ideas, messages) and have them pick / rate / upvote across multiple rounds, optionally seeing each other's choices. Run multiple parallel "worlds" to show how social influence makes outcomes unpredictable — the same item can be a hit in one world and a flop in another, like Salganik, Dodds & Watts's 2006 cultural-market experiment. Outputs per-world winners, cross-world variance, and a dashboard showing the market evolution. Use when the user says "/persona-market", "run a market simulation", "predict which one will go viral", "test for social-influence dynamics", "multi-world simulation", or wants to know not just what wins but *how predictable* the winner is.
+description: Simulate a cultural market — give the personas a set of items (songs, products, posts, ideas, messages) and have them pick / rate / upvote across multiple rounds, optionally seeing each other's choices. Run multiple parallel "worlds" to show how social influence makes outcomes unpredictable — the same item can be a hit in one world and a flop in another, like Salganik, Dodds & Watts's 2006 cultural-market experiment. Outputs per-world winners, cross-world variance, and a self-contained HTML report showing the market evolution. Use when the user says "/persona-market", "run a market simulation", "predict which one will go viral", "test for social-influence dynamics", "multi-world simulation", or wants to know not just what wins but *how predictable* the winner is.
 ---
 
 # Persona Market
@@ -56,7 +56,7 @@ Everything goes into `./.personas/assets/market-runs/<run-id>/`:
 │   └── ...
 ├── independent/            # if running both conditions, parallel structure
 │   └── ...
-└── dashboard.html          # auto-rendered dashboard for browsing the run
+└── report.html             # the final self-contained report (Phase 3)
 ```
 
 ## Workflow
@@ -102,19 +102,25 @@ Pick response format:
 After all personas' picks for a round are in, the orchestrator:
 1. Updates the world's `state.json` with the new cumulative counts. Only the **public pick (Choice)** feeds the running counts other personas see next round; each persona's private Grounding + Thinking stay with the orchestrator and never propagate into the social-influence visibility.
 2. Appends each pick to `picks.jsonl`.
-3. Snapshots state after this round to `snapshots/round-N.json` (lets the dashboard show the evolution).
+3. Snapshots state after this round to `snapshots/round-N.json` (lets the report show the evolution).
 4. Moves on to the next round of this world (or the first round of the next world).
 
 **Parallelism note:** within a single (world, round) cell, persona subagents run in parallel. Across (world, round) cells: world-N's round-M cannot start until round-M-1 is done. But different worlds at the same round number can run in parallel — they share no state. So a typical run can parallelize as `worlds × personas` per round.
 
-### Phase 3 — Render dashboard
+### Phase 3 — Render the report
 
-Copy the dashboard.html from this skill's `assets/` into the run dir. Tell the user how to view it (`cd <run-dir> && python3 -m http.server 8766` then open `http://localhost:8766/dashboard.html`). It reads the world state JSONs and renders:
+Write `report.html` into the run dir per the shared spec in
+`skills/persona-research/references/html-report.md` — one self-contained file (inline
+CSS/JS, the world-state data embedded; no server, opens with a double-click). Its
+results sections show:
 - Per-world final ranking
 - Cross-world comparison grid (which items won where)
 - Round-by-round evolution per world
 - Variance metric (how different the rankings were across worlds)
 - If both conditions: side-by-side comparison
+
+Plus the invariants from the spec: header with N caveat, per-persona cards (public
+picks with confidence, grounding collapsed), insights. Tell the user the path.
 
 ### Phase 4 — Synthesize
 

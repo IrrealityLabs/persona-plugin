@@ -117,6 +117,15 @@ For the top 3 and bottom 3 items, the dominant *why* (aggregated from personas' 
 "N=<N> personas; MaxDiff is sample-efficient but rankings within the middle tier should still be treated as directional."
 ```
 
+### Phase 7 — Render the report
+
+Write `report.html` to `./.persona-research-runs/max-diff-<YYYY-MM-DD>-<slug>/` per the
+shared spec in `skills/persona-research/references/html-report.md` — self-contained
+(inline CSS/JS, data embedded, opens with a double-click): the question, method + N
+caveat, the best/worst ranking with tiers, one card per persona with their verbatim
+public answers + confidence and collapsible grounding, and the insights. Tell the user
+the path.
+
 ## Notes
 
 - MaxDiff produces the cleanest ranked list of any quant method at small sample sizes. If you have personas and need a ranked list, this is almost always the right method.
