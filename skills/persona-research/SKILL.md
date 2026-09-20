@@ -7,7 +7,7 @@ description: Run structured market research with your personas. Parent skill tha
 
 A catalog of market-research methodologies adapted to run against your saved personas (in `./.personas/`, or `$PERSONA_HOME` if that env var is set — the same store every child skill reads). Each child skill is one method. This parent skill is the menu — it helps you pick the right method for the user's actual question, briefs them on what it'll cost, and dispatches.
 
-Every method ultimately uses the personas + `persona-ask` (framing + the *Ground, think, then talk* contract: grounding, then private reasoning, then the public answer). The methods differ in *structure*: how many personas, how many questions, whether they see each other's answers, what the output looks like.
+The research methods use saved personas + `persona-ask` (framing + the *Ground, think, then talk* contract: grounding, then private reasoning, then the public answer). The methods differ in *structure*: how many personas, how many questions, whether they see each other's answers, what the output looks like. For a decision with temporary advisor roles and a judge's recommendation, dispatch directly to `persona-war-council`; it has its own setup and needs no saved personas.
 
 Persona selection is the same across every method (see `persona-review` Phase 1): if the user names personas, use exactly those; otherwise use all personas in `./.personas/`. There's no automatic filtering or sampling — when a method would be unwieldy with a very large roster, it asks the user which personas to include (or, for methods that want a diverse subset, the orchestrator picks a spanning set by reading the personas' `## At a glance` lines).
 
@@ -21,6 +21,7 @@ Cost and time estimates come from **`references/cost-estimator.md`**, which pull
 - **Use `persona-roleplay`** when the user wants to *rehearse a live conversation* (journalist interview, sales pitch, 1:1 with the boss) rather than research a persona. There the persona plays the counterpart and the user is the one being tested — the inverse of every method below. Its own dedicated skill, not part of this catalog.
 - **Use `persona-ask`** for a single-persona quick question. Don't reach for a methodology when one persona and one question will do.
 - **Use `persona-of-thought`** when the user wants *one* synthesized answer to a question (including an A/B choice) fused from many independent persona perspectives — a merged anonymous answer, not a study report or a per-persona panel. Its own dedicated skill, not part of this catalog.
+- **Use `persona-war-council`** for a difficult decision with competing advisor priorities and a neutral judge's final recommendation. It supplies a CFO, operator, customer representative, and situational specialists by default; dispatch before checking for saved personas. Use `persona-council` when the user wants their existing personas to debate and surface disagreement.
 
 ## Method catalog
 
@@ -151,7 +152,7 @@ Once you've picked the method:
 3. Tell the user the rough cost / time, if non-trivial.
 4. Invoke the child skill, passing along the question, the asset(s) if any, and any persona-selection overrides.
 
-If `./.personas/` is empty or missing, stop and offer `persona-distill` or `persona-create` first — none of these methods work without personas.
+For the saved-persona research methods above, if `./.personas/` (or `$PERSONA_HOME`) is empty or missing, offer `persona-distill` or `persona-create` first. `persona-war-council` works without that prerequisite; follow its own advisor setup.
 
 ## Meta-skill: `persona-multiverse`
 

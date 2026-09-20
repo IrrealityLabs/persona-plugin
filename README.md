@@ -65,6 +65,7 @@ The parent / dispatcher for the full library of research methodologies. Helps yo
 - **`persona-roleplay`** — rehearse a high-stakes conversation against a persona who plays the counterpart: a journalist interviewing you, a prospect you're pitching, your boss in a 1:1. Inverts the usual setup — *you* are the one being tested, and you get coached at the end.
 - **`persona-presentation`** — slide-by-slide audience feedback on a deck or talk. Feed it a deck, a run-of-show, and/or a transcript/video; the personas sit through the whole talk and the panel feedback becomes a curated change list.
 - **`persona-of-thought`** — each persona answers a question independently, then the answers are fused into a single anonymous joint response. Use when you want *one* better answer informed by many perspectives, not a panel breakdown.
+- **[`persona-war-council`](skills/persona-war-council/SKILL.md)** — a CFO, operator, customer representative, and 1–2 situational advisors debate a difficult decision; a neutral judge recommends a course and stakes a fictional $1,000 on a defined outcome. Inspired by [Wade Foster's War-Council](https://x.com/wadefoster/status/2066507532135203130). No saved personas required. Try: `/persona-war-council Should we retire our free plan?`
 - **`persona-observe` / `persona-correct` / `persona-refresh`** — keep a persona current: add real data you already have (`persona-observe`, freeform or CSV), fix a wrong answer so it sticks (`persona-correct`), or rebuild the persona from its source assets (`persona-refresh`).
 
 ## Studies available under `persona-research`
@@ -259,6 +260,8 @@ But the plugin can also build a persona of a **real, identifiable person** — `
 ## Credits
 
 Created by the team behind [AskRally](https://askrally.com).
+
+`persona-war-council` is inspired by [Wade Foster's War-Council post](https://x.com/wadefoster/status/2066507532135203130), adapted here with attribution; no endorsement is implied.
 
 ## License
 
