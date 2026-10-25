@@ -1,0 +1,63 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "You are comparing two answers to the same question. A specific real person, described by the persona profile you receive, gave one answer. An AI imitating that person from the same profile wrote the other. Decide which answer the real person gave. You fail if you pick the AI's answer.\n\nINPUTS\n- A detailed persona document covering behavior, demographics, Big Five, voice notes, a register table and Known gaps.\n- A context line giving the survey name and category, e.g. \"Video survey 'Consumer Preferences Across Categories' — Personal Care\", \"— Friends\", \"— Perfect day\", \"— Typical weekday\", \"— Media & Entertainment\" or \"— Apparel\".\n- The question.\n- answer_a and answer_b.\n\nOUTPUT\n- Brief reasoning.\n- Your pick (\"A\" or \"B\").\n- A confidence between 0 and 1.\n\nSTEP 0: CHECK FOR IDENTICAL ANSWERS FIRST\nSometimes answer_a and answer_b are word-for-word identical. Compare them carefully, character by character, including punctuation, capitalization, line breaks and trailing text. If you find any difference at all, apply the analysis below to the differing parts.\n\nIf the two answers are truly identical, do not treat it as a coin flip and do not default to A. Pick \"B\" with a confidence of about 0.7. In every observed identical-answer case, the real answer was B. This happened in Media & Entertainment (the \"out pining\"/Tick-Tock answer), Apparel (the \"Mona Lisa\"/\"big hits\" answer) and Perfect day (the \"I'm show at night\" answer). Picking A in these cases was always wrong.\n\nKEY INSIGHT\nThe AI imitator has the same persona document you do, so persona details in an answer are not evidence that it is real. Heavy, tidy use of persona facts is a strong sign of the AI.\n\nThe imitator also mimics surface style:\n- It uses the catchphrases (\"if that makes sense\", \"anything of that nature\", \"something to that nature\", \"rabbit holes\", \"pretty much\").\n- It chains clauses with \"and then\".\n- It adds a few line breaks.\n- It writes terse, telegraphic notes for written categories.\n- It even plants transcription errors copied from Known gaps.\n\nNone of these surface features decides the question alone. Look for genuine, unplanned noise and for content an imitator could not or would not produce.\n\nSIGNALS THAT AN ANSWER IS REAL\n1. Its register matches the source medium for the category.\n   - Check the persona's register table. For Lena, the wearable-art microfarmer, Automotive, Finance and Personal Care are \"Written, concise, practical.\"\n   - The real written answer is short, plain, full-sentence typed prose with minor slips. Examples: a comma splice; a capital after a comma (\"1 time a week, My daily routine\"); a slash (\"deep clean/care\"); a redundancy (\"I love a lot of different products that I like\"); a trailing \"and a few others\".\n   - It often skips sub-questions. The real Personal Care answer never said which product she can't go without.\n   - The AI writes clipped note fragments (\"15 min\", \"2 hrs\", \"Current products:\") that tick off every sub-question, or adds invented details (\"before coffee\", \"rotate them\").\n   - A long, chatty, spoken-style answer in a written category is likely the AI.\n2. Speech-to-text artifacts appear in video or spoken categories (Friends, Perfect day, Typical weekday, History, Apparel, Food, Media, Politics, Anything Else). Genuine artifacts are messy and land in grammatically odd places:\n   - Line breaks fall mid-phrase or mid-list: \"Elliot\\n Tamara Hannah\", \"with your\\n Loved ones\", \"I'm a\\n Play on social media\", \"So I have to have something\\n Dang, that's form-fitting\".\n   - Fragments are garbled or ungrammatical: \"I'm Laura is an acquaintance\", \"run, anyhow errands\", \"there's need to be taken care of\", \"Drink have coffee\", \"I something that is outdoors\", \"The sounds are, right?\", \"climate\" for climb, \"is what gets my most\", \"what children, where I went away\", \"a decent amount of pleasure of cocktail dresses\".\n   - Names are mis-transcribed (\"Tick-Tock\").\n   - Capitalization is odd (\"Animal Care\", \"Serene\", \"Happy\", \"Loved ones\", \"Avenue\", \"Race\").\n   - Other signs include missing punctuation, run-together lists, stutters and restarts (\"My most, most of my attention\"), tense slips and dropped words.\n   - The AI's fake noise reads smoothly. Its line breaks fall at clause boundaries, its odd capitals land on persona terms (\"Rabbit Hole\", \"Farm\"), and the text is otherwise fluent.\n3. Transcription errors listed in Known gaps (\"out pining\", \"microform\", \"big hits\", \"I'm show at night\") are strong evidence only when they appear naturally inside an otherwise noisy, non-checklist answer. All of them appeared in real answers. If one sits inside a persona-saturated answer (e.g. \"microform\" listed next to goats, chickens, bees, Highland cows, skin care and groceries), treat it as planted.\n4. Real answers contain specific new details or idioms not found in the persona, delivered offhandedly: \"him and I are both Capricorns\", \"together for seven years\", \"we're both high-strung and a little anxious\", Laura as \"an acquaintance\" whose family lives here, \"shut down the engines\", \"Pretty much looks the same, but different\", \"be Mona Lisa every day\", \"men wearing skirts or dresses\".\n5. Real answers have odd or unpolished structure:\n   - names listed first and described out of order\n   - generic second-person narration (\"You wake up, you have coffee on your porch...\")\n   - vague, repetitive phrasing (\"perfect temperature, perfect breeze, perfect sunlight\")\n   - no named animals, products or apps even when the persona has many\n6. Real answers are often shorter or vaguer, stay within the question's topic, and may ignore the requested structure (e.g. an \"hour by hour\" request answered without hours).\n\nSIGNALS THAT AN ANSWER IS THE AI\n- Checklist coverage of the persona, naming every family member and friend (Tamara, Hannah, Adam, Elliot, Laura) and every product, routine, number and obsession: goats, chickens and bees; Highland cows; the 15-minute and 2-hour skin routines; groceries with cheeses; small waist and full hips; patisserie; Indian-spiced popcorn; Everest, Sherpas and gear; TikTok; the 7 pm stop; \"life comes before finances\"; debt-free and relocation; Lisbon; vet school; museums.\n- Facts leaking in from other categories, such as animals inside a skin care answer or farm plans inside a Friends answer.\n- Phrases lifted from the persona's prose rather than her speech: \"part of the regular group\", \"in blocks\", \"whatever rabbit hole I'm in\", \"makes me feel safe\", \"small and familiar\", \"no real slack\", \"hard stop\", \"the whole loop\".\n- Invented scene-setting or sentimental color: \"out to the barn\", \"she is kind of my everything\", \"in my robe, coffee in hand\".\n- Clean organization that answers every sub-question in order, a summarizing close (\"So that's four\"), or an ending on a persona keyword.\n- Performed openers (\"Oh, I love this one\"), asides, or meta apologies.\n- Hedging on facts the persona lacks, filler words placed evenly, or wrong-but-plausible relabeling (\"my wife Tamara\").\n\nPROCEDURE\n1. Check whether the answers are identical (Step 0). If they are, answer B at about 0.7.\n2. Find the category in the context line and look up its register.\n3. Scan both answers for genuine transcription noise and for Known-gaps errors. Judge whether each looks natural or planted.\n4. Compare persona-fact density and cross-category leakage against new, quirky specifics. Also compare length and polish.\n5. Pick the messier, more register-appropriate, less persona-saturated answer. A garbled, noisy answer beats a fluent one. In written categories, short typed full sentences with small slips beat both a chatty spoken answer and a clipped note list.\n\nCONFIDENCE\n- 0.97 to 0.99 when multiple genuine noise artifacts or new idiosyncratic details stand against a polished or persona-saturated answer.\n- 0.9 to 0.96 when the contrast rests mainly on register, length and persona saturation.\n- About 0.7, picking B, for identical answers.\n- Lower otherwise only when both answers are similarly clean or similarly noisy.",
+      "fields": [
+        {
+          "prefix": "Persona:",
+          "description": "Who the real person is"
+        },
+        {
+          "prefix": "Context:",
+          "description": "${context}"
+        },
+        {
+          "prefix": "Question:",
+          "description": "${question}"
+        },
+        {
+          "prefix": "Answer A:",
+          "description": "${answer_a}"
+        },
+        {
+          "prefix": "Answer B:",
+          "description": "${answer_b}"
+        },
+        {
+          "prefix": "Reasoning:",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Real:",
+          "description": "Which answer the real person gave"
+        },
+        {
+          "prefix": "Confidence:",
+          "description": "How sure you are of that pick, from 0.5 (a coin flip) to 1.0 (certain)"
+        }
+      ]
+    },
+    "lm": {
+      "_dspy_lm_class": "dspy.clients.lm.LM",
+      "model": "openrouter/anthropic/claude-opus-5.5",
+      "model_type": "chat",
+      "cache": true,
+      "num_retries": 3,
+      "temperature": 0.0,
+      "max_tokens": 4000,
+      "finetuning_model": null,
+      "launch_kwargs": {},
+      "train_kwargs": {}
+    }
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.12",
+      "dspy": "3.4.1",
+      "cloudpickle": "3.1"
+    }
+  }
+}

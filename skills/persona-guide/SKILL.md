@@ -6,7 +6,9 @@ description: Start-here orientation for this plugin and for personas in general 
 # Persona Guide — start here
 
 This plugin builds **AI personas** and runs research against them, all locally — no account, no
-API key, no server. This skill is the map: what a persona is, where things live, what the other
+server. Calibration, avatars, and the optional fast mode of `persona-ask` call model APIs. OpenRouter is
+recommended (one key, every model), and Anthropic, OpenAI, Gemini or xAI keys work too, as do local models through Ollama, LM
+Studio or llama.cpp (no key, but slow). Avatars are OpenRouter-only. This skill is the map: what a persona is, where things live, what the other
 skills do, what people use personas for, and how to make a good one. Read it before answering a
 "how does this work / what can I do with this" question, then point the user at the specific
 skill they need.
@@ -50,6 +52,10 @@ is the menu for studies:
 
 - **Build a persona** — e.g. `persona-create` (from scratch) or `persona-distill` (from real data
   like Slack / X / web).
+- **Prove it works** — `persona-clone` builds a persona from a real person's own answers and then
+  calibrates it: `persona-calibrate` trains a judge to tell the persona from the real person and tunes
+  the persona until it passes, `persona-test` re-scores it, and `persona-validate` tries it on questions
+  nobody has answered. This needs a model API key (OpenRouter recommended); the skills walk you through getting one.
 - **Keep it current** — e.g. `persona-correct` (fix a wrong answer so it sticks) or
   `persona-observe` (add data you already have).
 - **Use one persona** — `persona-ask` (one grounded, referenced answer with a confidence tag).
@@ -111,10 +117,24 @@ investing in a persona. The headlines:
   `persona-observe` real data, the persona improves and that improvement is permanent (it lives in
   the assets). Personas are meant to be maintained, not built once and frozen.
 
+## Sample personas
+
+The plugin ships ready-made personas in `samples/personas/`, each built with `persona-create` from a real
+person's anonymized video-survey interview, which is included as raw data. One of them comes in two
+versions: `wearable-art-microfarmer` as created, and `wearable-art-microfarmer-calibrated`, the same doc
+after `persona-calibrate`. Comparing the two shows what calibration adds.
+`samples/README.md` describes them and how to load them. Loading means copying into the store without
+overwriting: `mkdir -p .personas && cp -Rn <plugin>/samples/personas/. .personas/`. It also lists the
+options: use them as they are, re-score or validate the calibrated one, calibrate the others, or
+`persona-clone` one yourself from its raw interview to learn the full path. Offer them whenever someone
+has no personas yet and wants to try things out.
+
 ## New here? The shortest path
 
+0. Want to try it first? Load the sample personas (above) and ask one something.
 1. Build one persona — `persona-create` (from scratch) or `persona-distill` (from real data).
 2. Ask it something — `persona-ask`.
 3. When you want a study, `persona-research` helps you pick the method.
 
-Then keep it sharp with `persona-correct` and `persona-observe` as you learn where it's wrong.
+Then keep it sharp with `persona-correct` and `persona-observe` as you learn where it's wrong. If it
+was built from someone's own answers, `persona-calibrate` shows how well it actually passes for them.

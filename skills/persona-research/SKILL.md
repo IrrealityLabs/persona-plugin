@@ -152,7 +152,7 @@ Once you've picked the method:
 3. Tell the user the rough cost / time, if non-trivial.
 4. Invoke the child skill, passing along the question, the asset(s) if any, and any persona-selection overrides.
 
-For the saved-persona research methods above, if `./.personas/` (or `$PERSONA_HOME`) is empty or missing, offer `persona-distill` or `persona-create` first. `persona-war-council` works without that prerequisite; follow its own advisor setup.
+For the saved-persona research methods above, if `./.personas/` (or `$PERSONA_HOME`) is empty or missing, offer `persona-distill` or `persona-create` first, or loading the sample personas to try the method straight away (see `samples/README.md`). `persona-war-council` works without that prerequisite; follow its own advisor setup.
 
 ## Meta-skill: `persona-multiverse`
 

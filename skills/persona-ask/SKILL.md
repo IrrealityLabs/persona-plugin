@@ -38,6 +38,34 @@ When the question being asked is structured for aggregation — voting, rating o
 - **Both defaults are overridden** when a `persona-research` child skill calls into this one — those skills declare their own sample size and question structure per methodology (e.g., a survey hits all personas with a fixed question set; Van Westendorp asks four questions per persona).
 - **The user can override either default explicitly** ("ask all eight of them", "ask three questions in a row, I want a quick triage").
 
+## Running it: subagents (default) or a model API (faster)
+
+By default each persona answers in its own subagent: no setup, no key. When that's too slow (many
+personas, or the same question across a whole panel), and the user has a model API key, offer the fast
+path instead. A script makes one call per persona, all in parallel, and returns the same Grounding /
+Thinking / Talking parts as JSON, answered under this skill's *Shaping the response* rules:
+
+```bash
+python3 skills/persona-ask/scripts/ask.py --personas <slug>,<slug> --question "<the framed question>" \
+  [--asset <file>] [--model haiku] [--out answers.json]
+python3 skills/persona-ask/scripts/ask.py --all --question "…"          # every persona in the store
+```
+
+- **Keys:** it uses whichever key it finds in `.env` or the environment, checking OpenRouter first
+  (`OPENROUTER_API_KEY`, one key for every model), then `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`,
+  `GEMINI_API_KEY`, and `XAI_API_KEY` (Grok). Set `PERSONA_PROVIDER` to pick one. If the user has none and wants speed, point them to
+  https://openrouter.ai/keys.
+- **Local models:** for privacy or zero cost, `PERSONA_PROVIDER=ollama`, `lmstudio` or `llamacpp`, with the model named
+  (`--model llama3.2`). There's no key, nothing leaves the machine, and `PERSONA_BASE_URL` changes the address. It is
+  not faster: a local server mostly answers one request at a time. Small models also ground answers weakly, so
+  use the biggest model the machine can run.
+- **Models:** `haiku` / `sonnet` / `opus`, `luna` / `sol`, `flash` / `pro`, `grok`, or any model id the provider
+  offers. The default is the provider's fast model, or `PERSONA_MODEL`.
+- **Using the results:** frame the question first, exactly as for subagents; the script asks it verbatim. Then
+  build the usual response or tally from the JSON. Answers with an `error` key didn't come back, so say which.
+
+Only ask about this path when speed matters. For one or two personas, subagents are fine.
+
 The whole skill is in service of one principle: **bad framing produces bad data, and the personas can't save you.** A persona simulation will be agreeable, confirming, and surface-level if the question lets it be. Tight framing — and ruthless grounding in the persona doc — forces a substantive answer.
 
 ## Phase 1 — Resolve the persona

@@ -10,7 +10,7 @@ Treat every result as a structured prompt for your own judgment, and as a list o
 
 If you build a persona of a **real, identifiable person** (e.g. distilling someone's Slack, posts, or public writing), that's processing personal data and may be regulated where you and they are based — see [Legal & compliance](#legal--compliance) below. Complying with the law that applies to you is your responsibility.
 
-## The four main skills
+## The five main skills
 
 These are the entry points you'll use most. Everything else either consumes these or is dispatched by `persona-research`.
 
@@ -50,6 +50,8 @@ Resolve a single persona by name and get their grounded, referenced response to 
 
 Quoted questions get asked verbatim; unquoted questions are reframed for better signal. Tally logic kicks in automatically for vote/rate/scale questions.
 
+By default each persona answers in its own subagent, with no setup. With a model API key it can switch to a fast mode instead: one call per persona, all in parallel, with the same grounded answers. The key can be OpenRouter, Anthropic, OpenAI, Gemini or xAI, or a local Ollama, LM Studio or llama.cpp server.
+
 > Invoke: `ask <name>`, `what would <name> think of <X>`, `/persona-ask <name> "<question>"`
 
 ### `persona-research` — run a study
@@ -57,6 +59,18 @@ Quoted questions get asked verbatim; unquoted questions are reframed for better 
 The parent / dispatcher for the full library of research methodologies. Helps you pick the right method based on your stage in the product lifecycle (WHY / WHAT / HOW) and dispatches to the matching child skill. Always estimates cost before launching expensive studies (uses live model pricing via LiteLLM / `ccusage`).
 
 > Invoke: `run a study`, `do market research with the personas`, `/persona-research`, or describe a research question without naming a methodology
+
+### `persona-calibrate` — prove a persona works
+
+If you have a real person's own answers (an interview, a survey, transcripts), calibration **tests that the persona prompt actually works**, and makes it better. It's a modified Turing test:
+
+- **The test:** the persona answers questions the person really answered, and a judge model sees both answers side by side and has to pick the real one.
+- **The optimization:** DSPy's GEPA optimizer improves the judge, then improves how the persona is roleplayed against that judge.
+- **What you get:** a **Turing score** (50% = indistinguishable from the real person), the judge's reasoning per question, and a calibrated instruction written into the persona doc.
+
+Run `persona-test` to re-score it later, and `persona-validate` to try it on questions nobody has answered. Calibration needs a model API key: [OpenRouter](https://openrouter.ai) is recommended, or bring an Anthropic, OpenAI, Gemini or xAI key. The skill walks you through it.
+
+> Invoke: `calibrate <persona>`, `/persona-calibrate`, `does this persona actually sound like them?`
 
 ## Plus
 
@@ -67,6 +81,34 @@ The parent / dispatcher for the full library of research methodologies. Helps yo
 - **`persona-of-thought`** — each persona answers a question independently, then the answers are fused into a single anonymous joint response. Use when you want *one* better answer informed by many perspectives, not a panel breakdown.
 - **[`persona-war-council`](skills/persona-war-council/SKILL.md)** — a CFO, operator, customer representative, and 1–2 situational advisors debate a difficult decision; a neutral judge recommends a course and stakes a fictional $1,000 on a defined outcome. Inspired by [Wade Foster's War-Council](https://x.com/wadefoster/status/2066507532135203130). No saved personas required. Try: `/persona-war-council Should we retire our free plan?`
 - **`persona-observe` / `persona-correct` / `persona-refresh`** — keep a persona current: add real data you already have (`persona-observe`, freeform or CSV), fix a wrong answer so it sticks (`persona-correct`), or rebuild the persona from its source assets (`persona-refresh`).
+
+## Calibration and real people
+
+- **`persona-clone`** — the path for real people, and the tested alternative to `persona-create`. It builds the persona from their answers, then calibrates and validates it.
+- **`persona-test`** — re-score the current persona against its trained judge. It's cheap, so it works well in a loop.
+- **`persona-validate`** — put the calibrated persona through an interview it has never seen (best of two answers per question, picked by its judge), then review the answers for invented facts and voice drift.
+- **`persona-anonymize`** — swap real names and identifying details for consistent pseudonyms before building personas from someone's data.
+- **`persona-avatar`** — a profile photo and a short talking-head intro video for a persona.
+
+These use a model API key in a `.env`:
+
+- `OPENROUTER_API_KEY` is recommended: one key, every model.
+- `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GEMINI_API_KEY` or `XAI_API_KEY` work too.
+- Local models work too, with no key: Ollama, LM Studio or llama.cpp (`PERSONA_PROVIDER=ollama`). They're private and free, but slow, and the judge should still be a strong model.
+- Avatars are OpenRouter-only.
+
+Every other skill runs without a key, and `persona-ask` can optionally use one to ask many personas in parallel instead of one subagent each.
+
+- **Models:** the persona defaults to Claude Haiku and the judge to Claude Opus. `luna` / `sol` select the GPT equivalents, `flash` / `pro` the Gemini ones, and `grok` selects Grok; any model id works too.
+- **Cost:** a default calibration run (one round) takes about 20–25 minutes and costs roughly $5–10 for a 15-answer interview with the Opus judge. `--judge-model sonnet` or `sol` costs several times less. Testing and validating an already-calibrated persona costs cents.
+
+## Try the sample personas
+
+`samples/` has ready-made personas built from **real, anonymized video-survey interviews**, with the raw interviews included so you can clone them yourself. One comes in two versions, as created and after calibration, so you can compare them. See [`samples/README.md`](samples/README.md). To load them:
+
+```bash
+mkdir -p .personas && cp -Rn <path-to-plugin>/samples/personas/. .personas/
+```
 
 ## Studies available under `persona-research`
 
@@ -217,15 +259,23 @@ persona-plugin/
 ├── plugins/
 │   └── persona-plugin -> ..          # Codex marketplace entry points back to this plugin root
 ├── README.md                         # this file
+├── samples/                          # ready-made personas + their anonymized raw interviews
 └── skills/
     ├── persona-create/               # build a persona (interview / CSV / paste)
     ├── persona-distill/              # build a persona from real data (Slack/X/web)
     │   ├── references/               # per-source walkthroughs + distillation spec
     │   └── scripts/                  # zero-dep Node dump scripts
-    ├── persona-ask/                  # one persona, one grounded answer
+    ├── persona-ask/                  # one persona, one grounded answer (scripts/ask.py: optional fast mode)
     ├── persona-observe/              # add real data to a persona (CSV / freeform)
     ├── persona-correct/              # fix a wrong answer so it sticks
     ├── persona-refresh/              # rebuild a persona's doc from its assets
+    ├── persona-clone/                # real person's answers → persona → calibrate → validate
+    ├── persona-calibrate/            # judge-vs-persona Turing test + GEPA optimization
+    │   └── scripts/calibrate.py      # calibrate / test / validate (DSPy, via a model API)
+    ├── persona-test/                 # re-score a persona against its trained judge
+    ├── persona-validate/             # unseen-interview check of a calibrated persona
+    ├── persona-anonymize/            # pseudonymize source data before import
+    ├── persona-avatar/               # profile photo + talking-head intro video
     ├── persona-review/               # asset review with line-level critique
     ├── persona-goal/                 # optimize an asset against the panel in a stopping-aware loop (goal feature)
     ├── persona-roleplay/             # rehearse a live conversation; the persona plays the counterpart
